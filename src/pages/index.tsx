@@ -5,7 +5,11 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const startRef = useRef<HTMLDivElement | null>(null);
@@ -48,6 +52,58 @@ export default function Home() {
       target: "https://example.com/?q={search_term_string}",
       "query-input": "required name=search_term_string",
     },
+  };
+
+  // Assessment: flattened questions and state
+  const questions = [
+    { id: "gender", text: "What is your gender?", type: "single", options: ["Male", "Female", "Prefer not to say", "Other"] },
+    { id: "age", text: "What is your age range?", type: "single", options: ["18–24", "25–34", "35–44", "45–54", "55+"] },
+    { id: "location", text: "Where do you live? (city, region, or climate)", type: "text" },
+    { id: "health_conditions", text: "Do you have any known health conditions that affect nutrient absorption?", type: "single", options: ["No", "Celiac disease", "Crohn's disease", "IBD/IBS", "Other / not sure"] },
+    { id: "primary_concern", text: "What is your primary hair concern?", type: "single", options: ["Hair thinning", "Slow growth", "Dullness", "Breakage", "Hair loss / shedding"] },
+    { id: "hair_type", text: "What is your hair type?", type: "single", options: ["Oily", "Dry", "Normal", "Combination"] },
+    { id: "scalp_condition", text: "How would you describe your scalp?", type: "single", options: ["Dry / itchy", "Oily", "Normal", "Flaky / sensitive"] },
+    { id: "hair_loss_history", text: "Have you noticed recent hair thinning or hair loss?", type: "single", options: ["No", "Yes — past month", "Yes — 3–6 months", "Yes — 6–12 months", "Yes — over a year"] },
+    { id: "diet", text: "What is your dietary preference?", type: "single", options: ["Omnivore", "Vegetarian", "Vegan", "Pescatarian"] },
+    { id: "protein_intake", text: "How often do you consume protein-rich foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "iron_foods", text: "How often do you eat iron-rich foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "biotin_foods", text: "How often do you consume foods rich in Biotin (B7)?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "zinc_foods", text: "How often do you consume foods rich in Zinc?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "vitc_foods", text: "How often do you consume foods rich in Vitamin C?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "omega3_foods", text: "How often do you consume foods rich in Omega-3s?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "water", text: "How many glasses of water do you drink per day?", type: "single", options: ["1–2", "3–5", "6–8", "8+"] },
+    { id: "stress", text: "How would you rate your typical stress level?", type: "single", options: ["Low", "Moderate", "High"] },
+    { id: "sleep", text: "How many hours of sleep do you get on average per night?", type: "single", options: ["Less than 6", "6–7", "7–8", "More than 8"] },
+    { id: "activity", text: "How often do you exercise?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "styling", text: "What is your typical hair styling routine?", type: "single", options: ["Heat styling", "Chemical treatments", "Protective styles", "Gentle / natural"] },
+    { id: "goal", text: "What is your main goal for your hair?", type: "single", options: ["Faster growth", "Thicker hair", "Shinier hair", "Reduce shedding"] },
+    { id: "supplements", text: "Are you currently taking any vitamins, minerals, or other supplements? If yes, list them.", type: "text" },
+  ] as { id: string; text: string; type: "single" | "text"; options?: string[] }[];
+
+  const total = questions.length;
+  const [showAssessment, setShowAssessment] = useState(false);
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<string, any>>({});
+
+  const current = questions[step];
+  const percent = Math.round(((step) / total) * 100);
+
+  const handleSelect = (value: string) => {
+    setAnswers((prev) => ({ ...prev, [current.id]: value }));
+  };
+  const handleText = (value: string) => {
+    setAnswers((prev) => ({ ...prev, [current.id]: value }));
+  };
+  const goNext = () => {
+    if (step < total - 1) setStep(step + 1);
+  };
+  const goBack = () => {
+    if (step > 0) setStep(step - 1);
+  };
+  const startAssessment = () => {
+    setShowAssessment(true);
+    setStep(0);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -112,7 +168,7 @@ export default function Home() {
                   unlock your complete plan.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Button onClick={() => scrollTo(startRef)} className="px-6">
+                  <Button onClick={startAssessment} className="px-6">
                     Start free assessment
                   </Button>
                   <Button
@@ -225,7 +281,7 @@ export default function Home() {
               </ul>
 
               <div className="mt-8">
-                <Button onClick={() => scrollTo(startRef)}>Start now</Button>
+                <Button onClick={startAssessment}>Start now</Button>
               </div>
             </div>
 
@@ -330,7 +386,7 @@ export default function Home() {
                 unlock your complete plan afterwards.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Button className="px-6">Begin now</Button>
+                <Button className="px-6" onClick={startAssessment}>Begin now</Button>
                 <Button variant="secondary" className="px-6">See sample questions</Button>
               </div>
               <p className="mt-3 text-xs text-muted-foreground">
@@ -382,6 +438,137 @@ export default function Home() {
             </CardContent>
           </Card>
         </motion.section>
+
+        {/* Assessment overlay */}
+        <AnimatePresence>
+          {showAssessment && (
+            <motion.div
+              key="assessment"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50"
+            >
+              <motion.div
+                aria-hidden
+                className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+              <div className="absolute inset-0 flex items-start sm:items-center justify-center p-4 sm:p-6">
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 20, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative w-full max-w-3xl rounded-md border bg-background"
+                >
+                  <div className="flex items-center justify-between border-b px-4 py-3">
+                    <div className="text-sm text-muted-foreground">
+                      Step {step + 1} of {total}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowAssessment(false)}
+                      className="text-xs text-muted-foreground hover:text-primary"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  <div className="px-4 pt-4">
+                    <Progress value={percent} />
+                  </div>
+
+                    <div className="px-4 py-6">
+                      <h3 className="text-lg sm:text-xl font-medium text-primary">
+                        {current.text}
+                      </h3>
+
+                      <div className="mt-4">
+                        {current.type === "single" && (
+                          <RadioGroup
+                            value={answers[current.id] ?? ""}
+                            onValueChange={handleSelect}
+                            className="grid gap-3"
+                          >
+                            {current.options?.map((opt) => {
+                              const inputId = `${current.id}-${opt}`;
+                              return (
+                                <label
+                                  key={opt}
+                                  htmlFor={inputId}
+                                  className="flex items-center gap-3 rounded-md border px-3 py-2 cursor-pointer hover:bg-accent/40"
+                                >
+                                  <RadioGroupItem
+                                    id={inputId}
+                                    value={opt}
+                                    className="shadow-none"
+                                  />
+                                  <span className="text-sm">{opt}</span>
+                                </label>
+                              );
+                            })}
+                          </RadioGroup>
+                        )}
+
+                        {current.type === "text" && (
+                          <div className="grid gap-2">
+                            <Label htmlFor={`${current.id}`}>Your answer</Label>
+                            {current.id === "supplements" ? (
+                              <Textarea
+                                id={`${current.id}`}
+                                value={answers[current.id] ?? ""}
+                                onChange={(e) => handleText(e.target.value)}
+                                placeholder="List any vitamins, minerals, or supplements you currently take"
+                                className="min-h-28"
+                              />
+                            ) : (
+                              <Input
+                                id={`${current.id}`}
+                                value={answers[current.id] ?? ""}
+                                onChange={(e) => handleText(e.target.value)}
+                                placeholder="Type your answer"
+                              />
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-6 flex items-center justify-between">
+                        <Button variant="secondary" onClick={goBack} disabled={step === 0}>
+                          Back
+                        </Button>
+                        {step < total - 1 ? (
+                          <Button
+                            onClick={goNext}
+                            disabled={
+                              current.type === "single"
+                                ? !(answers[current.id])
+                                : !(String(answers[current.id] ?? "").trim().length > 0)
+                            }
+                          >
+                            Next
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => {
+                              // Placeholder: we'll generate a unique insight next step
+                              setShowAssessment(false);
+                              // Optionally scroll to a "insight" section in the future
+                            }}
+                          >
+                            Finish
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Footer */}
         <footer className="border-t">
