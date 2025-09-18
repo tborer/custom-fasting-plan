@@ -184,7 +184,7 @@ export default function Home() {
           "Content-Type": "application/json",
           ...(sessionId ? { "x-session-id": sessionId } : {}),
         } as any,
-        body: JSON.stringify({ email, consent: true, source: "insight", answers }),
+        body: JSON.stringify({ email, consent: true, source: "insight", answers, insight }),
       });
       const data = await resp.json();
       if (data?.ok) {

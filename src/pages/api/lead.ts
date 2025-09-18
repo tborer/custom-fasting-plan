@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { randomUUID } from "crypto";
+import { saveLead } from "@/lib/db";
+import { sendPlanPreview } from "@/lib/email";
 
 type LeadPayload = {
   email?: string;
   consent?: boolean;
   answers?: Record<string, any>;
   source?: string;
+  insight?: string;
 };
 
 type LeadResponse =
@@ -22,7 +24,7 @@ export default async function handler(
   }
 
   try {
-    const { email, consent, answers, source } = (req.body ?? {}) as LeadPayload;
+    const { email, consent, answers, source, insight } = (req.body ?? {}) as LeadPayload;
 
     if (!email || typeof email !== "string") {
       return res.status(400).json({ ok: false, message: "Email is required" });
@@ -32,19 +34,22 @@ export default async function handler(
     }
 
     const incomingSession = (req.headers["x-session-id"] as string) || undefined;
-    const sessionId = incomingSession || randomUUID();
-
-    // Stub: replace with database persistence (Vercel Postgres/Supabase) later
-    console.log("[lead] received", {
+    const result = await saveLead({
       email,
       consent,
-      sessionId,
-      source: source ?? "landing",
-      preview: process.env.NEXT_PUBLIC_CO_DEV_ENV === "preview",
-      answersPresent: Boolean(answers),
+      answers,
+      sessionId: incomingSession,
+      source,
     });
 
-    return res.status(200).json({ ok: true, sessionId });
+    // Attempt to email plan preview (no-op if RESEND is not configured)
+    await sendPlanPreview({
+      to: email,
+      insight,
+      sessionId: result.sessionId,
+    });
+
+    return res.status(200).json({ ok: true, sessionId: result.sessionId });
   } catch (err) {
     console.error("[lead] error", err);
     return res.status(500).json({ ok: false, message: "Internal Server Error" });

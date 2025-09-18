@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { randomUUID } from "crypto";
+import { saveAnswers } from "@/lib/db";
 
 type SavePayload = {
   answers?: Record<string, any>;
@@ -28,18 +28,13 @@ export default async function handler(
       return res.status(400).json({ ok: false, message: "Answers are required" });
     }
 
-    const sessionId = incoming || randomUUID();
-
-    // Stub persistence: replace with DB (Vercel Postgres/Supabase) later
-    console.log("[answers/save] received", {
-      sessionId,
-      count: Object.keys(answers).length,
-      email: email ?? null,
-      source: source ?? "assessment",
-      preview: process.env.NEXT_PUBLIC_CO_DEV_ENV === "preview",
+    const result = await saveAnswers({
+      answers,
+      sessionId: incoming,
+      email,
+      source,
     });
-
-    return res.status(200).json({ ok: true, sessionId });
+    return res.status(200).json({ ok: true, sessionId: result.sessionId });
   } catch (err) {
     console.error("[answers/save] error", err);
     return res.status(500).json({ ok: false, message: "Internal Server Error" });
