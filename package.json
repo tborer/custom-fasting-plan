@@ -70,7 +70,7 @@
     "vaul": "^1.0.0",
     "yup": "^1.4.0",
     "zod": "^3.23.8",
-    "@vercel/postgres": "^0.7.4",
+    "@vercel/postgres": "^0.10.0",
     "resend": "^4.0.0"
   },
   "devDependencies": {
