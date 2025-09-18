@@ -47,9 +47,10 @@ export async function saveAnswers(params: {
 
   try {
     await ensureSchema();
+    const answersJson = JSON.stringify(answers);
     await sql`
       INSERT INTO answers (session_id, email, answers, source)
-      VALUES (${sid}, ${email ?? null}, ${sql.json(answers)}, ${source ?? null})
+      VALUES (${sid}, ${email ?? null}, ${answersJson}::jsonb, ${source ?? null})
     `;
     return { sessionId: sid, saved: true };
   } catch (err) {
@@ -70,9 +71,10 @@ export async function saveLead(params: {
 
   try {
     await ensureSchema();
+    const answersJson = answers ? JSON.stringify(answers) : null;
     await sql`
       INSERT INTO leads (session_id, email, consent, answers, source)
-      VALUES (${sid}, ${email}, ${consent}, ${answers ? sql.json(answers) : null}, ${source ?? null})
+      VALUES (${sid}, ${email}, ${consent}, ${answersJson}::jsonb, ${source ?? null})
       ON CONFLICT (session_id, email)
       DO UPDATE SET
         consent = EXCLUDED.consent,
