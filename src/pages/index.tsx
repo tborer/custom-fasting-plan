@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/components/ui/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
@@ -104,6 +106,99 @@ export default function Home() {
     setShowAssessment(true);
     setStep(0);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const [showInsight, setShowInsight] = useState(false);
+  const [insight, setInsight] = useState("");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadConsent, setLeadConsent] = useState(false);
+  const [submittingLead, setSubmittingLead] = useState(false);
+  const { toast } = useToast();
+
+  const generateInsight = (ans: Record<string, any>): string => {
+    const stress = ans["stress"];
+    const diet = ans["diet"];
+    const iron = ans["iron_foods"];
+    const omega = ans["omega3_foods"];
+    const water = ans["water"];
+    const protein = ans["protein_intake"];
+    const sleep = ans["sleep"];
+
+    if (stress === "High") {
+      return "Your top lever: reduce systemic stress. Pair a balanced B‑complex in the morning with magnesium glycinate at night, aim for 7–8 hours sleep, and build a simple wind‑down. Lower cortisol helps prolong the growth (anagen) phase and reduce shedding.";
+    }
+    if ((diet === "Vegan" || diet === "Vegetarian") && (iron === "Rarely" || iron === "1–2 times/week")) {
+      return "Prioritize iron and B12 status. With a plant‑forward diet and low iron intake, ask your clinician about checking ferritin and consider gentle iron paired with vitamin C. Addressing this often reduces diffuse shedding.";
+    }
+    if (omega === "Rarely" || omega === "1–2 times/week") {
+      return "Increase omega‑3 intake. Add 2–3 servings of fatty fish per week or consider algae/fish oil (EPA/DHA). Better omega status supports follicle signaling and a calmer scalp.";
+    }
+    if (water === "1–2") {
+      return "Hydration first: work toward 6–8 glasses of water daily. Hydration and electrolytes support nutrient delivery to follicles and reduce brittleness.";
+    }
+    if (protein === "1–2 times/week" || protein === "Rarely") {
+      return "Raise daily protein toward ~0.8–1.0 g/kg, distributed across meals. Adequate protein underpins keratin synthesis and can improve thickness over time.";
+    }
+    return "Solid foundation—focus on consistency. Keep protein targets, include vitamin D3+K2, zinc, and biotin‑rich foods, and pair a proven topical for best regrowth odds.";
+  };
+
+  const handleFinish = async () => {
+    const text = generateInsight(answers);
+    setInsight(text);
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("hair_answers", JSON.stringify(answers));
+      }
+      const resp = await fetch("/api/answers/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers, source: "assessment" }),
+      });
+      const data = await resp.json().catch(() => null);
+      if (data?.ok && data.sessionId) setSessionId(data.sessionId);
+    } catch (e) {
+      console.warn("save answers failed", e);
+    }
+    setShowAssessment(false);
+    setShowInsight(true);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const submitLead = async () => {
+    const email = leadEmail.trim();
+    const valid = /^\S+@\S+\.\S+$/.test(email);
+    if (!valid) {
+      toast({ title: "Enter a valid email" });
+      return;
+    }
+    if (!leadConsent) {
+      toast({ title: "Please consent to receive your plan preview" });
+      return;
+    }
+    setSubmittingLead(true);
+    try {
+      const resp = await fetch("/api/lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionId ? { "x-session-id": sessionId } : {}),
+        } as any,
+        body: JSON.stringify({ email, consent: true, source: "insight", answers }),
+      });
+      const data = await resp.json();
+      if (data?.ok) {
+        if (data.sessionId) setSessionId(data.sessionId);
+        if (typeof window !== "undefined") localStorage.setItem("hair_lead", "true");
+        toast({ title: "Thanks! We'll email your plan preview." });
+      } else {
+        throw new Error(data?.message || "Failed");
+      }
+    } catch (e) {
+      toast({ title: "Something went wrong. Please try again." });
+    } finally {
+      setSubmittingLead(false);
+    }
   };
 
   return (
@@ -552,18 +647,96 @@ export default function Home() {
                             Next
                           </Button>
                         ) : (
-                          <Button
-                            onClick={() => {
-                              // Placeholder: we'll generate a unique insight next step
-                              setShowAssessment(false);
-                              // Optionally scroll to a "insight" section in the future
-                            }}
-                          >
+                          <Button onClick={handleFinish}>
                             Finish
                           </Button>
                         )}
                       </div>
                     </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Insight overlay */}
+        <AnimatePresence>
+          {showInsight && (
+            <motion.div
+              key="insight"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50"
+            >
+              <motion.div
+                aria-hidden
+                className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+              <div className="absolute inset-0 flex items-start sm:items-center justify-center p-4 sm:p-6">
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 20, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative w-full max-w-3xl rounded-md border bg-background"
+                >
+                  <div className="flex items-center justify-between border-b px-4 py-3">
+                    <h3 className="text-sm font-medium text-primary">Your personalized free insight</h3>
+                    <button
+                      type="button"
+                      onClick={() => setShowInsight(false)}
+                      className="text-xs text-muted-foreground hover:text-primary"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  <div className="px-4 py-6 space-y-6">
+                    <p className="text-base text-foreground">{insight}</p>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-primary text-lg">Get your full plan</CardTitle>
+                        <CardDescription>We’ll email your plan preview and options to unlock the complete program.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid gap-3">
+                          <div className="grid gap-2">
+                            <Label htmlFor="lead-email">Email</Label>
+                            <Input
+                              id="lead-email"
+                              type="email"
+                              placeholder="you@example.com"
+                              value={leadEmail}
+                              onChange={(e) => setLeadEmail(e.target.value)}
+                            />
+                          </div>
+                          <label className="flex items-center gap-3 text-sm text-muted-foreground">
+                            <Checkbox
+                              checked={leadConsent}
+                              onCheckedChange={(v: any) => setLeadConsent(Boolean(v))}
+                            />
+                            I agree to receive my results and occasional updates. You can opt out anytime.
+                          </label>
+                          <div className="flex items-center gap-3">
+                            <Button onClick={submitLead} disabled={submittingLead} className="px-6">
+                              {submittingLead ? "Submitting..." : "Email me my plan preview"}
+                            </Button>
+                            <Button variant="secondary" onClick={() => setShowInsight(false)}>
+                              No thanks
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Payment via Stripe coming soon. Your answers are saved so you can return anytime.
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </motion.div>
               </div>
             </motion.div>
