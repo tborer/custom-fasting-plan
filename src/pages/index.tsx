@@ -114,6 +114,7 @@ export default function Home() {
   const [leadEmail, setLeadEmail] = useState("");
   const [leadConsent, setLeadConsent] = useState(false);
   const [submittingLead, setSubmittingLead] = useState(false);
+  const [unlocking, setUnlocking] = useState(false);
   const { toast } = useToast();
 
   const generateInsight = (ans: Record<string, any>): string => {
@@ -198,6 +199,32 @@ export default function Home() {
       toast({ title: "Something went wrong. Please try again." });
     } finally {
       setSubmittingLead(false);
+    }
+  };
+
+  const handleUnlockFullPlan = async () => {
+    setUnlocking(true);
+    try {
+      const resp = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionId ? { "x-session-id": sessionId } : {}),
+        } as any,
+        body: JSON.stringify({ insight }),
+      });
+      const data = await resp.json().catch(() => null);
+      if (data?.url) {
+        if (typeof window !== "undefined") {
+          window.location.href = data.url as string;
+        }
+      } else {
+        throw new Error(data?.message || "Failed to initiate checkout");
+      }
+    } catch (e) {
+      toast({ title: "Checkout failed", description: "Please try again." });
+    } finally {
+      setUnlocking(false);
     }
   };
 
@@ -700,38 +727,27 @@ export default function Home() {
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-primary text-lg">Get your full plan</CardTitle>
-                        <CardDescription>We’ll email your plan preview and options to unlock the complete program.</CardDescription>
+                        <CardTitle className="text-primary text-lg">Unlock your full plan</CardTitle>
+                        <CardDescription>
+                          Get all insights and a comprehensive, personalized plan with supplement dosing, timing, stack, lifestyle guidance, and topicals.
+                        </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="grid gap-3">
-                          <div className="grid gap-2">
-                            <Label htmlFor="lead-email">Email</Label>
-                            <Input
-                              id="lead-email"
-                              type="email"
-                              placeholder="you@example.com"
-                              value={leadEmail}
-                              onChange={(e) => setLeadEmail(e.target.value)}
-                            />
-                          </div>
-                          <label className="flex items-center gap-3 text-sm text-muted-foreground">
-                            <Checkbox
-                              checked={leadConsent}
-                              onCheckedChange={(v: any) => setLeadConsent(Boolean(v))}
-                            />
-                            I agree to receive my results and occasional updates. You can opt out anytime.
-                          </label>
+                        <div className="grid gap-4">
+                          <ul className="text-sm text-muted-foreground space-y-2">
+                            <li>• Immediate access after secure Stripe checkout</li>
+                            <li>• We’ll email your complete plan and a link to view it anytime</li>
+                          </ul>
                           <div className="flex items-center gap-3">
-                            <Button onClick={submitLead} disabled={submittingLead} className="px-6">
-                              {submittingLead ? "Submitting..." : "Email me my plan preview"}
+                            <Button onClick={handleUnlockFullPlan} disabled={unlocking} className="px-6">
+                              {unlocking ? "Redirecting..." : "Unlock Full Plan"}
                             </Button>
                             <Button variant="secondary" onClick={() => setShowInsight(false)}>
-                              No thanks
+                              Maybe later
                             </Button>
                           </div>
                           <p className="text-xs text-muted-foreground">
-                            Payment via Stripe coming soon. Your answers are saved so you can return anytime.
+                            You’ll be redirected to a secure Stripe checkout. On completion we’ll email your full plan.
                           </p>
                         </div>
                       </CardContent>
