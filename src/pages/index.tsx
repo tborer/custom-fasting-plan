@@ -58,6 +58,7 @@ export default function Home() {
 
   // Assessment: flattened questions and state
   const questions = [
+    { id: "email", text: "What is your email?", type: "text" },
     { id: "gender", text: "What is your gender?", type: "single", options: ["Male", "Female", "Prefer not to say", "Other"] },
     { id: "age", text: "What is your age range?", type: "single", options: ["18–24", "25–34", "35–44", "45–54", "55+"] },
     { id: "location", text: "Where do you live? (city, region, or climate)", type: "text" },
@@ -113,6 +114,11 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [leadEmail, setLeadEmail] = useState("");
   const [leadConsent, setLeadConsent] = useState(false);
+
+  useEffect(() => {
+    const e = String((answers as any)["email"] || "").trim();
+    if (/^\S+@\S+\.\S+$/.test(e)) setLeadEmail(e);
+  }, [answers]);
   const [submittingLead, setSubmittingLead] = useState(false);
   const [unlocking, setUnlocking] = useState(false);
   const { toast } = useToast();
@@ -150,6 +156,7 @@ export default function Home() {
     try {
       if (typeof window !== "undefined") {
         localStorage.setItem("hair_answers", JSON.stringify(answers));
+        localStorage.setItem("hair_insight", text);
       }
       const resp = await fetch("/api/answers/save", {
         method: "POST",
@@ -206,13 +213,14 @@ export default function Home() {
     setUnlocking(true);
     try {
       // 1) Create a Checkout Session (preferred; preserves metadata and uses mode-aware credentials)
+      const emailToUse = String((leadEmail || (answers as any)["email"] || "")).trim();
       const resp = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           ...(sessionId ? { "x-session-id": sessionId } : {}),
         } as any,
-        body: JSON.stringify({ insight }),
+        body: JSON.stringify({ insight, email: emailToUse }),
       });
       const data = await resp.json().catch(() => null);
       if (data?.url) {
@@ -668,6 +676,14 @@ export default function Home() {
                                 placeholder="List any vitamins, minerals, or supplements you currently take"
                                 className="min-h-28"
                               />
+                            ) : current.id === "email" ? (
+                              <Input
+                                id={`${current.id}`}
+                                type="email"
+                                value={answers[current.id] ?? ""}
+                                onChange={(e) => handleText(e.target.value)}
+                                placeholder="you@example.com"
+                              />
                             ) : (
                               <Input
                                 id={`${current.id}`}
@@ -690,6 +706,8 @@ export default function Home() {
                             disabled={
                               current.type === "single"
                                 ? !(answers[current.id])
+                                : current.id === "email"
+                                ? !(/^\S+@\S+\.\S+$/.test(String(answers[current.id] ?? "").trim()))
                                 : !(String(answers[current.id] ?? "").trim().length > 0)
                             }
                           >

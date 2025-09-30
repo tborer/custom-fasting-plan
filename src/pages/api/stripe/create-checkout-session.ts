@@ -19,7 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const siteUrl = getSiteUrl(req);
     const appSessionId = (req.headers["x-session-id"] as string) || "";
-    const { insight } = (req.body || {}) as { insight?: string };
+    const { insight, email } = (req.body || {}) as { insight?: string; email?: string };
+    const emailToUse =
+      typeof email === "string" && /^\S+@\S+\.\S+$/.test(email.trim()) ? email.trim() : undefined;
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -31,6 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ],
       success_url: `${siteUrl}/plan/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/plan/cancel`,
+      customer_email: emailToUse,
       allow_promotion_codes: true,
       // Let Stripe collect the email during checkout
       metadata: {
