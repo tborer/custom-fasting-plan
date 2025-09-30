@@ -98,12 +98,19 @@ export default function Home() {
     setAnswers((prev) => ({ ...prev, [current.id]: value }));
   };
   const goNext = () => {
-    if (step < total - 1) setStep(step + 1);
+    if (step < total - 1) {
+      postLog("assessment_next", { step, nextStep: step + 1, questionId: current.id });
+      setStep(step + 1);
+    }
   };
   const goBack = () => {
-    if (step > 0) setStep(step - 1);
+    if (step > 0) {
+      postLog("assessment_back", { step, prevStep: step - 1, questionId: current.id });
+      setStep(step - 1);
+    }
   };
   const startAssessment = () => {
+    postLog("assessment_start", { step: 0 });
     setShowAssessment(true);
     setStep(0);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
@@ -122,6 +129,22 @@ export default function Home() {
   const [submittingLead, setSubmittingLead] = useState(false);
   const [unlocking, setUnlocking] = useState(false);
   const { toast } = useToast();
+
+  const [cid] = useState(() => Math.random().toString(36).slice(2) + Date.now().toString(36));
+  const postLog = async (event: string, context?: any, level: "info" | "warn" | "error" | "debug" = "info") => {
+    try {
+      await fetch("/api/log", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionId ? { "x-session-id": sessionId } : {}),
+        } as any,
+        body: JSON.stringify({ event, level, context: { cid, ...context } }),
+      });
+    } catch {
+      // ignore logging errors
+    }
+  };
 
   const generateInsight = (ans: Record<string, any>): string => {
     const stress = ans["stress"];
@@ -153,6 +176,7 @@ export default function Home() {
   const handleFinish = async () => {
     const text = generateInsight(answers);
     setInsight(text);
+    await postLog("assessment_finish", { total, hasEmail: !!leadEmail || !!(answers as any)["email"] });
     try {
       if (typeof window !== "undefined") {
         localStorage.setItem("hair_answers", JSON.stringify(answers));
@@ -165,11 +189,14 @@ export default function Home() {
       });
       const data = await resp.json().catch(() => null);
       if (data?.ok && data.sessionId) setSessionId(data.sessionId);
+      await postLog("answers_save_result", { ok: !!data?.ok, sessionId: data?.sessionId || null });
     } catch (e) {
       console.warn("save answers failed", e);
+      await postLog("answers_save_error", { message: e instanceof Error ? e.message : String(e) }, "error");
     }
     setShowAssessment(false);
     setShowInsight(true);
+    await postLog("insight_shown", { hasInsight: !!text });
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -184,6 +211,7 @@ export default function Home() {
       toast({ title: "Please consent to receive your plan preview" });
       return;
     }
+    await postLog("lead_submit_attempt", { email });
     setSubmittingLead(true);
     try {
       const resp = await fetch("/api/lead", {
@@ -196,6 +224,7 @@ export default function Home() {
       });
       const data = await resp.json();
       if (data?.ok) {
+        await postLog("lead_submit_success", { sessionId: data?.sessionId || sessionId });
         if (data.sessionId) setSessionId(data.sessionId);
         if (typeof window !== "undefined") localStorage.setItem("hair_lead", "true");
         toast({ title: "Thanks! We'll email your plan preview." });
@@ -203,6 +232,7 @@ export default function Home() {
         throw new Error(data?.message || "Failed");
       }
     } catch (e) {
+      await postLog("lead_submit_error", { message: e instanceof Error ? e.message : String(e) }, "error");
       toast({ title: "Something went wrong. Please try again." });
     } finally {
       setSubmittingLead(false);
@@ -211,6 +241,7 @@ export default function Home() {
 
   const handleUnlockFullPlan = async () => {
     setUnlocking(true);
+    await postLog("unlock_click", { hasSessionId: !!sessionId });
     try {
       // 1) Create a Checkout Session (preferred; preserves metadata and uses mode-aware credentials)
       const emailToUse = String((leadEmail || (answers as any)["email"] || "")).trim();
@@ -223,8 +254,10 @@ export default function Home() {
         body: JSON.stringify({ insight, email: emailToUse }),
       });
       const data = await resp.json().catch(() => null);
+      await postLog("checkout_create_response", { ok: !!data?.ok, hasUrl: !!data?.url });
       if (data?.url) {
         if (typeof window !== "undefined") {
+          await postLog("checkout_redirect", { to: "checkout_session_url" });
           window.location.href = data.url as string;
           return;
         }
@@ -233,6 +266,7 @@ export default function Home() {
       // 2) Fallback to a configured Stripe Payment Link (mode-aware)
       const plResp = await fetch("/api/stripe/payment-link", { method: "GET" });
       const plData = await plResp.json().catch(() => null);
+      await postLog("payment_link_fetch", { ok: !!plData?.ok, hasUrl: !!plData?.url });
 
       if (plData?.ok && plData?.url) {
         let redirectUrl: string = plData.url as string;
@@ -245,6 +279,7 @@ export default function Home() {
         }
 
         if (typeof window !== "undefined") {
+          await postLog("payment_link_redirect", { to: "payment_link_url" });
           window.location.href = redirectUrl;
           return;
         }
@@ -252,6 +287,7 @@ export default function Home() {
 
       throw new Error(data?.message || "Failed to initiate checkout");
     } catch (e) {
+      await postLog("checkout_error", { message: e instanceof Error ? e.message : String(e) }, "error");
       toast({ title: "Checkout failed", description: "Please try again." });
     } finally {
       setUnlocking(false);

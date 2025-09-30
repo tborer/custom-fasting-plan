@@ -23,6 +23,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const emailToUse =
       typeof email === "string" && /^\S+@\S+\.\S+$/.test(email.trim()) ? email.trim() : undefined;
 
+    const mode = (process.env.STRIPE_MODE || "test").toLowerCase() === "live" ? "live" : "test";
+    console.log("[stripe] checkout_session_create start", JSON.stringify({
+      mode,
+      hasStripe: !!stripe,
+      hasPriceId: !!priceId,
+      appSessionId: !!appSessionId,
+      emailProvided: !!emailToUse,
+      siteUrl
+    }));
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: [
@@ -43,9 +53,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
+    console.log("[stripe] checkout_session_create success", JSON.stringify({
+      id: session.id,
+      hasUrl: !!session.url,
+      mode
+    }));
     return res.status(200).json({ ok: true, id: session.id, url: session.url });
   } catch (err: any) {
-    console.error("[stripe] create-checkout-session error", err);
+    console.error("[stripe] checkout_session_create error", {
+      message: err?.message,
+      type: err?.type,
+      code: err?.code,
+    });
     return res
       .status(500)
       .json({ ok: false, message: err?.message || "Failed to create checkout session" });
