@@ -205,6 +205,27 @@ export default function Home() {
   const handleUnlockFullPlan = async () => {
     setUnlocking(true);
     try {
+      // 1) Try a configured Stripe Payment Link (mode-aware). If present, redirect there.
+      const plResp = await fetch("/api/stripe/payment-link", { method: "GET" });
+      const plData = await plResp.json().catch(() => null);
+
+      if (plData?.ok && plData?.url) {
+        let redirectUrl: string = plData.url as string;
+
+        // Optionally pass a prefilled email if we have one.
+        const email = (leadEmail || "").trim();
+        if (email && /^\S+@\S+\.\S+$/.test(email)) {
+          const sep = redirectUrl.includes("?") ? "&" : "?";
+          redirectUrl = `${redirectUrl}${sep}prefilled_email=${encodeURIComponent(email)}`;
+        }
+
+        if (typeof window !== "undefined") {
+          window.location.href = redirectUrl;
+          return;
+        }
+      }
+
+      // 2) Fallback to creating a Checkout Session (carries metadata to our confirm endpoint).
       const resp = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: {
@@ -217,6 +238,7 @@ export default function Home() {
       if (data?.url) {
         if (typeof window !== "undefined") {
           window.location.href = data.url as string;
+          return;
         }
       } else {
         throw new Error(data?.message || "Failed to initiate checkout");
