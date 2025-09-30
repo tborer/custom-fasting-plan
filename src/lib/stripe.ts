@@ -2,24 +2,37 @@ import Stripe from "stripe";
 import type { NextApiRequest } from "next";
 
 /**
- * Lazily initialize a Stripe client if STRIPE_SECRET_KEY is configured.
- * Returns null in preview/dev environments without config so routes can gracefully fallback.
+ * Lazily initialize a Stripe client based on STRIPE_MODE.
+ * - STRIPE_MODE: "test" | "live" (defaults to "test" if unset)
+ * - Test: uses STRIPE_TEST_SECRET_KEY
+ * - Live: uses STRIPE_SECRET_KEY
+ * Returns null if no appropriate key is configured so routes can gracefully fallback.
  */
 let stripeSingleton: Stripe | null = null;
+let stripeSingletonKey: string | null = null;
 
 export function getStripe(): Stripe | null {
-  const key = process.env.STRIPE_SECRET_KEY;
+  const mode = (process.env.STRIPE_MODE || "test").toLowerCase() === "live" ? "live" : "test";
+  const key =
+    mode === "live"
+      ? process.env.STRIPE_SECRET_KEY
+      : process.env.STRIPE_TEST_SECRET_KEY;
+
   if (!key) {
     if (process.env.NODE_ENV !== "production") {
-      console.warn("[stripe] STRIPE_SECRET_KEY missing - Stripe disabled (using graceful fallback)");
+      console.warn(
+        `[stripe] ${mode === "live" ? "STRIPE_SECRET_KEY" : "STRIPE_TEST_SECRET_KEY"} missing - Stripe disabled (using graceful fallback)`
+      );
     }
     return null;
   }
-  if (!stripeSingleton) {
+
+  if (!stripeSingleton || stripeSingletonKey !== key) {
     // apiVersion is pinned for type-safety. Adjust as needed if Stripe updates.
     stripeSingleton = new Stripe(key, {
       apiVersion: "2024-06-20" as any,
     });
+    stripeSingletonKey = key;
   }
   return stripeSingleton;
 }
@@ -39,13 +52,18 @@ export function getSiteUrl(req?: NextApiRequest): string {
 }
 
 /**
- * Convenience to get the Price ID (required).
+ * Convenience to get the Price ID (required), selected by STRIPE_MODE.
+ * - Test: STRIPE_TEST_PRICE_ID
+ * - Live: STRIPE_PRICE_ID
  */
 export function getPriceId(): string | null {
-  const price = process.env.STRIPE_PRICE_ID;
+  const mode = (process.env.STRIPE_MODE || "test").toLowerCase() === "live" ? "live" : "test";
+  const price = mode === "live" ? process.env.STRIPE_PRICE_ID : process.env.STRIPE_TEST_PRICE_ID;
   if (!price) {
     if (process.env.NODE_ENV !== "production") {
-      console.warn("[stripe] STRIPE_PRICE_ID missing - using graceful fallback");
+      console.warn(
+        `[stripe] ${mode === "live" ? "STRIPE_PRICE_ID" : "STRIPE_TEST_PRICE_ID"} missing - using graceful fallback`
+      );
     }
     return null;
   }
