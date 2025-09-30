@@ -205,7 +205,24 @@ export default function Home() {
   const handleUnlockFullPlan = async () => {
     setUnlocking(true);
     try {
-      // 1) Try a configured Stripe Payment Link (mode-aware). If present, redirect there.
+      // 1) Create a Checkout Session (preferred; preserves metadata and uses mode-aware credentials)
+      const resp = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionId ? { "x-session-id": sessionId } : {}),
+        } as any,
+        body: JSON.stringify({ insight }),
+      });
+      const data = await resp.json().catch(() => null);
+      if (data?.url) {
+        if (typeof window !== "undefined") {
+          window.location.href = data.url as string;
+          return;
+        }
+      }
+
+      // 2) Fallback to a configured Stripe Payment Link (mode-aware)
       const plResp = await fetch("/api/stripe/payment-link", { method: "GET" });
       const plData = await plResp.json().catch(() => null);
 
@@ -225,24 +242,7 @@ export default function Home() {
         }
       }
 
-      // 2) Fallback to creating a Checkout Session (carries metadata to our confirm endpoint).
-      const resp = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(sessionId ? { "x-session-id": sessionId } : {}),
-        } as any,
-        body: JSON.stringify({ insight }),
-      });
-      const data = await resp.json().catch(() => null);
-      if (data?.url) {
-        if (typeof window !== "undefined") {
-          window.location.href = data.url as string;
-          return;
-        }
-      } else {
-        throw new Error(data?.message || "Failed to initiate checkout");
-      }
+      throw new Error(data?.message || "Failed to initiate checkout");
     } catch (e) {
       toast({ title: "Checkout failed", description: "Please try again." });
     } finally {
