@@ -33,6 +33,8 @@ export default function PlanSuccess() {
 
   const confirmEnabled = (process.env.NEXT_PUBLIC_STRIPE_CONFIRM_ENABLED || "false").toLowerCase() === "true";
   const [verifyState, setVerifyState] = useState<"idle" | "verifying" | "verified" | "failed">("idle");
+  const debugBanner = (process.env.NEXT_PUBLIC_DEBUG_BANNER || "false").toLowerCase() === "true";
+  const [lastConfirm, setLastConfirm] = useState<{ status?: number; ok?: boolean; message?: string | null } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -76,6 +78,7 @@ export default function PlanSuccess() {
         await postLog("confirm_start", { stripeSessionId });
         const resp = await fetch(`/api/stripe/confirm?session_id=${encodeURIComponent(stripeSessionId)}`, { method: "GET" });
         const data = await resp.json().catch(() => null);
+        setLastConfirm({ status: resp.status, ok: !!data?.ok, message: data?.message || null });
         if (data?.ok) {
           setVerifyState("verified");
           await postLog("confirm_success", { emailed: !!data?.emailed });
@@ -85,6 +88,7 @@ export default function PlanSuccess() {
         }
       } catch (e: any) {
         setVerifyState("failed");
+        setLastConfirm({ status: undefined, ok: false, message: e?.message || String(e) });
         await postLog("confirm_error", { message: e?.message || String(e) }, "error");
       }
     })();
@@ -217,6 +221,17 @@ export default function PlanSuccess() {
               </p>
             </CardContent>
           </Card>
+        {debugBanner && (
+          <div className="fixed bottom-2 left-2 z-[60] rounded-md border bg-background/95 backdrop-blur px-3 py-2 text-xs text-muted-foreground">
+            <div>Debug: confirmEnabled={String(confirmEnabled)} sessionId={String(!!stripeSessionId)} verify={verifyState}</div>
+            {lastConfirm ? (
+              <div>confirm status={String(lastConfirm.status)} ok={String(!!lastConfirm.ok)} msg={lastConfirm.message || ""}</div>
+            ) : (
+              <div>confirm: not called</div>
+            )}
+            <div>env={process.env.NEXT_PUBLIC_CO_DEV_ENV || "unknown"}</div>
+          </div>
+        )}
         </main>
       </div>
     </>
