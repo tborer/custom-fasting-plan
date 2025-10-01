@@ -12,26 +12,68 @@ export default function PlanSuccess() {
   const [answers, setAnswers] = useState<Answers | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [stripeSessionId, setStripeSessionId] = useState<string | null>(null);
+
+  const [cid] = useState(() => Math.random().toString(36).slice(2) + Date.now().toString(36));
+  const postLog = async (
+    event: string,
+    context?: any,
+    level: "info" | "warn" | "error" | "debug" = "info"
+  ) => {
+    try {
+      await fetch("/api/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" } as any,
+        body: JSON.stringify({ event, level, context: { cid, stripeSessionId, ...context } }),
+      });
+    } catch {
+      // ignore logging errors
+    }
+  };
 
   useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const storedAnswers = window.localStorage.getItem("hair_answers");
-        const storedInsight = window.localStorage.getItem("hair_insight");
-        const parsedAnswers = storedAnswers ? (JSON.parse(storedAnswers) as Answers) : null;
-        setAnswers(parsedAnswers);
-        setInsight(storedInsight || null);
-        const e = parsedAnswers?.email;
-        if (typeof e === "string" && /^\S+@\S+\.\S+$/.test(e)) {
-          setEmail(e);
+    (async () => {
+      try {
+        if (typeof window !== "undefined") {
+          const params = new URLSearchParams(window.location.search);
+          const sid = params.get("session_id");
+          if (sid) setStripeSessionId(sid);
+
+          const storedAnswers = window.localStorage.getItem("hair_answers");
+          const storedInsight = window.localStorage.getItem("hair_insight");
+          const parsedAnswers = storedAnswers ? (JSON.parse(storedAnswers) as Answers) : null;
+          setAnswers(parsedAnswers);
+          setInsight(storedInsight || null);
+          const e = parsedAnswers?.email;
+          if (typeof e === "string" && /^\S+@\S+\.\S+$/.test(e)) {
+            setEmail(e);
+          }
+
+          await postLog("plan_success_load", {
+            hasStoredAnswers: !!parsedAnswers,
+            hasStoredInsight: !!storedInsight,
+            hasEmail: !!e,
+            stripeSessionIdPresent: !!sid,
+          });
         }
+      } catch {
+        await postLog("plan_success_load_error");
+      } finally {
+        setReady(true);
       }
-    } catch {
-      // ignore parse errors; we'll still show default plan below
-    } finally {
-      setReady(true);
-    }
+    })();
   }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    (async () => {
+      await postLog("plan_displayed", {
+        hasInsight: !!insight,
+        hasAnswers: !!answers,
+        hasEmail: !!email,
+      });
+    })();
+  }, [ready, insight, answers, email]);
 
   const title = "Plan unlocked | Your comprehensive hair plan";
   const description = "Payment successful. Your complete, personalized hair plan is ready.";
