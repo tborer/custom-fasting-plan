@@ -33,11 +33,12 @@ export default function PlanSuccess() {
 
   const confirmEnabled = (process.env.NEXT_PUBLIC_STRIPE_CONFIRM_ENABLED || "false").toLowerCase() === "true";
   const [verifyState, setVerifyState] = useState<"idle" | "verifying" | "verified" | "failed">("idle");
-  const debugBanner = (process.env.NEXT_PUBLIC_DEBUG_BANNER || "false").toLowerCase() === "true";
+  const debugBanner = ["true", "1", "yes", "on"].includes(String(process.env.NEXT_PUBLIC_DEBUG_BANNER ?? "").trim().toLowerCase());
   const [lastConfirm, setLastConfirm] = useState<{ status?: number; ok?: boolean; message?: string | null } | null>(null);
   const [cfg, setCfg] = useState<{ serverConfirmEnabled: boolean; clientConfirmEnabled: boolean; serverHasStripeKey: boolean; stripeMode: string } | null>(null);
   const [configLoaded, setConfigLoaded] = useState<boolean>(false);
   const [runtimeConfirmEnabled, setRuntimeConfirmEnabled] = useState<boolean>(false);
+  const [configError, setConfigError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -76,6 +77,7 @@ export default function PlanSuccess() {
   useEffect(() => {
     (async () => {
       try {
+        setConfigError(null);
         const resp = await fetch("/api/config");
         const data = await resp.json().catch(() => null);
         if (data?.ok) {
@@ -90,9 +92,11 @@ export default function PlanSuccess() {
           setRuntimeConfirmEnabled(computed);
           await postLog("config_loaded", { ...nextCfg, runtimeConfirmEnabled: computed });
         } else {
+          setConfigError(data?.message || "invalid");
           await postLog("config_load_error", { message: data?.message || "invalid" }, "warn");
         }
       } catch (e: any) {
+        setConfigError(e?.message || String(e));
         await postLog("config_load_error", { message: e?.message || String(e) }, "error");
       } finally {
         setConfigLoaded(true);
@@ -262,6 +266,8 @@ export default function PlanSuccess() {
               <div>confirm: not called</div>
             )}
             <div>env={process.env.NEXT_PUBLIC_CO_DEV_ENV || "unknown"}</div>
+            <div>storage: hasAnswers={String(!!answers)} hasInsight={String(!!insight)} hasEmail={String(!!email)}</div>
+            {configError && (<div className="text-destructive">config error: {configError}</div>)}
             {cfg && (
               <div>config: mode={cfg.stripeMode} serverConfirm={String(cfg.serverConfirmEnabled)} clientConfirm={String(cfg.clientConfirmEnabled)} serverHasKey={String(cfg.serverHasStripeKey)}</div>
             )}
