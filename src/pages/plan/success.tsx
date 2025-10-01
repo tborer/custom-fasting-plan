@@ -35,6 +35,9 @@ export default function PlanSuccess() {
   const [verifyState, setVerifyState] = useState<"idle" | "verifying" | "verified" | "failed">("idle");
   const debugBanner = (process.env.NEXT_PUBLIC_DEBUG_BANNER || "false").toLowerCase() === "true";
   const [lastConfirm, setLastConfirm] = useState<{ status?: number; ok?: boolean; message?: string | null } | null>(null);
+  const [cfg, setCfg] = useState<{ serverConfirmEnabled: boolean; clientConfirmEnabled: boolean; serverHasStripeKey: boolean; stripeMode: string } | null>(null);
+  const [configLoaded, setConfigLoaded] = useState<boolean>(false);
+  const [runtimeConfirmEnabled, setRuntimeConfirmEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -69,8 +72,37 @@ export default function PlanSuccess() {
     })();
   }, []);
 
+  // Fetch runtime config to avoid build-time NEXT_PUBLIC caching issues
   useEffect(() => {
-    if (!confirmEnabled) return;
+    (async () => {
+      try {
+        const resp = await fetch("/api/config");
+        const data = await resp.json().catch(() => null);
+        if (data?.ok) {
+          const nextCfg = {
+            serverConfirmEnabled: !!data.serverConfirmEnabled,
+            clientConfirmEnabled: !!data.clientConfirmEnabled,
+            serverHasStripeKey: !!data.serverHasStripeKey,
+            stripeMode: data.stripeMode || "test",
+          };
+          setCfg(nextCfg);
+          const computed = !!nextCfg.serverConfirmEnabled && !!nextCfg.clientConfirmEnabled && !!nextCfg.serverHasStripeKey;
+          setRuntimeConfirmEnabled(computed);
+          await postLog("config_loaded", { ...nextCfg, runtimeConfirmEnabled: computed });
+        } else {
+          await postLog("config_load_error", { message: data?.message || "invalid" }, "warn");
+        }
+      } catch (e: any) {
+        await postLog("config_load_error", { message: e?.message || String(e) }, "error");
+      } finally {
+        setConfigLoaded(true);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!configLoaded) return;
+    if (!runtimeConfirmEnabled) return;
     if (!stripeSessionId) return;
     (async () => {
       try {
@@ -92,7 +124,7 @@ export default function PlanSuccess() {
         await postLog("confirm_error", { message: e?.message || String(e) }, "error");
       }
     })();
-  }, [confirmEnabled, stripeSessionId]);
+  }, [configLoaded, runtimeConfirmEnabled, stripeSessionId]);
 
   useEffect(() => {
     if (!ready) return;
@@ -133,7 +165,7 @@ export default function PlanSuccess() {
                   {`Signed in as ${email}.`}
                 </p>
               )}
-              {confirmEnabled && (
+              {runtimeConfirmEnabled && (
                 <p className="text-xs text-muted-foreground">
                   {verifyState === "verifying"
                     ? "Verifying payment…"
@@ -223,13 +255,16 @@ export default function PlanSuccess() {
           </Card>
         {debugBanner && (
           <div className="fixed bottom-2 left-2 z-[60] rounded-md border bg-background/95 backdrop-blur px-3 py-2 text-xs text-muted-foreground">
-            <div>Debug: confirmEnabled={String(confirmEnabled)} sessionId={String(!!stripeSessionId)} verify={verifyState}</div>
+            <div>Debug: buildConfirm={String(confirmEnabled)} runtimeConfirm={String(runtimeConfirmEnabled)} configLoaded={String(configLoaded)} sessionId={String(!!stripeSessionId)} verify={verifyState}</div>
             {lastConfirm ? (
               <div>confirm status={String(lastConfirm.status)} ok={String(!!lastConfirm.ok)} msg={lastConfirm.message || ""}</div>
             ) : (
               <div>confirm: not called</div>
             )}
             <div>env={process.env.NEXT_PUBLIC_CO_DEV_ENV || "unknown"}</div>
+            {cfg && (
+              <div>config: mode={cfg.stripeMode} serverConfirm={String(cfg.serverConfirmEnabled)} clientConfirm={String(cfg.clientConfirmEnabled)} serverHasKey={String(cfg.serverHasStripeKey)}</div>
+            )}
           </div>
         )}
         </main>
