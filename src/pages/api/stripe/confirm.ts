@@ -71,16 +71,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ ok: false, message: "Confirm disabled" });
   }
 
+  const stripeMode = (process.env.STRIPE_MODE || "test").toLowerCase() === "live" ? "live" : "test";
+  const hasKey = stripeMode === "live" ? !!process.env.STRIPE_SECRET_KEY : !!process.env.STRIPE_TEST_SECRET_KEY;
+  console.log("[stripe/confirm] config", JSON.stringify({ enabled, stripeMode, hasKey }));
+
   const stripe = getStripe();
   if (!stripe) {
-    console.warn("[stripe/confirm] no_stripe_config");
+    console.warn("[stripe/confirm] no_stripe_config", JSON.stringify({ stripeMode, hasKey }));
     return res.status(400).json({ ok: false, message: "Stripe is not configured" });
   }
 
   const sessionId =
     (req.method === "GET" ? (req.query.session_id as string) : (req.body?.session_id as string)) || "";
 
-  console.log("[stripe/confirm] start", JSON.stringify({ hasSessionId: !!sessionId }));
+  console.log("[stripe/confirm] start", JSON.stringify({ hasSessionId: !!sessionId, stripeMode }));
   if (!sessionId) {
     return res.status(400).json({ ok: false, message: "Missing session_id" });
   }
@@ -144,6 +148,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       message: err?.message,
       type: err?.type,
       code: err?.code,
+      stripeMode: (process.env.STRIPE_MODE || "test").toLowerCase() === "live" ? "live" : "test",
     });
     return res.status(500).json({ ok: false, message: err?.message || "Failed to confirm session" });
   }
