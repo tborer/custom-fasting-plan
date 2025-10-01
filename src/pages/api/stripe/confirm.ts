@@ -65,14 +65,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ ok: false, message: "Method not allowed" });
   }
 
+  const enabled = (process.env.STRIPE_CONFIRM_ENABLED || "false").toLowerCase() === "true";
+  if (!enabled) {
+    console.log("[stripe/confirm] disabled");
+    return res.status(200).json({ ok: false, message: "Confirm disabled" });
+  }
+
   const stripe = getStripe();
   if (!stripe) {
+    console.warn("[stripe/confirm] no_stripe_config");
     return res.status(400).json({ ok: false, message: "Stripe is not configured" });
   }
 
   const sessionId =
     (req.method === "GET" ? (req.query.session_id as string) : (req.body?.session_id as string)) || "";
 
+  console.log("[stripe/confirm] start", JSON.stringify({ hasSessionId: !!sessionId }));
   if (!sessionId) {
     return res.status(400).json({ ok: false, message: "Missing session_id" });
   }
@@ -120,6 +128,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       sent = result.sent;
     }
 
+    console.log("[stripe/confirm] success", JSON.stringify({
+      stripeSessionId: sessionId,
+      appSessionId,
+      emailed: sent
+    }));
     return res.status(200).json({
       ok: true,
       emailed: sent,
@@ -127,7 +140,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: email || null,
     });
   } catch (err: any) {
-    console.error("[stripe] confirm error", err);
+    console.error("[stripe/confirm] error", {
+      message: err?.message,
+      type: err?.type,
+      code: err?.code,
+    });
     return res.status(500).json({ ok: false, message: err?.message || "Failed to confirm session" });
   }
 }

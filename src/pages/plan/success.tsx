@@ -31,6 +31,9 @@ export default function PlanSuccess() {
     }
   };
 
+  const confirmEnabled = (process.env.NEXT_PUBLIC_STRIPE_CONFIRM_ENABLED || "false").toLowerCase() === "true";
+  const [verifyState, setVerifyState] = useState<"idle" | "verifying" | "verified" | "failed">("idle");
+
   useEffect(() => {
     (async () => {
       try {
@@ -63,6 +66,29 @@ export default function PlanSuccess() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (!confirmEnabled) return;
+    if (!stripeSessionId) return;
+    (async () => {
+      try {
+        setVerifyState("verifying");
+        await postLog("confirm_start", { stripeSessionId });
+        const resp = await fetch(`/api/stripe/confirm?session_id=${encodeURIComponent(stripeSessionId)}`, { method: "GET" });
+        const data = await resp.json().catch(() => null);
+        if (data?.ok) {
+          setVerifyState("verified");
+          await postLog("confirm_success", { emailed: !!data?.emailed });
+        } else {
+          setVerifyState("failed");
+          await postLog("confirm_error", { message: data?.message || "unknown" }, "error");
+        }
+      } catch (e: any) {
+        setVerifyState("failed");
+        await postLog("confirm_error", { message: e?.message || String(e) }, "error");
+      }
+    })();
+  }, [confirmEnabled, stripeSessionId]);
 
   useEffect(() => {
     if (!ready) return;
@@ -101,6 +127,17 @@ export default function PlanSuccess() {
               {email && (
                 <p className="text-sm text-muted-foreground">
                   {`Signed in as ${email}.`}
+                </p>
+              )}
+              {confirmEnabled && (
+                <p className="text-xs text-muted-foreground">
+                  {verifyState === "verifying"
+                    ? "Verifying payment…"
+                    : verifyState === "verified"
+                    ? "Payment verified."
+                    : verifyState === "failed"
+                    ? "We couldn’t verify your payment. Please try again or contact support."
+                    : null}
                 </p>
               )}
               <div className="flex flex-wrap gap-3">
