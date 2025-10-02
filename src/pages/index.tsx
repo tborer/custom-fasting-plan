@@ -407,7 +407,7 @@ export default function Home() {
               {
                 title: "Keeping your hair",
                 desc: "Reduce shedding triggers and maintain a scalp environment where hair thrives.",
-                img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=60",
+                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=60",
               },
               {
                 title: "Fighting thinning",
@@ -431,51 +431,22 @@ export default function Home() {
               },
             ].map((item) => (
               <Card key={item.title} className="overflow-hidden">
-                {item.title === "Keeping your hair" ? (
-                  <div className="relative h-40 w-full grid grid-cols-2 gap-px bg-border">
-                    <div className="relative">
-                      <Image
-                        src="https://images.unsplash.com/photo-1600962815726-c96a61a767a2?auto=format&fit=crop&w=450&q=60"
-                        alt="Thinning scalp close-up (before)"
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 50vw, 16vw"
-                      />
-                      <span className="absolute left-2 top-2 rounded bg-background/80 px-1.5 py-0.5 text-[10px] border">
-                        Before
-                      </span>
+                <div className="relative h-40 w-full">
+                  <Image
+                    src={item.img}
+                    alt={item.title === "Keeping your hair" ? "Man running hand through thick hair" : item.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                  {item.title === "High‑performing topicals" && (
+                    <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
+                      <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Finasteride</span>
+                      <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Minoxidil</span>
+                      <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Peptides</span>
                     </div>
-                    <div className="relative">
-                      <Image
-                        src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=450&q=60"
-                        alt="Fuller scalp close-up (after)"
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 50vw, 16vw"
-                      />
-                      <span className="absolute left-2 top-2 rounded bg-background/80 px-1.5 py-0.5 text-[10px] border">
-                        After
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative h-40 w-full">
-                    <Image
-                      src={item.img}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                    {item.title === "High‑performing topicals" && (
-                      <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
-                        <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Finasteride</span>
-                        <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Minoxidil</span>
-                        <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Peptides</span>
-                      </div>
-                    )}
-                  </div>
-                )}
+                  )}
+                </div>
                 <CardHeader className="space-y-2">
                   <CardTitle className="text-lg text-primary">{item.title}</CardTitle>
                   <CardDescription className="text-sm">{item.desc}</CardDescription>
