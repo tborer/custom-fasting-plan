@@ -296,9 +296,16 @@ export default function PlanSuccess() {
                 </ul>
               </section>
 
-              <p className="text-xs text-muted-foreground">
-                This plan is educational and not medical advice. Consult your clinician before making changes.
-              </p>
+              <div className="text-xs text-muted-foreground rounded-md border bg-accent/20 p-3">
+                <p className="font-medium text-foreground">Medical disclaimer</p>
+                <p className="mt-1">
+                  The information provided in this plan is for educational purposes only and is not a substitute for professional medical advice,
+                  diagnosis, or treatment. Always seek the guidance of your physician or other qualified health provider with any questions you may have
+                  regarding a medical condition, supplements, or medications (including finasteride, minoxidil, or peptide therapies). Do not disregard
+                  professional medical advice or delay seeking it because of something you have read here. If you experience any adverse effects, stop
+                  and consult a healthcare professional.
+                </p>
+              </div>
             </CardContent>
           </Card>
         {debugBanner && (

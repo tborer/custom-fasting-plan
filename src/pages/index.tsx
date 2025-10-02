@@ -402,7 +402,7 @@ export default function Home() {
               {
                 title: "Regrowing hair",
                 desc: "Stimulate follicles with targeted nutraceuticals and growth‑supportive routines.",
-                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=60",
+                img: "https://images.unsplash.com/photo-1605460375648-278bcbd579a6?auto=format&fit=crop&w=900&q=60",
               },
               {
                 title: "Keeping your hair",
@@ -427,19 +427,55 @@ export default function Home() {
               {
                 title: "High‑performing topicals",
                 desc: "Combine proven topicals for a comprehensive, high‑yield plan.",
-                img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=900&q=60",
+                img: "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&w=900&q=60",
               },
             ].map((item) => (
               <Card key={item.title} className="overflow-hidden">
-                <div className="relative h-40 w-full">
-                  <Image
-                    src={item.img}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
+                {item.title === "Keeping your hair" ? (
+                  <div className="relative h-40 w-full grid grid-cols-2 gap-px bg-border">
+                    <div className="relative">
+                      <Image
+                        src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=450&q=60"
+                        alt="Thinning scalp close-up (before)"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 16vw"
+                      />
+                      <span className="absolute left-2 top-2 rounded bg-background/80 px-1.5 py-0.5 text-[10px] border">
+                        Before
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <Image
+                        src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=450&q=60"
+                        alt="Fuller scalp close-up (after)"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 16vw"
+                      />
+                      <span className="absolute left-2 top-2 rounded bg-background/80 px-1.5 py-0.5 text-[10px] border">
+                        After
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative h-40 w-full">
+                    <Image
+                      src={item.img}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    {item.title === "High‑performing topicals" && (
+                      <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
+                        <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Finasteride</span>
+                        <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Minoxidil</span>
+                        <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Peptides</span>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <CardHeader className="space-y-2">
                   <CardTitle className="text-lg text-primary">{item.title}</CardTitle>
                   <CardDescription className="text-sm">{item.desc}</CardDescription>
@@ -622,7 +658,7 @@ export default function Home() {
                   and topical pairings. Pay securely with Stripe.
                 </p>
                 <div className="mt-6">
-                  <Button className="px-6" onClick={startAssessment}>View pricing after insight</Button>
+                  <Button className="px-6" onClick={startAssessment}>Unlock your full plan</Button>
                 </div>
               </div>
             </CardContent>
