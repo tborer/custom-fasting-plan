@@ -402,7 +402,7 @@ export default function Home() {
               {
                 title: "Regrowing hair",
                 desc: "Stimulate follicles with targeted nutraceuticals and growth‑supportive routines.",
-                img: "https://images.unsplash.com/photo-1605460375648-278bcbd579a6?auto=format&fit=crop&w=900&q=60",
+                img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=60",
               },
               {
                 title: "Keeping your hair",
@@ -435,7 +435,7 @@ export default function Home() {
                   <div className="relative h-40 w-full grid grid-cols-2 gap-px bg-border">
                     <div className="relative">
                       <Image
-                        src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=450&q=60"
+                        src="https://images.unsplash.com/photo-1600962815726-c96a61a767a2?auto=format&fit=crop&w=450&q=60"
                         alt="Thinning scalp close-up (before)"
                         fill
                         className="object-cover"
@@ -447,7 +447,7 @@ export default function Home() {
                     </div>
                     <div className="relative">
                       <Image
-                        src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=450&q=60"
+                        src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=450&q=60"
                         alt="Fuller scalp close-up (after)"
                         fill
                         className="object-cover"
