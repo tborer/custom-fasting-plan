@@ -823,6 +823,15 @@ export default function Home() {
                             <li>• Immediate access after secure Stripe checkout</li>
                             <li>• We’ll email your complete plan and a link to view it anytime</li>
                           </ul>
+
+                          <div className="flex flex-wrap items-baseline gap-2">
+                            <span className="inline-flex items-center rounded bg-accent/40 text-accent-foreground px-2 py-0.5 text-[10px] border">
+                              Limited time
+                            </span>
+                            <span className="text-muted-foreground line-through">$79.99</span>
+                            <span className="text-2xl font-semibold text-primary">$19.99</span>
+                          </div>
+
                           <div className="flex items-center gap-3">
                             <Button onClick={handleUnlockFullPlan} disabled={unlocking} className="px-6">
                               {unlocking ? "Redirecting..." : "Unlock Full Plan"}
