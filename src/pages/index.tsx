@@ -400,7 +400,7 @@ export default function Home() {
               {
                 title: "Regrowing hair",
                 desc: "Stimulate follicles with targeted nutraceuticals and growth‑supportive routines.",
-                img: "https://images.unsplash.com/photo-1498601761256-5df5291a7525?auto=format&fit=crop&w=900&q=60",
+                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=60",
               },
               {
                 title: "Keeping your hair",
