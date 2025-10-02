@@ -622,7 +622,7 @@ export default function Home() {
                   and topical pairings. Pay securely with Stripe.
                 </p>
                 <div className="mt-6">
-                  <Button className="px-6">View pricing after insight</Button>
+                  <Button className="px-6" onClick={startAssessment}>View pricing after insight</Button>
                 </div>
               </div>
             </CardContent>
