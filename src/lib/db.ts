@@ -29,6 +29,17 @@ async function ensureSchema() {
 
     await sql`CREATE INDEX IF NOT EXISTS answers_session_idx ON answers (session_id);`;
 
+    await sql`CREATE TABLE IF NOT EXISTS plan_logs (
+      id BIGSERIAL PRIMARY KEY,
+      session_id TEXT,
+      email TEXT,
+      plan_html TEXT NOT NULL,
+      source TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );`;
+
+    await sql`CREATE INDEX IF NOT EXISTS plan_logs_session_idx ON plan_logs (session_id);`;
+
     schemaEnsured = true;
   } catch (err) {
     // If DB is not configured yet, fail gracefully. We'll no-op in save functions.
@@ -85,6 +96,28 @@ export async function saveLead(params: {
     return { sessionId: sid, saved: true };
   } catch (err) {
     console.warn("[db] saveLead fallback (no DB)", err);
+    return { sessionId: sid, saved: false };
+  }
+}
+
+export async function savePlanLog(params: {
+  email: string;
+  planHtml: string;
+  sessionId?: string;
+  source?: string;
+}): Promise<{ sessionId: string; saved: boolean }> {
+  const { email, planHtml, sessionId, source } = params;
+  const sid = sessionId || randomUUID();
+
+  try {
+    await ensureSchema();
+    await sql`
+      INSERT INTO plan_logs (session_id, email, plan_html, source)
+      VALUES (${sid}, ${email}, ${planHtml}, ${source ?? null})
+    `;
+    return { sessionId: sid, saved: true };
+  } catch (err) {
+    console.warn("[db] savePlanLog fallback (no DB)", err);
     return { sessionId: sid, saved: false };
   }
 }

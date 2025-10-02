@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Header from "@/components/Header";
+import HelpLink from "@/components/HelpLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -13,6 +14,7 @@ export default function PlanSuccess() {
   const [email, setEmail] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [stripeSessionId, setStripeSessionId] = useState<string | null>(null);
+  const [planLogged, setPlanLogged] = useState(false);
 
   const [cid] = useState(() => Math.random().toString(36).slice(2) + Date.now().toString(36));
   const postLog = async (
@@ -140,6 +142,47 @@ export default function PlanSuccess() {
       });
     })();
   }, [ready, insight, answers, email]);
+
+  // Ensure the unlocked full plan is logged with email + details (for regenerate/resend later)
+  useEffect(() => {
+    if (!ready) return;
+    if (planLogged) return;
+    if (!email || !insight) return;
+
+    // If server-side confirm ran and succeeded, assume it logged already
+    if (lastConfirm?.ok) {
+      setPlanLogged(true);
+      return;
+    }
+
+    (async () => {
+      try {
+        await postLog("plan_log_attempt", { hasEmail: !!email, hasInsight: !!insight });
+        const resp = await fetch("/api/plan/log", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(stripeSessionId ? { "x-session-id": stripeSessionId } : {}),
+          } as any,
+          body: JSON.stringify({
+            email,
+            sessionId: stripeSessionId || undefined,
+            insight,
+            source: "success_page",
+          }),
+        });
+        const data = await resp.json().catch(() => null);
+        if (resp.ok && data?.ok) {
+          setPlanLogged(true);
+          await postLog("plan_log_success", { ok: true });
+        } else {
+          await postLog("plan_log_error", { message: data?.message || "Failed" }, "error");
+        }
+      } catch (e: any) {
+        await postLog("plan_log_error", { message: e?.message || String(e) }, "error");
+      }
+    })();
+  }, [ready, email, insight, planLogged, lastConfirm, stripeSessionId]);
 
   const title = "Plan unlocked | Your comprehensive hair plan";
   const description = "Payment successful. Your complete, personalized hair plan is ready.";
@@ -273,6 +316,23 @@ export default function PlanSuccess() {
             )}
           </div>
         )}
+        {/* Page footer with Help link */}
+        <footer className="border-t">
+          <div className="mx-auto max-w-3xl w-full px-4 py-10 text-sm text-muted-foreground">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <p>© {new Date().getFullYear()} Hair Plan. All rights reserved.</p>
+              <div className="flex gap-4">
+                <a href="#" className="hover:text-primary">Privacy</a>
+                <a href="#" className="hover:text-primary">Terms</a>
+                <HelpLink
+                  page="Plan Success"
+                  sessionId={stripeSessionId ?? undefined}
+                  email={email ?? undefined}
+                />
+              </div>
+            </div>
+          </div>
+        </footer>
         </main>
       </div>
     </>

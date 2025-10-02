@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Header from "@/components/Header";
+import HelpLink from "@/components/HelpLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -844,6 +845,11 @@ export default function Home() {
                 <a href="#" className="hover:text-primary">Privacy</a>
                 <a href="#" className="hover:text-primary">Terms</a>
                 <a href="#" className="hover:text-primary">Contact</a>
+                <HelpLink
+                  page="Home"
+                  sessionId={sessionId ?? undefined}
+                  email={(leadEmail || (answers as any)?.email) || undefined}
+                />
               </div>
             </div>
           </div>

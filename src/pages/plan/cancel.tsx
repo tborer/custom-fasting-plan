@@ -2,6 +2,7 @@ import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Header from "@/components/Header";
+import HelpLink from "@/components/HelpLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -40,6 +41,18 @@ export default function PlanCancel() {
             </CardContent>
           </Card>
         </main>
+        <footer className="border-t">
+          <div className="mx-auto max-w-3xl w-full px-4 py-10 text-sm text-muted-foreground">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <p>© {new Date().getFullYear()} Hair Plan. All rights reserved.</p>
+              <div className="flex gap-4">
+                <a href="#" className="hover:text-primary">Privacy</a>
+                <a href="#" className="hover:text-primary">Terms</a>
+                <HelpLink page="Plan Cancel" />
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );
