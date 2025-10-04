@@ -29,12 +29,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
     const handleRouteChange = (url: string) => {
       // @ts-ignore - gtag injected by our inline script
-      window.gtag?.('config', GA_ID, { page_path: url });
+      window.gtag?.('config', GA_ID, { page_path: url, transport_type: 'image' });
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);
-    // Initial page load
-    handleRouteChange(window.location.pathname + window.location.search);
+    // Initial page view is sent once GA script loads (see onLoad on ga4-script)
 
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
@@ -55,6 +54,10 @@ export default function App({ Component, pageProps }: AppProps) {
             id="ga4-script"
             strategy="afterInteractive"
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+            onLoad={() => {
+              // @ts-ignore
+              window.gtag?.('config', GA_ID, { page_path: window.location.pathname + window.location.search, transport_type: 'image' });
+            }}
           />
           <Script
             id="ga4-inline"
@@ -65,7 +68,7 @@ export default function App({ Component, pageProps }: AppProps) {
               function gtag(){dataLayer.push(arguments);}
               window.gtag = window.gtag || gtag;
               gtag('js', new Date());
-              gtag('config', '${GA_ID}');
+              gtag('config', '${GA_ID}', { send_page_view: false, transport_type: 'image' });
             `}
           </Script>
         </>
