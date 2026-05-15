@@ -17,7 +17,7 @@ const Logo: React.FC<LogoProps> = ({ size = 40, withText = true, className, ...p
       role="img"
       {...props}
     >
-      <title id="logoTitle">Custom Hair Plan</title>
+      <title id="logoTitle">Custom Fasting Plan</title>
 
       <defs>
         <path id="textcircle" d="M32 2a30 30 0 1 1 0 60a30 30 0 1 1 0-60Z" />
@@ -26,24 +26,35 @@ const Logo: React.FC<LogoProps> = ({ size = 40, withText = true, className, ...p
       {/* Outer guide circle */}
       <circle cx="32" cy="32" r="31" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.25" />
 
-      {/* Stylized face and hair outline */}
-      <g stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        {/* Hair swoops */}
-        <path d="M20 25c2-7 11-12 18-10 4 1 7 4 8 8" />
-        <path d="M21 27c4-5 11-7 17-5" />
-        {/* Face outline */}
-        <path d="M24 30c0 9 4 16 8 16s8-7 8-16" />
-        {/* Jaw/chin accent */}
-        <path d="M26 44c2 3 12 3 14 0" />
-        {/* Ears hints */}
-        <path d="M22 33c-1 2-1 4 1 5" />
-        <path d="M42 33c1 2 1 4-1 5" />
-      </g>
+      {/* Clock face */}
+      <circle cx="32" cy="32" r="13" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.7" />
+
+      {/* Clock center dot */}
+      <circle cx="32" cy="32" r="1.5" fill="currentColor" />
+
+      {/* Hour hand pointing up (12 o'clock — start of fast) */}
+      <line x1="32" y1="32" x2="32" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+
+      {/* Minute/progress arc suggesting time passing */}
+      <path
+        d="M32 19 A13 13 0 0 1 45 32"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.5"
+      />
+
+      {/* Tick marks */}
+      <line x1="32" y1="19.5" x2="32" y2="21" stroke="currentColor" strokeWidth="1.2" />
+      <line x1="44.5" y1="32" x2="43" y2="32" stroke="currentColor" strokeWidth="1.2" />
+      <line x1="32" y1="44.5" x2="32" y2="43" stroke="currentColor" strokeWidth="1.2" />
+      <line x1="19.5" y1="32" x2="21" y2="32" stroke="currentColor" strokeWidth="1.2" />
 
       {withText && (
-        <text fill="currentColor" fontSize="6" letterSpacing="1.5" fontWeight="600">
+        <text fill="currentColor" fontSize="5.6" letterSpacing="1.4" fontWeight="600">
           <textPath href="#textcircle" startOffset="0%">
-            CUSTOM HAIR PLAN • CUSTOM HAIR PLAN •
+            CUSTOM FASTING PLAN • CUSTOM FASTING PLAN •
           </textPath>
         </text>
       )}

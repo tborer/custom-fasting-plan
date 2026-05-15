@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import nodemailer from "nodemailer";
 
 const resendKey = process.env.RESEND_API_KEY || "";
-const resendFrom = process.env.RESEND_FROM || "Hair Plan <noreply@yourdomain.com>";
+const resendFrom = process.env.RESEND_FROM || "Fasting Plan <noreply@yourdomain.com>";
 
 // SMTP configuration (via env)
 const smtpHost = process.env.SMTP_HOST || "";
@@ -136,22 +136,22 @@ export async function sendPlanPreview(params: {
 }): Promise<{ sent: boolean; id?: string | null }> {
   const { to, insight, sessionId } = params;
 
-  const subject = "Your Hair Plan Preview";
+  const subject = "Your Personalized Fasting Insight";
   const site = getSiteUrl();
   const manageUrl = sessionId ? `${site}/?session=${encodeURIComponent(sessionId)}` : site;
 
   const html = `
   <div style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #0b0b0c; padding: 24px;">
-    <h1 style="margin:0 0 12px; font-size: 20px;">Your personalized insight</h1>
-    <p style="margin: 0 0 12px;">Here is your free insight based on your answers:</p>
-    ${insight ? `<blockquote style="margin: 0 0 16px; padding: 12px 16px; border-left: 3px solid #111; background: #f6f6f7;">${insight}</blockquote>` : ""}
+    <h1 style="margin:0 0 12px; font-size: 20px;">Your personalized fasting insight</h1>
+    <p style="margin: 0 0 12px;">Here is your free insight based on your assessment answers:</p>
+    ${insight ? `<blockquote style="margin: 0 0 16px; padding: 12px 16px; border-left: 3px solid #56a156; background: #f0f7f0;">${insight}</blockquote>` : ""}
     <p style="margin: 0 0 16px;">
-      Ready for the complete, personalized plan (dosages, timing, stack, and topical pairings)?
+      Ready for your complete intermittent fasting plan — including your custom fasting window, fat-burning strategy, first-meal protocol, and weekly rhythm?
     </p>
 
     <p style="margin: 16px 0;">
-      <a href="${manageUrl}" style="display: inline-block; text-decoration: none; padding: 10px 16px; background: #111; color: #fff; border-radius: 6px;">
-        View your plan preview
+      <a href="${manageUrl}" style="display: inline-block; text-decoration: none; padding: 10px 16px; background: #3d8c3d; color: #fff; border-radius: 6px;">
+        View your fasting plan preview
       </a>
     </p>
 
@@ -183,8 +183,8 @@ export async function sendFullPlan(params: {
 
   const wrappedHtml = `
   <div style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #0b0b0c; padding: 24px;">
-    <h1 style="margin:0 0 12px; font-size: 20px;">Your Complete Hair Plan</h1>
-    <p style="margin: 0 0 16px;">Below is your personalized plan. We’ve also saved it so you can view it anytime:</p>
+    <h1 style="margin:0 0 12px; font-size: 20px;">Your Complete Intermittent Fasting Plan</h1>
+    <p style="margin: 0 0 16px;">Below is your personalized fasting plan. We’ve also saved it so you can view it anytime:</p>
     <p style="margin: 8px 0 16px;">
       <a href="${portalUrl}" style="display: inline-block; text-decoration: none; padding: 10px 16px; background: #111; color: #fff; border-radius: 6px;">
         View your plan online
@@ -202,7 +202,7 @@ export async function sendFullPlan(params: {
   try {
     const result = await sendEmailRaw({
       to,
-      subject: subject || "Your Complete Hair Plan",
+      subject: subject || "Your Complete Intermittent Fasting Plan",
       html: wrappedHtml,
     });
     return { sent: result.sent, id: result.id ?? null };

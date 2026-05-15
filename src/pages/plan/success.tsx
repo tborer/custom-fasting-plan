@@ -51,8 +51,8 @@ export default function PlanSuccess() {
           const sid = params.get("session_id");
           if (sid) setStripeSessionId(sid);
 
-          const storedAnswers = window.localStorage.getItem("hair_answers");
-          const storedInsight = window.localStorage.getItem("hair_insight");
+          const storedAnswers = window.localStorage.getItem("fasting_answers");
+          const storedInsight = window.localStorage.getItem("fasting_insight");
           const parsedAnswers = storedAnswers ? (JSON.parse(storedAnswers) as Answers) : null;
           setAnswers(parsedAnswers);
           setInsight(storedInsight || null);
@@ -185,8 +185,8 @@ export default function PlanSuccess() {
     })();
   }, [ready, email, insight, planLogged, lastConfirm, stripeSessionId]);
 
-  const title = "Plan unlocked | Your comprehensive hair plan";
-  const description = "Payment successful. Your complete, personalized hair plan is ready.";
+  const title = "Plan unlocked | Your custom intermittent fasting plan";
+  const description = "Payment successful. Your complete, personalized intermittent fasting plan is ready.";
 
   return (
     <>
@@ -234,13 +234,13 @@ export default function PlanSuccess() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-primary">Your Full Plan</CardTitle>
-              <CardDescription>Personalized, research‑informed guidance based on your answers.</CardDescription>
+              <CardTitle className="text-primary">Your Custom Fasting Plan</CardTitle>
+              <CardDescription>Personalized, research‑informed intermittent fasting guidance based on your answers.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
               {insight && (
                 <section>
-                  <h2 className="text-lg font-medium text-primary">Key Insight</h2>
+                  <h2 className="text-lg font-medium text-primary">Your Key Insight</h2>
                   <blockquote className="mt-2 rounded-md border bg-accent/20 text-foreground p-4">
                     {insight}
                   </blockquote>
@@ -248,51 +248,75 @@ export default function PlanSuccess() {
               )}
 
               <section>
-                <h2 className="text-lg font-medium text-primary">Nutrition Foundation</h2>
+                <h2 className="text-lg font-medium text-primary">Your Fasting Protocol</h2>
                 <ul className="mt-2 text-sm text-muted-foreground space-y-2">
-                  <li>• Daily protein target: ~0.8–1.0 g/kg body weight, split across meals</li>
-                  <li>• Micronutrients focus: Vitamin D3+K2, Zinc, Biotin, B‑complex</li>
-                  <li>• Iron support if low ferritin; pair with Vitamin C (confirm with clinician)</li>
-                  <li>• Hydration: 6–8 glasses water per day; add electrolytes if active</li>
+                  <li>• Start with 16:8 — eat within an 8‑hour window (e.g. 12pm–8pm), fast for 16 hours</li>
+                  <li>• If new to fasting, begin with 12:12 for 2 weeks, then extend by 1 hour per week</li>
+                  <li>• Advanced option: progress to 18:6 once 16:8 feels effortless for 3+ weeks</li>
+                  <li>• On high‑activity days or after poor sleep, allow a 14:10 window — flexibility prevents burnout</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-lg font-medium text-primary">Growth Support Stack</h2>
+                <h2 className="text-lg font-medium text-primary">Fat‑Burning Window Strategy</h2>
                 <ul className="mt-2 text-sm text-muted-foreground space-y-2">
-                  <li>• Collagen (type I/III) + MSM, daily</li>
-                  <li>• Marine peptides or high‑quality protein to support keratin synthesis</li>
-                  <li>• Saw palmetto / β‑sitosterol blend (monitor tolerance)</li>
-                  <li>• Pair with topical minoxidil (discuss with clinician if needed)</li>
+                  <li>• True fat oxidation peaks after 12–14 hours of fasting, when insulin is lowest</li>
+                  <li>• Keep the fasting window to water, black coffee, or plain tea — no calories, no sweeteners</li>
+                  <li>• Light fasted movement (20–30 min walk) in the final 2 hours of your fast amplifies fat burning</li>
+                  <li>• Morning sunlight exposure (10–15 min) helps set cortisol rhythm and supports metabolic rate</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-lg font-medium text-primary">Stress &amp; Sleep</h2>
+                <h2 className="text-lg font-medium text-primary">Breaking Your Fast (First Meal)</h2>
                 <ul className="mt-2 text-sm text-muted-foreground space-y-2">
-                  <li>• Magnesium glycinate in the evening; consider L‑theanine earlier in day</li>
-                  <li>• Wind‑down routine: light hygiene, screens off, consistent sleep window</li>
-                  <li>• Target 7–8 hours sleep; light AM movement and sunlight exposure</li>
+                  <li>• Lead with 30–40g protein: eggs, Greek yogurt, chicken, tofu, or a protein shake</li>
+                  <li>• Add healthy fats (avocado, olive oil, nuts) to blunt insulin spike and extend satiety</li>
+                  <li>• Avoid high‑sugar foods or refined carbs as your first meal — this resets fat‑burning progress</li>
+                  <li>• Eat slowly and mindfully; the first meal sets metabolic tone for your entire eating window</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-lg font-medium text-primary">Topicals &amp; Scalp Care</h2>
+                <h2 className="text-lg font-medium text-primary">Eating Window Nutrition</h2>
                 <ul className="mt-2 text-sm text-muted-foreground space-y-2">
-                  <li>• Topical minoxidil once or twice daily as tolerated</li>
-                  <li>• Gentle shampoo; avoid harsh heat/chemicals; consider scalp massage 3–5x/week</li>
-                  <li>• Track shedding and density monthly with photos</li>
+                  <li>• Protein target: 0.7–1.0g per pound of body weight, distributed across 2–3 meals</li>
+                  <li>• Prioritize whole foods, fiber‑rich vegetables, and complex carbs — minimize processed foods</li>
+                  <li>• Include omega‑3 sources (fatty fish, walnuts, flax) to support fat metabolism and reduce inflammation</li>
+                  <li>• Keep net carbs moderate and pair carbs with protein/fat to blunt insulin response</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-lg font-medium text-primary">Electrolytes &amp; Supplements</h2>
+                <ul className="mt-2 text-sm text-muted-foreground space-y-2">
+                  <li>• Sodium: 2–3g daily (add to broth or water during fast if needed)</li>
+                  <li>• Potassium: 3–4g daily from food (avocado, leafy greens, salmon)</li>
+                  <li>• Magnesium glycinate: 300–400mg before bed — reduces hunger, improves sleep quality</li>
+                  <li>• Optional: creatine (3–5g), vitamin D3+K2, omega‑3 (EPA/DHA 1–2g) with first meal</li>
                 </ul>
               </section>
 
               <section>
                 <h2 className="text-lg font-medium text-primary">Weekly Rhythm</h2>
-                <p className="mt-2 text-sm text-muted-foreground">Mon–Sun:</p>
+                <p className="mt-2 text-sm text-muted-foreground">Mon–Sun (example with noon eating window start):</p>
                 <ul className="mt-2 text-sm text-muted-foreground space-y-2">
-                  <li>• AM: Protein‑rich meal, D3+K2, B‑complex, fish oil/algae (EPA/DHA)</li>
-                  <li>• Noon: Hydration; balanced meal; collagen + MSM</li>
-                  <li>• PM: Protein‑rich meal; zinc (with food); magnesium glycinate before bed</li>
-                  <li>• 3–5x/week: Scalp massage; topical application as directed</li>
+                  <li>• 7–8am: Wake, hydrate (16oz water), black coffee or green tea if desired</li>
+                  <li>• 9–11am: Fasted light walk or low‑intensity movement (optional, amplifies fat burn)</li>
+                  <li>• 12pm: Break fast — protein + fat first meal (30–40g protein)</li>
+                  <li>• 3–4pm: Balanced meal — lean protein, vegetables, moderate complex carbs</li>
+                  <li>• 7–8pm: Final meal — close eating window; magnesium with evening meal</li>
+                  <li>• 8pm–12pm: Fasting window begins</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-lg font-medium text-primary">Tracking Your Progress</h2>
+                <ul className="mt-2 text-sm text-muted-foreground space-y-2">
+                  <li>• Weigh yourself 1–2x per week, same time and conditions (not daily — too variable)</li>
+                  <li>• Take waist and hip measurements every 2 weeks — often changes before the scale moves</li>
+                  <li>• Track energy, hunger, and mood weekly — these indicate metabolic adaptation</li>
+                  <li>• Reassess your fasting window after 4 weeks and progress based on results and comfort</li>
                 </ul>
               </section>
 
@@ -301,9 +325,9 @@ export default function PlanSuccess() {
                 <p className="mt-1">
                   The information provided in this plan is for educational purposes only and is not a substitute for professional medical advice,
                   diagnosis, or treatment. Always seek the guidance of your physician or other qualified health provider with any questions you may have
-                  regarding a medical condition, supplements, or medications (including finasteride, minoxidil, or peptide therapies). Do not disregard
-                  professional medical advice or delay seeking it because of something you have read here. If you experience any adverse effects, stop
-                  and consult a healthcare professional.
+                  regarding a medical condition, supplements, or medications. Intermittent fasting may not be appropriate for everyone, including
+                  those with diabetes, eating disorders, pregnancy, or certain chronic conditions. Do not disregard professional medical advice or
+                  delay seeking it because of something you have read here. If you experience any adverse effects, stop and consult a healthcare professional.
                 </p>
               </div>
             </CardContent>
@@ -328,7 +352,7 @@ export default function PlanSuccess() {
         <footer className="border-t">
           <div className="mx-auto max-w-3xl w-full px-4 py-10 text-sm text-muted-foreground">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <p>© 2025 Custom Hair Plan by Agile Rant. All rights reserved.</p>
+              <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
               <div className="flex gap-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -340,7 +364,7 @@ export default function PlanSuccess() {
                       <DialogDescription>How we collect, use, and protect your information.</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>Custom Hair Plan by Agile Rant (“we”, “us”) respects your privacy. This policy explains what we collect when you use our site, why we collect it, and how we handle it.</p>
+                      <p>Custom Fasting Plan by Agile Rant (“we”, “us”) respects your privacy. This policy explains what we collect when you use our site, why we collect it, and how we handle it.</p>
                       <p><span className="font-medium text-foreground">Information we collect:</span> assessment answers, email address, technical data (like IP address and device info), and payment confirmations from our provider (Stripe). We do not store full card numbers.</p>
                       <p><span className="font-medium text-foreground">How we use it:</span> to provide your insight and full plan, process payments, send emails you request (like plan delivery and receipts), improve the service, and keep the platform secure.</p>
                       <p><span className="font-medium text-foreground">Sharing:</span> we share data with processors we use to operate the service (e.g., hosting, email, analytics, payments). We don’t sell your personal information.</p>
@@ -364,7 +388,7 @@ export default function PlanSuccess() {
                       <DialogDescription>Your agreement to use our service.</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>By using Custom Hair Plan by Agile Rant (“Service”), you agree to these Terms. If you don’t agree, please don’t use the Service.</p>
+                      <p>By using Custom Fasting Plan by Agile Rant (“Service”), you agree to these Terms. If you don’t agree, please don’t use the Service.</p>
                       <p><span className="font-medium text-foreground">Use of Service:</span> You may use the Service for personal, non‑commercial purposes and must comply with applicable laws.</p>
                       <p><span className="font-medium text-foreground">No medical advice:</span> Content is for educational purposes only and does not constitute medical advice. Consult your clinician before making changes.</p>
                       <p><span className="font-medium text-foreground">Payments:</span> Payments are processed by Stripe. Access to the full plan is delivered upon successful payment. Taxes may apply.</p>

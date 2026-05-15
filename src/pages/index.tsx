@@ -41,14 +41,14 @@ export default function Home() {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const title = "Personalized Hair Regrowth Plan | Science‑Backed Insights";
+  const title = "Personalized Intermittent Fasting Plan | Burn Fat Smarter";
   const description =
-    "Regrow and keep your hair with a personalized plan. We assess stress, nutrition, thinning patterns, and pair proven supplements with topicals. Get a unique free insight, then unlock your full plan.";
+    "Discover your custom intermittent fasting protocol designed to maximize fat burning. We assess your schedule, hunger patterns, sleep, and lifestyle to build a plan that actually fits your life.";
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Personalized Hair Regrowth Plan",
+    name: "Custom Intermittent Fasting Plan",
     url: "https://example.com/",
     description,
     potentialAction: {
@@ -58,31 +58,29 @@ export default function Home() {
     },
   };
 
-  // Assessment: flattened questions and state
+  // Assessment questions
   const questions = [
     { id: "email", text: "What is your email?", type: "text" },
     { id: "gender", text: "What is your gender?", type: "single", options: ["Male", "Female", "Prefer not to say", "Other"] },
     { id: "age", text: "What is your age range?", type: "single", options: ["18–24", "25–34", "35–44", "45–54", "55+"] },
-    { id: "location", text: "Where do you live? (city, region, or climate)", type: "text" },
-    { id: "health_conditions", text: "Do you have any known health conditions that affect nutrient absorption?", type: "single", options: ["No", "Celiac disease", "Crohn's disease", "IBD/IBS", "Other / not sure"] },
-    { id: "primary_concern", text: "What is your primary hair concern?", type: "single", options: ["Hair thinning", "Slow growth", "Dullness", "Breakage", "Hair loss / shedding"] },
-    { id: "hair_type", text: "What is your hair type?", type: "single", options: ["Oily", "Dry", "Normal", "Combination"] },
-    { id: "scalp_condition", text: "How would you describe your scalp?", type: "single", options: ["Dry / itchy", "Oily", "Normal", "Flaky / sensitive"] },
-    { id: "hair_loss_history", text: "Have you noticed recent hair thinning or hair loss?", type: "single", options: ["No", "Yes — past month", "Yes — 3–6 months", "Yes — 6–12 months", "Yes — over a year"] },
-    { id: "diet", text: "What is your dietary preference?", type: "single", options: ["Omnivore", "Vegetarian", "Vegan", "Pescatarian"] },
-    { id: "protein_intake", text: "How often do you consume protein-rich foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "iron_foods", text: "How often do you eat iron-rich foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "biotin_foods", text: "How often do you consume foods rich in Biotin (B7)?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "zinc_foods", text: "How often do you consume foods rich in Zinc?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "vitc_foods", text: "How often do you consume foods rich in Vitamin C?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "omega3_foods", text: "How often do you consume foods rich in Omega-3s?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "water", text: "How many glasses of water do you drink per day?", type: "single", options: ["1–2", "3–5", "6–8", "8+"] },
-    { id: "stress", text: "How would you rate your typical stress level?", type: "single", options: ["Low", "Moderate", "High"] },
-    { id: "sleep", text: "How many hours of sleep do you get on average per night?", type: "single", options: ["Less than 6", "6–7", "7–8", "More than 8"] },
-    { id: "activity", text: "How often do you exercise?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "styling", text: "What is your typical hair styling routine?", type: "single", options: ["Heat styling", "Chemical treatments", "Protective styles", "Gentle / natural"] },
-    { id: "goal", text: "What is your main goal for your hair?", type: "single", options: ["Faster growth", "Thicker hair", "Shinier hair", "Reduce shedding"] },
-    { id: "supplements", text: "Are you currently taking any vitamins, minerals, or other supplements? If yes, list them.", type: "text" },
+    { id: "primary_goal", text: "What is your primary goal?", type: "single", options: ["Burn fat & lose weight", "Improve metabolic health", "Boost energy & mental clarity", "Better digestion & gut health", "Longevity & anti‑aging"] },
+    { id: "fasting_experience", text: "How familiar are you with intermittent fasting?", type: "single", options: ["Never tried", "Tried once or twice", "Practice occasionally", "Regular 14–16 hour fasts", "Advanced — 18+ hour fasts"] },
+    { id: "current_eating_pattern", text: "How would you describe your current eating pattern?", type: "single", options: ["3 meals/day", "3 meals + snacks", "Frequent small meals", "2 large meals", "Irregular / no set pattern"] },
+    { id: "first_meal_time", text: "When do you typically have your first meal?", type: "single", options: ["Before 7am", "7–9am", "9–11am", "11am–1pm", "After 1pm"] },
+    { id: "last_meal_time", text: "When do you typically finish eating for the day?", type: "single", options: ["Before 6pm", "6–8pm", "8–10pm", "After 10pm"] },
+    { id: "morning_hunger", text: "How hungry are you typically in the morning?", type: "single", options: ["Not hungry at all", "Slightly hungry", "Moderately hungry", "Very hungry — need to eat immediately"] },
+    { id: "sleep_hours", text: "How many hours of sleep do you get per night on average?", type: "single", options: ["Less than 6", "6–7", "7–8", "More than 8"] },
+    { id: "wake_time", text: "What time do you typically wake up?", type: "single", options: ["Before 5:30am", "5:30–7am", "7–8:30am", "After 8:30am"] },
+    { id: "activity_level", text: "How would you describe your daily activity level?", type: "single", options: ["Sedentary (mostly sitting)", "Lightly active", "Moderately active", "Very active", "Athlete / intense training daily"] },
+    { id: "exercise_timing", text: "When do you prefer to exercise?", type: "single", options: ["Morning (fasted)", "Morning (after eating)", "Afternoon", "Evening", "No preference / varies"] },
+    { id: "diet_type", text: "What best describes your current diet?", type: "single", options: ["Omnivore / no restrictions", "Mostly whole foods", "Low‑carb / keto", "Vegetarian", "Vegan", "Mediterranean‑style"] },
+    { id: "sugar_processed", text: "How often do you eat sugary or highly processed foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "caffeine_habits", text: "What are your caffeine habits?", type: "single", options: ["None", "1–2 coffees/day", "3+ coffees/day", "Tea only", "Energy drinks"] },
+    { id: "water_intake", text: "How many glasses of water do you drink daily?", type: "single", options: ["1–3", "4–5", "6–8", "8+"] },
+    { id: "stress_level", text: "How would you rate your typical stress level?", type: "single", options: ["Low", "Moderate", "High", "Very high"] },
+    { id: "health_conditions", text: "Any relevant health conditions to consider?", type: "single", options: ["None", "Blood sugar / pre‑diabetes", "Thyroid condition", "PCOS / hormonal imbalance", "Heart condition / on medication", "Other"] },
+    { id: "biggest_challenge", text: "What's your biggest challenge with fasting?", type: "single", options: ["Hunger and cravings", "Energy crashes", "Social situations / meals out", "Fitting it into my schedule", "Not knowing where to start"] },
+    { id: "current_supplements", text: "Are you currently taking any supplements? If yes, please list them.", type: "text" },
   ] as { id: string; text: string; type: "single" | "text"; options?: string[] }[];
 
   const total = questions.length;
@@ -149,30 +147,36 @@ export default function Home() {
   };
 
   const generateInsight = (ans: Record<string, any>): string => {
-    const stress = ans["stress"];
-    const diet = ans["diet"];
-    const iron = ans["iron_foods"];
-    const omega = ans["omega3_foods"];
-    const water = ans["water"];
-    const protein = ans["protein_intake"];
-    const sleep = ans["sleep"];
+    const exp = ans["fasting_experience"];
+    const hunger = ans["morning_hunger"];
+    const stress = ans["stress_level"];
+    const sleep = ans["sleep_hours"];
+    const diet = ans["diet_type"];
+    const activity = ans["activity_level"];
+    const sugar = ans["sugar_processed"];
 
-    if (stress === "High") {
-      return "Your top lever: reduce systemic stress. Pair a balanced B‑complex in the morning with magnesium glycinate at night, aim for 7–8 hours sleep, and build a simple wind‑down. Lower cortisol helps prolong the growth (anagen) phase and reduce shedding.";
+    if (exp === "Never tried" || exp === "Tried once or twice") {
+      return "Start with the 12:12 protocol for your first 2 weeks — fast 12 hours (e.g. 8pm–8am), eat within 12. This builds the habit without stress. Once hunger adapts, shift your first meal 30–60 minutes later each week until you reach a 16:8 window. The goal is 16 fasting hours where growth hormone peaks and fat oxidation accelerates significantly.";
     }
-    if ((diet === "Vegan" || diet === "Vegetarian") && (iron === "Rarely" || iron === "1–2 times/week")) {
-      return "Prioritize iron and B12 status. With a plant‑forward diet and low iron intake, ask your clinician about checking ferritin and consider gentle iron paired with vitamin C. Addressing this often reduces diffuse shedding.";
+    if (stress === "High" || stress === "Very high") {
+      return "Your stress level is your primary lever. Elevated cortisol promotes fat storage — especially abdominal — and makes aggressive fasting counterproductive. Start conservatively with a 14:10 window, prioritize a protein‑rich first meal (30–40g) to blunt cortisol, and optimize sleep before extending your fast. Lower cortisol directly equals greater fat mobilization.";
     }
-    if (omega === "Rarely" || omega === "1–2 times/week") {
-      return "Increase omega‑3 intake. Add 2–3 servings of fatty fish per week or consider algae/fish oil (EPA/DHA). Better omega status supports follicle signaling and a calmer scalp.";
+    if (hunger === "Not hungry at all" || hunger === "Slightly hungry") {
+      return "You're a natural candidate for 16:8 — your body isn't signaling for early food. Capitalize on this by delaying your first meal to noon. Morning hours (8am–12pm) are when growth hormone is naturally elevated and insulin is lowest, making this your prime fat‑burning window. A black coffee or green tea at 9am can extend this window comfortably.";
     }
-    if (water === "1–2") {
-      return "Hydration first: work toward 6–8 glasses of water daily. Hydration and electrolytes support nutrient delivery to follicles and reduce brittleness.";
+    if (sleep === "Less than 6" || sleep === "6–7") {
+      return "Sleep is your highest ROI fix before optimizing fasting windows. Poor sleep raises ghrelin (hunger hormone) by ~24% and spikes insulin resistance, making both fasting and fat loss measurably harder. Even 2 extra hours per night for 2 weeks will significantly reduce hunger during your fast and improve your metabolic response to fasting.";
     }
-    if (protein === "1–2 times/week" || protein === "Rarely") {
-      return "Raise daily protein toward ~0.8–1.0 g/kg, distributed across meals. Adequate protein underpins keratin synthesis and can improve thickness over time.";
+    if (diet === "Low‑carb / keto") {
+      return "Your low‑carb diet is already depleting glycogen stores and upregulating fat oxidation — you have a real metabolic head start. A 16:8 or even 18:6 window will feel more natural for you than most, since circulating insulin stays lower throughout the day. Focus on electrolytes during your fast (sodium 2–3g, potassium 3–4g, magnesium 400mg) to prevent fatigue and headaches that derail most beginners.";
     }
-    return "Solid foundation—focus on consistency. Keep protein targets, include vitamin D3+K2, zinc, and biotin‑rich foods, and pair a proven topical for best regrowth odds.";
+    if (sugar === "Daily") {
+      return "Reducing sugar and refined carbs within your eating window is the single biggest multiplier for your fasting protocol. Repeated sugar spikes suppress fat burning even hours after your fast ends. For your first 2 weeks, swap just one high‑sugar meal per day for a protein + healthy fat meal — this shift alone measurably moves your metabolism toward fat oxidation.";
+    }
+    if (activity === "Athlete / intense training daily" || activity === "Very active") {
+      return "With high training volume, protect muscle mass by placing your first meal within 60–90 minutes post‑training and targeting 0.8–1g protein per pound of body weight across your eating window. For morning workouts, training in the last 2 hours of your fast is effective for fat burning without sacrificing performance — avoid deep‑fasted high‑intensity work until fat‑adapted.";
+    }
+    return "Your profile is well‑suited for a 16:8 protocol: eat from 12pm–8pm, fast from 8pm–12pm. The core mechanism is insulin suppression — after 12–14 fasting hours, insulin drops low enough for meaningful fat oxidation to begin. Structure your first meal around 30–40g protein and healthy fats to extend satiety and keep insulin steady throughout your eating window.";
   };
 
   const handleFinish = async () => {
@@ -181,8 +185,8 @@ export default function Home() {
     await postLog("assessment_finish", { total, hasEmail: !!leadEmail || !!(answers as any)["email"] });
     try {
       if (typeof window !== "undefined") {
-        localStorage.setItem("hair_answers", JSON.stringify(answers));
-        localStorage.setItem("hair_insight", text);
+        localStorage.setItem("fasting_answers", JSON.stringify(answers));
+        localStorage.setItem("fasting_insight", text);
       }
       const resp = await fetch("/api/answers/save", {
         method: "POST",
@@ -228,7 +232,7 @@ export default function Home() {
       if (data?.ok) {
         await postLog("lead_submit_success", { sessionId: data?.sessionId || sessionId });
         if (data.sessionId) setSessionId(data.sessionId);
-        if (typeof window !== "undefined") localStorage.setItem("hair_lead", "true");
+        if (typeof window !== "undefined") localStorage.setItem("fasting_lead", "true");
         toast({ title: "Thanks! We'll email your plan preview." });
       } else {
         throw new Error(data?.message || "Failed");
@@ -245,7 +249,6 @@ export default function Home() {
     setUnlocking(true);
     await postLog("unlock_click", { hasSessionId: !!sessionId });
     try {
-      // 1) Create a Checkout Session (preferred; preserves metadata and uses mode-aware credentials)
       const emailToUse = String((leadEmail || (answers as any)["email"] || "")).trim();
       const resp = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
@@ -265,21 +268,17 @@ export default function Home() {
         }
       }
 
-      // 2) Fallback to a configured Stripe Payment Link (mode-aware)
       const plResp = await fetch("/api/stripe/payment-link", { method: "GET" });
       const plData = await plResp.json().catch(() => null);
       await postLog("payment_link_fetch", { ok: !!plData?.ok, hasUrl: !!plData?.url });
 
       if (plData?.ok && plData?.url) {
         let redirectUrl: string = plData.url as string;
-
-        // Optionally pass a prefilled email if we have one.
         const email = (leadEmail || "").trim();
         if (email && /^\S+@\S+\.\S+$/.test(email)) {
           const sep = redirectUrl.includes("?") ? "&" : "?";
           redirectUrl = `${redirectUrl}${sep}prefilled_email=${encodeURIComponent(email)}`;
         }
-
         if (typeof window !== "undefined") {
           await postLog("payment_link_redirect", { to: "payment_link_url" });
           window.location.href = redirectUrl;
@@ -303,14 +302,14 @@ export default function Home() {
         <meta name="description" content={description} />
         <meta
           name="keywords"
-          content="hair growth, regrow hair, hair loss, thinning hair, nutrition for hair, stress hair loss, hair supplements, hair vitamins, topicals for hair"
+          content="intermittent fasting, IF plan, fat burning, 16:8 fasting, fasting for weight loss, fat loss protocol, metabolic health, custom fasting plan, eating window"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://example.com/" />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&amp;fit=crop&amp;w=1200&amp;q=60" />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=60" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
@@ -329,7 +328,7 @@ export default function Home() {
         <section className="relative">
           <div aria-hidden className="pointer-events-none absolute inset-0">
             <Image
-              src="https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=2000&q=60"
+              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=2000&q=60"
               alt=""
               fill
               priority
@@ -347,15 +346,15 @@ export default function Home() {
                 className="max-w-3xl"
               >
                 <p className="inline-flex items-center rounded-full bg-accent/60 text-accent-foreground px-3 py-1 text-xs sm:text-sm">
-                  Science‑guided • Nutrition + Stress + Topicals
+                  Science‑guided • Fasting + Nutrition + Lifestyle
                 </p>
                 <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-primary">
-                  A personalized plan to regrow and keep your hair
+                  A personalized plan to burn fat with intermittent fasting
                 </h1>
                 <p className="mt-5 text-base sm:text-lg text-muted-foreground">
-                  We learn about your habits, stress, nutrition, and thinning patterns to tailor
-                  clinically‑researched supplements and topicals. Get one unique insight free, then
-                  unlock your complete plan.
+                  We learn about your schedule, hunger patterns, sleep, and goals to build a fasting
+                  protocol that fits your life — and actually maximizes fat burning. Get one unique
+                  insight free, then unlock your complete custom plan.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Button onClick={startAssessment} className="px-6">
@@ -393,57 +392,58 @@ export default function Home() {
               What your plan covers
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Your answers shape dosage, timing, and combinations across the pillars of hair health.
+              Your answers shape your fasting window, eating timing, nutrition, and lifestyle strategies.
             </p>
           </div>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                title: "Regrowing hair",
-                desc: "Stimulate follicles with targeted nutraceuticals and growth‑supportive routines.",
-                img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=60",
+                title: "Your custom fasting window",
+                desc: "Find the exact eating and fasting window that fits your natural hunger patterns and daily schedule.",
+                img: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=60",
+                tags: ["16:8", "18:6", "14:10"],
               },
               {
-                title: "Keeping your hair",
-                desc: "Reduce shedding triggers and maintain a scalp environment where hair thrives.",
-                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=60",
+                title: "Fat‑burning optimization",
+                desc: "Maximize fat oxidation with strategic fasting timing, fasted movement, and hormonal alignment.",
+                img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=60",
               },
               {
-                title: "Fighting thinning",
-                desc: "Address pattern thinning with evidence‑based strategies you can sustain.",
-                img: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&w=900&q=60",
+                title: "Breaking your fast right",
+                desc: "Discover exactly what to eat first and how to structure your eating window for sustained fat loss.",
+                img: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=900&q=60",
               },
               {
-                title: "Fixing diet & nutrition",
-                desc: "Optimize protein, iron, zinc, biotin, vitamin D and more—personalized to you.",
+                title: "Metabolic health",
+                desc: "Improve insulin sensitivity, stabilize blood sugar, and support long‑term metabolic function.",
                 img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=60",
               },
               {
-                title: "Fighting stress",
-                desc: "Calm systemic stress that accelerates shedding with lifestyle and supplementation.",
+                title: "Lifestyle & sleep alignment",
+                desc: "Sync your fasting schedule with your sleep, stress levels, and activity for compounding results.",
                 img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=60",
               },
               {
-                title: "High‑performing topicals",
-                desc: "Combine proven topicals for a comprehensive, high‑yield plan.",
-                img: "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&w=900&q=60",
+                title: "Electrolytes & supplements",
+                desc: "Electrolyte management, adaptogens, and targeted supplements to make fasting feel effortless.",
+                img: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=900&q=60",
               },
             ].map((item) => (
               <Card key={item.title} className="overflow-hidden">
                 <div className="relative h-40 w-full">
                   <Image
                     src={item.img}
-                    alt={item.title === "Keeping your hair" ? "Man running hand through thick hair" : item.title}
+                    alt={item.title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
-                  {item.title === "High‑performing topicals" && (
+                  {item.tags && (
                     <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
-                      <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Finasteride</span>
-                      <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Minoxidil</span>
-                      <span className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">Peptides</span>
+                      {item.tags.map((tag) => (
+                        <span key={tag} className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">{tag}</span>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -467,13 +467,13 @@ export default function Home() {
               <h2 className="text-2xl sm:text-3xl font-semibold text-primary">How it works</h2>
               <ul className="mt-6 space-y-4 text-muted-foreground">
                 <li className="leading-relaxed">
-                  1. Answer a short series of questions about your hair history, lifestyle, and goals.
+                  1. Answer a short series of questions about your eating habits, sleep, activity, and goals.
                 </li>
                 <li className="leading-relaxed">
-                  2. Get one unique insight free—something actionable you can do today.
+                  2. Get one unique insight free — something actionable you can apply today.
                 </li>
                 <li className="leading-relaxed">
-                  3. Unlock your complete, personalized plan: dosages, timing, stack, and topicals.
+                  3. Unlock your complete custom plan: fasting window, fat‑burning strategy, nutrition timing, electrolytes, and weekly rhythm.
                 </li>
               </ul>
 
@@ -501,13 +501,13 @@ export default function Home() {
                   <div className="rounded-md border p-4">
                     <p className="text-sm font-medium text-primary">Example question</p>
                     <p className="text-sm text-muted-foreground mt-1">
-                      How many days per week do you notice increased shedding during showering?
+                      How hungry are you typically in the morning?
                     </p>
-                    <div className="mt-3 flex gap-2">
-                      <Button variant="secondary">0–1</Button>
-                      <Button variant="secondary">2–3</Button>
-                      <Button variant="secondary">4–5</Button>
-                      <Button variant="secondary">6–7</Button>
+                    <div className="mt-3 flex gap-2 flex-wrap">
+                      <Button variant="secondary" className="text-xs">Not hungry</Button>
+                      <Button variant="secondary" className="text-xs">Slightly</Button>
+                      <Button variant="secondary" className="text-xs">Moderately</Button>
+                      <Button variant="secondary" className="text-xs">Very hungry</Button>
                     </div>
                   </div>
                 </CardContent>
@@ -517,39 +517,39 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* Evidence & supplements */}
+        {/* Evidence section */}
         <motion.section
           {...sectionFade}
           className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
         >
           <div className="max-w-2xl">
             <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
-              Backed by research‑driven building blocks
+              Backed by metabolic science
             </h2>
             <p className="mt-2 text-muted-foreground">
-              Your plan adapts dosage by body size, diet, labs, stress, and tolerance.
+              Your plan adapts fasting windows, nutrition targets, and lifestyle strategies to your unique profile.
             </p>
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                title: "Nutrition core",
-                points: ["Protein target", "Iron + Ferritin support", "Vitamin D3 + K2", "Zinc, Biotin, B‑complex"],
+                title: "Fasting protocol",
+                points: ["16:8, 18:6, or 14:10 window", "Customized eating window timing", "Step‑by‑step progression roadmap", "Weekend & social flexibility tactics"],
               },
               {
-                title: "Growth support",
-                points: ["Saw palmetto/β‑sitosterol", "Collagen + MSM", "Marine peptides", "Topical minoxidil pairing"],
+                title: "Metabolic support",
+                points: ["Electrolyte management (Na, K, Mg)", "Insulin sensitivity optimization", "Fat‑adapted eating strategies", "Hunger management techniques"],
               },
               {
-                title: "Stress & sleep",
-                points: ["Ashwagandha / L‑theanine", "Magnesium glycinate", "Light & wind‑down routine"],
+                title: "Lifestyle alignment",
+                points: ["Sleep‑fasting synchronization", "Fasted vs. fed exercise timing", "Stress & cortisol management", "Progress tracking system"],
               },
             ].map((c) => (
               <Card key={c.title}>
                 <CardHeader>
                   <CardTitle className="text-primary">{c.title}</CardTitle>
-                  <CardDescription>Personalized dosing guidance</CardDescription>
+                  <CardDescription>Personalized to your profile</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="text-sm text-muted-foreground space-y-2">
@@ -563,11 +563,11 @@ export default function Home() {
           </div>
 
           <p className="mt-6 text-xs text-muted-foreground">
-            This content is educational and not a substitute for medical advice. Consult your clinician before changes.
+            This content is educational and not a substitute for medical advice. Consult your clinician before starting a fasting protocol, especially if you have diabetes, hormonal conditions, or take medications.
           </p>
         </motion.section>
 
-        {/* Start CTA / Framework for flow */}
+        {/* Start CTA */}
         <motion.section
           ref={startRef}
           {...sectionFade}
@@ -579,12 +579,12 @@ export default function Home() {
                 Start your free assessment
               </h2>
               <p className="mt-2 text-muted-foreground">
-                Answer in under 2 minutes. We’ll reveal one personalized insight immediately. You can
-                unlock your complete plan afterwards.
+                Answer in under 3 minutes. We'll reveal one personalized fasting insight immediately.
+                Unlock your complete custom plan afterwards.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button className="px-6" onClick={startAssessment}>Begin now</Button>
-                <Button variant="secondary" className="px-6">See sample questions</Button>
+                <Button variant="secondary" className="px-6" onClick={startAssessment}>See sample questions</Button>
               </div>
               <p className="mt-3 text-xs text-muted-foreground">
                 We may email your results and plan preview. You can opt out anytime.
@@ -594,8 +594,8 @@ export default function Home() {
             <div className="relative">
               <div className="relative h-72 w-full overflow-hidden rounded-md border">
                 <Image
-                  src="https://images.unsplash.com/photo-1530630458144-014709e10016?auto=format&fit=crop&w=1400&q=60"
-                  alt="Healthy hair lifestyle"
+                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1400&q=60"
+                  alt="Healthy meal for intermittent fasting"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -622,11 +622,11 @@ export default function Home() {
             <CardContent className="py-10 md:py-12">
               <div className="mx-auto max-w-3xl text-center">
                 <h3 className="text-xl sm:text-2xl font-semibold text-primary">
-                  Unlock your comprehensive hair plan
+                  Unlock your complete fasting plan
                 </h3>
                 <p className="mt-2 text-muted-foreground">
-                  Get your fully personalized supplement dosing, timing, stack, lifestyle guidance,
-                  and topical pairings. Pay securely with Stripe.
+                  Get your fully personalized fasting protocol, fat‑burning window strategy, first‑meal
+                  guide, nutrition targets, electrolyte plan, and full weekly rhythm. Pay securely with Stripe.
                 </p>
                 <div className="mt-6">
                   <Button className="px-6" onClick={startAssessment}>Unlock your full plan</Button>
@@ -713,7 +713,7 @@ export default function Home() {
                         {current.type === "text" && (
                           <div className="grid gap-2">
                             <Label htmlFor={`${current.id}`}>Your answer</Label>
-                            {current.id === "supplements" ? (
+                            {current.id === "current_supplements" ? (
                               <Textarea
                                 id={`${current.id}`}
                                 value={answers[current.id] ?? ""}
@@ -797,7 +797,7 @@ export default function Home() {
                   className="relative w-full max-w-3xl rounded-md border bg-background"
                 >
                   <div className="flex items-center justify-between border-b px-4 py-3">
-                    <h3 className="text-sm font-medium text-primary">Your personalized free insight</h3>
+                    <h3 className="text-sm font-medium text-primary">Your personalized fasting insight</h3>
                     <button
                       type="button"
                       onClick={() => setShowInsight(false)}
@@ -812,16 +812,16 @@ export default function Home() {
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-primary text-lg">Unlock your full plan</CardTitle>
+                        <CardTitle className="text-primary text-lg">Unlock your complete fasting plan</CardTitle>
                         <CardDescription>
-                          Get all insights and a comprehensive, personalized plan with supplement dosing, timing, stack, lifestyle guidance, and topicals.
+                          Get all insights and a fully personalized plan with your custom fasting window, fat‑burning strategy, first‑meal guide, electrolyte protocol, and weekly rhythm.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="grid gap-4">
                           <ul className="text-sm text-muted-foreground space-y-2">
                             <li>• Immediate access after secure Stripe checkout</li>
-                            <li>• We’ll email your complete plan and a link to view it anytime</li>
+                            <li>• We'll email your complete plan and a link to view it anytime</li>
                           </ul>
 
                           <div className="flex flex-wrap items-baseline gap-2">
@@ -841,7 +841,7 @@ export default function Home() {
                             </Button>
                           </div>
                           <p className="text-xs text-muted-foreground">
-                            You’ll be redirected to a secure Stripe checkout. On completion we’ll email your full plan.
+                            You'll be redirected to a secure Stripe checkout. On completion we'll email your full plan.
                           </p>
                         </div>
                       </CardContent>
@@ -857,7 +857,7 @@ export default function Home() {
         <footer className="border-t">
           <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-muted-foreground">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <p>© 2025 Custom Hair Plan by Agile Rant. All rights reserved.</p>
+              <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
               <div className="flex gap-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -869,14 +869,14 @@ export default function Home() {
                       <DialogDescription>How we collect, use, and protect your information.</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>Custom Hair Plan by Agile Rant (“we”, “us”) respects your privacy. This policy explains what we collect when you use our site, why we collect it, and how we handle it.</p>
+                      <p>Custom Fasting Plan by Agile Rant ("we", "us") respects your privacy. This policy explains what we collect when you use our site, why we collect it, and how we handle it.</p>
                       <p><span className="font-medium text-foreground">Information we collect:</span> assessment answers, email address, technical data (like IP address and device info), and payment confirmations from our provider (Stripe). We do not store full card numbers.</p>
                       <p><span className="font-medium text-foreground">How we use it:</span> to provide your insight and full plan, process payments, send emails you request (like plan delivery and receipts), improve the service, and keep the platform secure.</p>
-                      <p><span className="font-medium text-foreground">Sharing:</span> we share data with processors we use to operate the service (e.g., hosting, email, analytics, payments). We don’t sell your personal information.</p>
+                      <p><span className="font-medium text-foreground">Sharing:</span> we share data with processors we use to operate the service (e.g., hosting, email, analytics, payments). We don't sell your personal information.</p>
                       <p><span className="font-medium text-foreground">Retention:</span> we keep data as long as needed to provide the service and for legitimate business or legal reasons, then delete or anonymize it.</p>
                       <p><span className="font-medium text-foreground">Your choices:</span> you can request access or deletion of your data. You can unsubscribe from emails at any time via the link provided.</p>
                       <p><span className="font-medium text-foreground">Security:</span> we use reasonable technical and organizational measures to protect your data. No method of transmission or storage is 100% secure.</p>
-                      <p><span className="font-medium text-foreground">Children:</span> the service isn’t intended for individuals under 18.</p>
+                      <p><span className="font-medium text-foreground">Children:</span> the service isn't intended for individuals under 18.</p>
                       <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
                       <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
                     </div>
@@ -893,14 +893,14 @@ export default function Home() {
                       <DialogDescription>Your agreement to use our service.</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>By using Custom Hair Plan by Agile Rant (“Service”), you agree to these Terms. If you don’t agree, please don’t use the Service.</p>
+                      <p>By using Custom Fasting Plan by Agile Rant ("Service"), you agree to these Terms. If you don't agree, please don't use the Service.</p>
                       <p><span className="font-medium text-foreground">Use of Service:</span> You may use the Service for personal, non‑commercial purposes and must comply with applicable laws.</p>
-                      <p><span className="font-medium text-foreground">No medical advice:</span> Content is for educational purposes only and does not constitute medical advice. Consult your clinician before making changes.</p>
+                      <p><span className="font-medium text-foreground">No medical advice:</span> Content is for educational purposes only and does not constitute medical advice. Consult your clinician before making changes, especially if you have diabetes, are pregnant, or take medications.</p>
                       <p><span className="font-medium text-foreground">Payments:</span> Payments are processed by Stripe. Access to the full plan is delivered upon successful payment. Taxes may apply.</p>
                       <p><span className="font-medium text-foreground">Accounts and communications:</span> You agree to provide accurate information and consent to receive emails related to plan delivery and important updates. You can unsubscribe from marketing at any time.</p>
                       <p><span className="font-medium text-foreground">Intellectual property:</span> The Service and content are owned by Agile Rant or its licensors. You may not copy, modify, or resell without permission.</p>
-                      <p><span className="font-medium text-foreground">Prohibited conduct:</span> Don’t misuse the Service, attempt to access others’ data, or interfere with operation or security.</p>
-                      <p><span className="font-medium text-foreground">Disclaimers:</span> The Service is provided “as is” without warranties. We do not guarantee outcomes, results, or uninterrupted availability.</p>
+                      <p><span className="font-medium text-foreground">Prohibited conduct:</span> Don't misuse the Service, attempt to access others' data, or interfere with operation or security.</p>
+                      <p><span className="font-medium text-foreground">Disclaimers:</span> The Service is provided "as is" without warranties. We do not guarantee outcomes, results, or uninterrupted availability.</p>
                       <p><span className="font-medium text-foreground">Limitation of liability:</span> To the fullest extent permitted by law, Agile Rant and its affiliates are not liable for indirect, incidental, or consequential damages.</p>
                       <p><span className="font-medium text-foreground">Governing law:</span> These Terms are governed by the laws of the jurisdiction where Agile Rant operates, without regard to conflict of law principles.</p>
                       <p><span className="font-medium text-foreground">Changes:</span> We may update these Terms. Material changes will be indicated by updating the Effective date.</p>
