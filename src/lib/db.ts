@@ -100,6 +100,20 @@ export async function saveLead(params: {
   }
 }
 
+export async function getAnswersBySessionId(sessionId: string): Promise<Record<string, any> | null> {
+  try {
+    await ensureSchema();
+    const result = await sql`
+      SELECT answers FROM answers WHERE session_id = ${sessionId} ORDER BY created_at DESC LIMIT 1
+    `;
+    if (result.rows.length === 0) return null;
+    return result.rows[0].answers as Record<string, any>;
+  } catch (err) {
+    console.warn("[db] getAnswersBySessionId failed", err);
+    return null;
+  }
+}
+
 export async function savePlanLog(params: {
   email: string;
   planHtml: string;

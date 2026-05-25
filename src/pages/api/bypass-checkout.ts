@@ -13,10 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ ok: false, bypassed: false });
   }
 
-  const { email, insight, sessionId } = (req.body || {}) as {
+  const { email, insight, sessionId, answers } = (req.body || {}) as {
     email?: string;
     insight?: string;
     sessionId?: string;
+    answers?: Record<string, any>;
   };
 
   const emailToCheck = (typeof email === "string" ? email.trim() : "").toLowerCase();
@@ -25,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const appSessionId = (req.headers["x-session-id"] as string) || sessionId || null;
-  const planHtml = buildFullPlanHtml({ insight });
+  const planHtml = buildFullPlanHtml({ insight, answers: answers ?? null });
 
   try {
     await saveLead({

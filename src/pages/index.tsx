@@ -74,6 +74,10 @@ export default function Home() {
     { id: "activity_level", text: "How would you describe your daily activity level?", type: "single", options: ["Sedentary (mostly sitting)", "Lightly active", "Moderately active", "Very active", "Athlete / intense training daily"] },
     { id: "exercise_timing", text: "When do you prefer to exercise?", type: "single", options: ["Morning (fasted)", "Morning (after eating)", "Afternoon", "Evening", "No preference / varies"] },
     { id: "diet_type", text: "What best describes your current diet?", type: "single", options: ["Omnivore / no restrictions", "Mostly whole foods", "Low‑carb / keto", "Vegetarian", "Vegan", "Mediterranean‑style"] },
+    { id: "protein_frequency", text: "How often do you eat high-protein foods (meat, fish, eggs, legumes, or dairy)?", type: "single", options: ["Less than once a day", "Once a day", "Twice a day", "3 or more times a day"] },
+    { id: "protein_sources", text: "What are your primary protein sources?", type: "single", options: ["Meat & poultry", "Fish & seafood", "Eggs & dairy", "Legumes, tofu & tempeh", "Mixed — a bit of everything"] },
+    { id: "fruit_veg_servings", text: "How many servings of fruits and vegetables do you eat daily?", type: "single", options: ["0–1", "2–3", "4–5", "6 or more"] },
+    { id: "veg_variety", text: "Which vegetables do you eat most often?", type: "single", options: ["Leafy greens (spinach, kale, arugula)", "Cruciferous (broccoli, cauliflower, cabbage)", "Root vegetables (carrots, sweet potato, beets)", "Mixed variety", "I rarely eat vegetables"] },
     { id: "sugar_processed", text: "How often do you eat sugary or highly processed foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
     { id: "caffeine_habits", text: "What are your caffeine habits?", type: "single", options: ["None", "1–2 coffees/day", "3+ coffees/day", "Tea only", "Energy drinks"] },
     { id: "water_intake", text: "How many glasses of water do you drink daily?", type: "single", options: ["1–3", "4–5", "6–8", "8+"] },
@@ -259,7 +263,7 @@ export default function Home() {
             "Content-Type": "application/json",
             ...(sessionId ? { "x-session-id": sessionId } : {}),
           } as any,
-          body: JSON.stringify({ email: emailToUse, insight, sessionId }),
+          body: JSON.stringify({ email: emailToUse, insight, sessionId, answers }),
         });
         const bypassData = await bypassResp.json().catch(() => null);
         if (bypassData?.bypassed) {

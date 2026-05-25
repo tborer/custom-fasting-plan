@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getStripe } from "@/lib/stripe";
 import { sendFullPlan } from "@/lib/email";
-import { saveLead, savePlanLog } from "@/lib/db";
+import { saveLead, savePlanLog, getAnswersBySessionId } from "@/lib/db";
 import { buildFullPlanHtml } from "@/lib/plan";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -51,8 +51,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const appSessionId = (session.metadata && (session.metadata as any).app_session_id) || null;
     const insight = (session.metadata && (session.metadata as any).insight) || null;
 
-    // Compose the full plan HTML using available context.
-    const planHtml = buildFullPlanHtml({ insight });
+    // Look up the user's answers from the DB so the plan includes deficiency analysis.
+    let answers: Record<string, any> | null = null;
+    if (appSessionId) {
+      answers = await getAnswersBySessionId(appSessionId);
+    }
+
+    const planHtml = buildFullPlanHtml({ insight, answers });
 
     // Save lead record (graceful fallback if DB not configured)
     if (email) {
