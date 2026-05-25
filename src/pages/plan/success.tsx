@@ -6,6 +6,7 @@ import HelpLink from "@/components/HelpLink";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { analyzeDeficiencies, type DeficiencyFinding } from "@/lib/plan";
 
 type Answers = Record<string, any>;
 
@@ -13,6 +14,7 @@ export default function PlanSuccess() {
   const [insight, setInsight] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Answers | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [deficiencies, setDeficiencies] = useState<DeficiencyFinding[]>([]);
   const [ready, setReady] = useState(false);
   const [stripeSessionId, setStripeSessionId] = useState<string | null>(null);
   const [planLogged, setPlanLogged] = useState(false);
@@ -55,6 +57,7 @@ export default function PlanSuccess() {
           const storedInsight = window.localStorage.getItem("fasting_insight");
           const parsedAnswers = storedAnswers ? (JSON.parse(storedAnswers) as Answers) : null;
           setAnswers(parsedAnswers);
+          if (parsedAnswers) setDeficiencies(analyzeDeficiencies(parsedAnswers));
           setInsight(storedInsight || null);
           const e = parsedAnswers?.email;
           if (typeof e === "string" && /^\S+@\S+\.\S+$/.test(e)) {
@@ -170,6 +173,7 @@ export default function PlanSuccess() {
             sessionId: stripeSessionId || undefined,
             insight,
             source: "success_page",
+            answers,
           }),
         });
         const data = await resp.json().catch(() => null);
@@ -318,6 +322,49 @@ export default function PlanSuccess() {
                   <li>• Track energy, hunger, and mood weekly — these indicate metabolic adaptation</li>
                   <li>• Reassess your fasting window after 4 weeks and progress based on results and comfort</li>
                 </ul>
+              </section>
+
+              <section>
+                <h2 className="text-lg font-medium text-primary">Potential Nutrient Deficiencies</h2>
+                {deficiencies.length === 0 ? (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {answers
+                      ? "Based on your dietary profile, your macro and micronutrient intake looks well-rounded. Keep prioritizing whole foods, varied vegetables, and quality protein to maintain this."
+                      : "Complete the assessment to see your personalized deficiency analysis."}
+                  </p>
+                ) : (
+                  <>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Based on your dietary profile, the following nutrients may need attention. These are common gaps given your food choices — not a medical diagnosis.
+                    </p>
+                    <div className="mt-3 overflow-x-auto">
+                      <table className="w-full text-sm border-collapse">
+                        <thead>
+                          <tr className="bg-accent/30">
+                            <th className="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground border-b">Nutrient</th>
+                            <th className="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground border-b">Risk</th>
+                            <th className="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground border-b">Why</th>
+                            <th className="text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground border-b">Top Food Sources</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {deficiencies.map((f) => (
+                            <tr key={f.nutrient} className="border-b last:border-0">
+                              <td className="px-3 py-2 font-medium text-primary align-top whitespace-nowrap">{f.nutrient}</td>
+                              <td className="px-3 py-2 align-top whitespace-nowrap">
+                                <span className={f.risk === "High" ? "text-destructive font-semibold" : "text-amber-600 font-semibold"}>
+                                  {f.risk}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2 text-muted-foreground align-top">{f.reason}</td>
+                              <td className="px-3 py-2 text-green-700 align-top">{f.foods}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
               </section>
 
               <div className="text-xs text-muted-foreground rounded-md border bg-accent/20 p-3">

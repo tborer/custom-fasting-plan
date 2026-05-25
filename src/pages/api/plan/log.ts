@@ -7,6 +7,7 @@ type PlanLogBody = {
   sessionId?: string;
   insight?: string | null;
   source?: string;
+  answers?: Record<string, any> | null;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,14 +17,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { email, sessionId, insight, source } = (req.body || {}) as PlanLogBody;
+    const { email, sessionId, insight, source, answers } = (req.body || {}) as PlanLogBody;
 
     if (!email || typeof email !== "string") {
       return res.status(400).json({ ok: false, message: "Email is required" });
     }
 
-    // Build the same full plan HTML the user receives
-    const planHtml = buildFullPlanHtml({ insight: typeof insight === "string" ? insight : null });
+    const planHtml = buildFullPlanHtml({
+      insight: typeof insight === "string" ? insight : null,
+      answers: answers ?? null,
+    });
 
     const xSessionId = (req.headers["x-session-id"] as string) || sessionId || undefined;
 
