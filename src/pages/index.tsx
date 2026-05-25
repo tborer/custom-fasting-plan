@@ -250,6 +250,30 @@ export default function Home() {
     await postLog("unlock_click", { hasSessionId: !!sessionId });
     try {
       const emailToUse = String((leadEmail || (answers as any)["email"] || "")).trim();
+
+      // Check for payment bypass before hitting Stripe
+      try {
+        const bypassResp = await fetch("/api/bypass-checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(sessionId ? { "x-session-id": sessionId } : {}),
+          } as any,
+          body: JSON.stringify({ email: emailToUse, insight, sessionId }),
+        });
+        const bypassData = await bypassResp.json().catch(() => null);
+        if (bypassData?.bypassed) {
+          await postLog("bypass_checkout", { emailed: !!bypassData?.emailed });
+          toast({ title: "Plan sent!", description: "Check your email for your complete fasting plan." });
+          if (typeof window !== "undefined") {
+            window.location.href = "/plan/success";
+          }
+          return;
+        }
+      } catch {
+        // bypass check failed, proceed to normal Stripe flow
+      }
+
       const resp = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: {
