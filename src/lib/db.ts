@@ -40,6 +40,19 @@ async function ensureSchema() {
 
     await sql`CREATE INDEX IF NOT EXISTS plan_logs_session_idx ON plan_logs (session_id);`;
 
+    await sql`CREATE TABLE IF NOT EXISTS payments (
+      id BIGSERIAL PRIMARY KEY,
+      stripe_session_id TEXT NOT NULL,
+      app_session_id TEXT,
+      email TEXT,
+      status TEXT NOT NULL,
+      insight TEXT,
+      emailed_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );`;
+
+    await sql`CREATE UNIQUE INDEX IF NOT EXISTS payments_stripe_session_idx ON payments (stripe_session_id);`;
+
     schemaEnsured = true;
   } catch (err) {
     // If DB is not configured yet, fail gracefully. We'll no-op in save functions.
@@ -133,5 +146,70 @@ export async function savePlanLog(params: {
   } catch (err) {
     console.warn("[db] savePlanLog fallback (no DB)", err);
     return { sessionId: sid, saved: false };
+  }
+}
+
+/**
+ * Idempotently records that a Stripe Checkout Session was paid.
+ * Returns inserted: true only for the caller that actually created the row,
+ * so callers can use that as a guard to send the plan email exactly once.
+ */
+export async function markPaymentPaid(params: {
+  stripeSessionId: string;
+  appSessionId?: string | null;
+  email?: string | null;
+  insight?: string | null;
+}): Promise<{ inserted: boolean; saved: boolean }> {
+  const { stripeSessionId, appSessionId, email, insight } = params;
+
+  try {
+    await ensureSchema();
+    const result = await sql`
+      INSERT INTO payments (stripe_session_id, app_session_id, email, status, insight)
+      VALUES (${stripeSessionId}, ${appSessionId ?? null}, ${email ?? null}, 'paid', ${insight ?? null})
+      ON CONFLICT (stripe_session_id) DO NOTHING
+      RETURNING id
+    `;
+    return { inserted: result.rows.length > 0, saved: true };
+  } catch (err) {
+    console.warn("[db] markPaymentPaid fallback (no DB)", err);
+    return { inserted: false, saved: false };
+  }
+}
+
+export async function getPaymentBySessionId(stripeSessionId: string): Promise<{
+  stripeSessionId: string;
+  appSessionId: string | null;
+  email: string | null;
+  status: string;
+  insight: string | null;
+} | null> {
+  try {
+    await ensureSchema();
+    const result = await sql`
+      SELECT stripe_session_id, app_session_id, email, status, insight
+      FROM payments WHERE stripe_session_id = ${stripeSessionId} LIMIT 1
+    `;
+    if (result.rows.length === 0) return null;
+    const row = result.rows[0];
+    return {
+      stripeSessionId: row.stripe_session_id,
+      appSessionId: row.app_session_id,
+      email: row.email,
+      status: row.status,
+      insight: row.insight,
+    };
+  } catch (err) {
+    console.warn("[db] getPaymentBySessionId failed", err);
+    return null;
+  }
+}
+
+export async function markPaymentEmailed(stripeSessionId: string): Promise<void> {
+  try {
+    await ensureSchema();
+    await sql`UPDATE payments SET emailed_at = NOW() WHERE stripe_session_id = ${stripeSessionId}`;
+  } catch (err) {
+    console.warn("[db] markPaymentEmailed failed", err);
   }
 }
