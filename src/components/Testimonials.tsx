@@ -120,7 +120,7 @@ export default function Testimonials() {
                 {/* Buy CTA */}
                 <div className="mt-4 pt-3 border-t">
                   <Button variant="outline" size="sm" className="w-full justify-center" onClick={() => window.location.href = "/"}>
-                    Get Your Plan \u27a4
+                    Get Your Plan ➤
                   </Button>
                 </div>
               </CardContent>
@@ -133,7 +133,7 @@ export default function Testimonials() {
           <h3 className="text-xl font-semibold text-primary mb-2">Ready to see your results?</h3>
           <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Get your personalized fasting plan for less than a morning coffee. Money-back guarantee included.</p>
           <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
-            \u27a4 Unlock Your Full Plan Now
+            ➤ Unlock Your Full Plan Now
           </Button>
         </div>
       </div>

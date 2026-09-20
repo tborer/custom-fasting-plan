@@ -200,7 +200,7 @@ export default function AboutPage() {
 
             {/* Disclaimer */}
             <div className="rounded-lg border bg-muted/30 p-6 mt-8">
-              <h3 className="font-medium text-primary mb-2">\ud83d\udc4b External Links Note</h3>
+              <h3 className="font-medium text-primary mb-2">👋 External Links Note</h3>
               <p className="text-sm text-muted-foreground">
                 We reference these external resources for educational purposes only. They may not represent our opinions or recommendations. Always consult qualified healthcare professionals before making significant changes to your diet, exercise routine, or medications.
               </p>
@@ -211,25 +211,25 @@ export default function AboutPage() {
           <section className="space-y-6 mb-12">
             <h2 className="text-2xl font-semibold text-primary">Get In Touch</h2>
             <p className="text-base text-muted-foreground leading-relaxed">
-              Have questions about how intermittent fasting might work for you? Questions about our approach or want to share your success stories? Reach out through our help form in the footer, and we'll respond within 24\u201348 hours.
+              Have questions about how intermittent fasting might work for you? Questions about our approach or want to share your success stories? Reach out through our help form in the footer, and we'll respond within 24–48 hours.
             </p>
 
             <div className="rounded-lg border bg-accent/5 p-6">
-              <h3 className="font-medium text-primary mb-2">\u27a4 Connect With Us</h3>
+              <h3 className="font-medium text-primary mb-2">➤ Connect With Us</h3>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li>\u2022 Use the Help link in the site footer</li>
-                <li>\u2022 Visit our FAQ page for immediate answers</li>
-                <li>\u2022 Email: ar@agilerant.info (subject line optional)</li>
+                <li>• Use the Help link in the site footer</li>
+                <li>• Visit our FAQ page for immediate answers</li>
+                <li>• Email: ar@agilerant.info (subject line optional)</li>
               </ul>
             </div>
           </section>
 
           {/* Footer */}
           <div className="mt-16 pt-10 border-t text-center">
-            <p className="text-sm text-muted-foreground">\u00a9 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex justify-center gap-4 mt-4">
               <a href="/faq" className="hover:text-primary text-sm underline-offset-2 hover:underline">FAQ</a>
-              <a href="/" className="hover:text-primary text-sm underline-offset-2 hover:underline">\u27a4 Back to Home</a>
+              <a href="/" className="hover:text-primary text-sm underline-offset-2 hover:underline">➤ Back to Home</a>
             </div>
           </div>
         </main>
@@ -237,7 +237,7 @@ export default function AboutPage() {
         {/* Footer */}
         <footer className="border-t mt-auto">
           <div className="mx-auto max-w-4xl px-4 py-8 text-sm text-muted-foreground text-center">
-            <p>\u00a9 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex justify-center gap-4 mt-4">
               <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/privacy" className="hover:text-primary">Privacy Policy</a>

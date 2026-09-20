@@ -174,27 +174,27 @@ export default function Home() {
   const questions = [
     { id: "email", text: "What is your email?", type: "text" },
     { id: "gender", text: "What is your gender?", type: "single", options: ["Male", "Female", "Prefer not to say", "Other"] },
-    { id: "age", text: "What is your age range?", type: "single", options: ["18\u201324", "25\u201334", "35\u201344", "45\u201354", "55+"] },
-    { id: "primary_goal", text: "What is your primary goal?", type: "single", options: ["Burn fat & lose weight", "Improve metabolic health", "Boost energy & mental clarity", "Better digestion & gut health", "Longevity & anti\u2011aging"] },
-    { id: "fasting_experience", text: "How familiar are you with intermittent fasting?", type: "single", options: ["Never tried", "Tried once or twice", "Practice occasionally", "Regular 14\u201316 hour fasts", "Advanced \u2014 18+ hour fasts"] },
+    { id: "age", text: "What is your age range?", type: "single", options: ["18–24", "25–34", "35–44", "45–54", "55+"] },
+    { id: "primary_goal", text: "What is your primary goal?", type: "single", options: ["Burn fat & lose weight", "Improve metabolic health", "Boost energy & mental clarity", "Better digestion & gut health", "Longevity & anti‑aging"] },
+    { id: "fasting_experience", text: "How familiar are you with intermittent fasting?", type: "single", options: ["Never tried", "Tried once or twice", "Practice occasionally", "Regular 14–16 hour fasts", "Advanced — 18+ hour fasts"] },
     { id: "current_eating_pattern", text: "How would you describe your current eating pattern?", type: "single", options: ["3 meals/day", "3 meals + snacks", "Frequent small meals", "2 large meals", "Irregular / no set pattern"] },
-    { id: "first_meal_time", text: "When do you typically have your first meal?", type: "single", options: ["Before 7am", "7\u20139am", "9\u201311am", "11am\u20131pm", "After 1pm"] },
-    { id: "last_meal_time", text: "When do you typically finish eating for the day?", type: "single", options: ["Before 6pm", "6\u20138pm", "8\u201310pm", "After 10pm"] },
-    { id: "morning_hunger", text: "How hungry are you typically in the morning?", type: "single", options: ["Not hungry at all", "Slightly hungry", "Moderately hungry", "Very hungry \u2014 need to eat immediately"] },
-    { id: "sleep_hours", text: "How many hours of sleep do you get per night on average?", type: "single", options: ["Less than 6", "6\u20137", "7\u20138", "More than 8"] },
-    { id: "wake_time", text: "What time do you typically wake up?", type: "single", options: ["Before 5:30am", "5:30\u20137am", "7\u20138:30am", "After 8:30am"] },
+    { id: "first_meal_time", text: "When do you typically have your first meal?", type: "single", options: ["Before 7am", "7–9am", "9–11am", "11am–1pm", "After 1pm"] },
+    { id: "last_meal_time", text: "When do you typically finish eating for the day?", type: "single", options: ["Before 6pm", "6–8pm", "8–10pm", "After 10pm"] },
+    { id: "morning_hunger", text: "How hungry are you typically in the morning?", type: "single", options: ["Not hungry at all", "Slightly hungry", "Moderately hungry", "Very hungry — need to eat immediately"] },
+    { id: "sleep_hours", text: "How many hours of sleep do you get per night on average?", type: "single", options: ["Less than 6", "6–7", "7–8", "More than 8"] },
+    { id: "wake_time", text: "What time do you typically wake up?", type: "single", options: ["Before 5:30am", "5:30–7am", "7–8:30am", "After 8:30am"] },
     { id: "activity_level", text: "How would you describe your daily activity level?", type: "single", options: ["Sedentary (mostly sitting)", "Lightly active", "Moderately active", "Very active", "Athlete / intense training daily"] },
     { id: "exercise_timing", text: "When do you prefer to exercise?", type: "single", options: ["Morning (fasted)", "Morning (after eating)", "Afternoon", "Evening", "No preference / varies"] },
-    { id: "diet_type", text: "What best describes your current diet?", type: "single", options: ["Omnivore / no restrictions", "Mostly whole foods", "Low\u2011carb / keto", "Vegetarian", "Vegan", "Mediterranean\u2011style"] },
+    { id: "diet_type", text: "What best describes your current diet?", type: "single", options: ["Omnivore / no restrictions", "Mostly whole foods", "Low‑carb / keto", "Vegetarian", "Vegan", "Mediterranean‑style"] },
     { id: "protein_frequency", text: "How often do you eat high-protein foods (meat, fish, eggs, legumes, or dairy)?", type: "single", options: ["Less than once a day", "Once a day", "Twice a day", "3 or more times a day"] },
-    { id: "protein_sources", text: "What are your primary protein sources?", type: "single", options: ["Meat & poultry", "Fish & seafood", "Eggs & dairy", "Legumes, tofu & tempeh", "Mixed \u2014 a bit of everything"] },
-    { id: "fruit_veg_servings", text: "How many servings of fruits and vegetables do you eat daily?", type: "single", options: ["0\u20131", "2\u20133", "4\u20135", "6 or more"] },
+    { id: "protein_sources", text: "What are your primary protein sources?", type: "single", options: ["Meat & poultry", "Fish & seafood", "Eggs & dairy", "Legumes, tofu & tempeh", "Mixed — a bit of everything"] },
+    { id: "fruit_veg_servings", text: "How many servings of fruits and vegetables do you eat daily?", type: "single", options: ["0–1", "2–3", "4–5", "6 or more"] },
     { id: "veg_variety", text: "Which vegetables do you eat most often?", type: "single", options: ["Leafy greens (spinach, kale, arugula)", "Cruciferous (broccoli, cauliflower, cabbage)", "Root vegetables (carrots, sweet potato, beets)", "Mixed variety", "I rarely eat vegetables"] },
-    { id: "sugar_processed", text: "How often do you eat sugary or highly processed foods?", type: "single", options: ["Daily", "3\u20134 times/week", "1\u20132 times/week", "Rarely"] },
-    { id: "caffeine_habits", text: "What are your caffeine habits?", type: "single", options: ["None", "1\u20132 coffees/day", "3+ coffees/day", "Tea only", "Energy drinks"] },
-    { id: "water_intake", text: "How many glasses of water do you drink daily?", type: "single", options: ["1\u20133", "4\u20135", "6\u20138", "8+"] },
+    { id: "sugar_processed", text: "How often do you eat sugary or highly processed foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
+    { id: "caffeine_habits", text: "What are your caffeine habits?", type: "single", options: ["None", "1–2 coffees/day", "3+ coffees/day", "Tea only", "Energy drinks"] },
+    { id: "water_intake", text: "How many glasses of water do you drink daily?", type: "single", options: ["1–3", "4–5", "6–8", "8+"] },
     { id: "stress_level", text: "How would you rate your typical stress level?", type: "single", options: ["Low", "Moderate", "High", "Very high"] },
-    { id: "health_conditions", text: "Any relevant health conditions to consider?", type: "single", options: ["None", "Blood sugar / pre\u2011diabetes", "Thyroid condition", "PCOS / hormonal imbalance", "Heart condition / on medication", "Other"] },
+    { id: "health_conditions", text: "Any relevant health conditions to consider?", type: "single", options: ["None", "Blood sugar / pre‑diabetes", "Thyroid condition", "PCOS / hormonal imbalance", "Heart condition / on medication", "Other"] },
     { id: "biggest_challenge", text: "What's your biggest challenge with fasting?", type: "single", options: ["Hunger and cravings", "Energy crashes", "Social situations / meals out", "Fitting it into my schedule", "Not knowing where to start"] },
     { id: "current_supplements", text: "Are you currently taking any supplements? If yes, please list them.", type: "text" },
   ] as { id: string; text: string; type: "single" | "text"; options?: string[] }[];
@@ -272,27 +272,27 @@ export default function Home() {
     const sugar = ans["sugar_processed"];
 
     if (exp === "Never tried" || exp === "Tried once or twice") {
-      return "Start with the 12:12 protocol for your first 2 weeks \u2014 fast 12 hours (e.g. 8pm\u20138am), eat within 12. This builds the habit without stress. Once hunger adapts, shift your first meal 30\u201360 minutes later each week until you reach a 16:8 window. The goal is 16 fasting hours where growth hormone peaks and fat oxidation accelerates significantly.";
+      return "Start with the 12:12 protocol for your first 2 weeks — fast 12 hours (e.g. 8pm–8am), eat within 12. This builds the habit without stress. Once hunger adapts, shift your first meal 30–60 minutes later each week until you reach a 16:8 window. The goal is 16 fasting hours where growth hormone peaks and fat oxidation accelerates significantly.";
     }
     if (stress === "High" || stress === "Very high") {
-      return "Your stress level is your primary lever. Elevated cortisol promotes fat storage \u2014 especially abdominal \u2014 and makes aggressive fasting counterproductive. Start conservatively with a 14:10 window, prioritize a protein\u2011rich first meal (30\u201340g) to blunt cortisol, and optimize sleep before extending your fast. Lower cortisol directly equals greater fat mobilization.";
+      return "Your stress level is your primary lever. Elevated cortisol promotes fat storage — especially abdominal — and makes aggressive fasting counterproductive. Start conservatively with a 14:10 window, prioritize a protein‑rich first meal (30–40g) to blunt cortisol, and optimize sleep before extending your fast. Lower cortisol directly equals greater fat mobilization.";
     }
     if (hunger === "Not hungry at all" || hunger === "Slightly hungry") {
-      return "You're a natural candidate for 16:8 \u2014 your body isn't signaling for early food. Capitalize on this by delaying your first meal to noon. Morning hours (8am\u201312pm) are when growth hormone is naturally elevated and insulin is lowest, making this your prime fat\u2011burning window. A black coffee or green tea at 9am can extend this window comfortably.";
+      return "You're a natural candidate for 16:8 — your body isn't signaling for early food. Capitalize on this by delaying your first meal to noon. Morning hours (8am–12pm) are when growth hormone is naturally elevated and insulin is lowest, making this your prime fat‑burning window. A black coffee or green tea at 9am can extend this window comfortably.";
     }
-    if (sleep === "Less than 6" || sleep === "6\u20137") {
+    if (sleep === "Less than 6" || sleep === "6–7") {
       return "Sleep is your highest ROI fix before optimizing fasting windows. Poor sleep raises ghrelin (hunger hormone) by ~24% and spikes insulin resistance, making both fasting and fat loss measurably harder. Even 2 extra hours per night for 2 weeks will significantly reduce hunger during your fast and improve your metabolic response to fasting.";
     }
-    if (diet === "Low\u2011carb / keto") {
-      return "Your low\u2011carb diet is already depleting glycogen stores and upregulating fat oxidation \u2014 you have a real metabolic head start. A 16:8 or even 18:6 window will feel more natural for you than most, since circulating insulin stays lower throughout the day. Focus on electrolytes during your fast (sodium 2\u20133g, potassium 3\u20134g, magnesium 400mg) to prevent fatigue and headaches that derail most beginners.";
+    if (diet === "Low‑carb / keto") {
+      return "Your low‑carb diet is already depleting glycogen stores and upregulating fat oxidation — you have a real metabolic head start. A 16:8 or even 18:6 window will feel more natural for you than most, since circulating insulin stays lower throughout the day. Focus on electrolytes during your fast (sodium 2–3g, potassium 3–4g, magnesium 400mg) to prevent fatigue and headaches that derail most beginners.";
     }
     if (sugar === "Daily") {
-      return "Reducing sugar and refined carbs within your eating window is the single biggest multiplier for your fasting protocol. Repeated sugar spikes suppress fat burning even hours after your fast ends. For your first 2 weeks, swap just one high\u2011sugar meal per day for a protein + healthy fat meal \u2014 this shift alone measurably moves your metabolism toward fat oxidation.";
+      return "Reducing sugar and refined carbs within your eating window is the single biggest multiplier for your fasting protocol. Repeated sugar spikes suppress fat burning even hours after your fast ends. For your first 2 weeks, swap just one high‑sugar meal per day for a protein + healthy fat meal — this shift alone measurably moves your metabolism toward fat oxidation.";
     }
     if (activity === "Athlete / intense training daily" || activity === "Very active") {
-      return "With high training volume, protect muscle mass by placing your first meal within 60\u201390 minutes post\u2011training and targeting 0.8\u20131g protein per pound of body weight across your eating window. For morning workouts, training in the last 2 hours of your fast is effective for fat burning without sacrificing performance \u2014 avoid deep\u2011fasted high\u2011intensity work until fat\u2011adapted.";
+      return "With high training volume, protect muscle mass by placing your first meal within 60–90 minutes post‑training and targeting 0.8–1g protein per pound of body weight across your eating window. For morning workouts, training in the last 2 hours of your fast is effective for fat burning without sacrificing performance — avoid deep‑fasted high‑intensity work until fat‑adapted.";
     }
-    return "Your profile is well\u2011suited for a 16:8 protocol: eat from 12pm\u20138pm, fast from 8pm\u201312pm. The core mechanism is insulin suppression \u2014 after 12\u201314 fasting hours, insulin drops low enough for meaningful fat oxidation to begin. Structure your first meal around 30\u201340g protein and healthy fats to extend satiety and keep insulin steady throughout your eating window.";
+    return "Your profile is well‑suited for a 16:8 protocol: eat from 12pm–8pm, fast from 8pm–12pm. The core mechanism is insulin suppression — after 12–14 fasting hours, insulin drops low enough for meaningful fat oxidation to begin. Structure your first meal around 30–40g protein and healthy fats to extend satiety and keep insulin steady throughout your eating window.";
   };
 
   const handleFinish = async () => {
@@ -480,7 +480,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 py-20 sm:py-24">
           {/* URGENCY BANNER - UX-03 Task */}
           <div className="mb-6 bg-accent/80 text-accent-foreground px-4 py-2 rounded-md text-center text-sm border border-accent/50 animate-pulse-slow">
-            <span className="font-bold">\u26a1 Most people see results within 3 weeks</span>
+            <span className="font-bold">⚡ Most people see results within 3 weeks</span>
           </div>
 
           <motion.div
@@ -490,31 +490,31 @@ export default function Home() {
             className="max-w-3xl"
           >
             <p className="inline-flex items-center rounded-full bg-accent/60 text-accent-foreground px-3 py-1 text-xs sm:text-sm">
-              Science\u2011guided \u2022 Fasting + Nutrition + Lifestyle
+              Science‑guided • Fasting + Nutrition + Lifestyle
             </p>
             <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-primary">
               A personalized plan to burn fat with intermittent fasting
             </h1>
             <p className="mt-5 text-base sm:text-lg text-muted-foreground">
               We learn about your schedule, hunger patterns, sleep, and goals to build a fasting
-              protocol that fits your life \u2014 and actually maximizes fat burning. Get one unique
+              protocol that fits your life — and actually maximizes fat burning. Get one unique
               insight free, then unlock your complete custom plan.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               {/* PHASE 1 ENHANCEMENT: Improved CTA buttons with urgency indicators */}
               <Button onClick={startAssessment} className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium group">
-                \u27a4 Start Free Assessment - Only $19.99
+                ➤ Start Free Assessment - Only $19.99
                 <span className="ml-2 inline-block h-5 w-5 rounded-full bg-green-500 text-white text-[10px] items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">New!</span>
               </Button>
               {/* PHASE 1 ENHANCEMENT: Secondary CTA with alternative messaging */}
               <Button variant="secondary" onClick={() => scrollTo(howRef)} className="px-6 font-medium">
-                \u27a4 How It Works
+                ➤ How It Works
               </Button>
 
               {/* PHASE 1 ENHANCEMENT: Trust badge component */}
               <div className="ml-4 flex items-center gap-2 text-xs text-muted-foreground bg-green/5 px-3 py-1.5 rounded-full border border-green/20">
                 <span className="inline-flex items-center justify-center rounded-full bg-green-100 text-green-600 w-5 h-5 flex-shrink-0">
-                  \u2713
+                  ✓
                 </span>
                 <span>Secure Checkout</span>
               </div>
@@ -555,7 +555,7 @@ export default function Home() {
               tags: ["16:8", "18:6", "14:10"],
             },
             {
-              title: "Fat\u2011burning optimization",
+              title: "Fat‑burning optimization",
               desc: "Maximize fat oxidation with strategic fasting timing, fasted movement, and hormonal alignment.",
               img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=60",
             },
@@ -566,7 +566,7 @@ export default function Home() {
             },
             {
               title: "Metabolic health",
-              desc: "Improve insulin sensitivity, stabilize blood sugar, and support long\u2011term metabolic function.",
+              desc: "Improve insulin sensitivity, stabilize blood sugar, and support long‑term metabolic function.",
               img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=60",
             },
             {
@@ -620,25 +620,25 @@ export default function Home() {
                 1. Answer a short series of questions about your eating habits, sleep, activity, and goals.
               </li>
               <li className="leading-relaxed">
-                2. Get one unique insight free \u2014 something actionable you can apply today.
+                2. Get one unique insight free — something actionable you can apply today.
               </li>
               <li className="leading-relaxed">
-                3. Unlock your complete custom plan: fasting window, fat\u2011burning strategy, nutrition timing, electrolytes, and weekly rhythm.
+                3. Unlock your complete custom plan: fasting window, fat‑burning strategy, nutrition timing, electrolytes, and weekly rhythm.
               </li>
             </ul>
 
             <div className="mt-8 flex items-center gap-3">
               <Button onClick={startAssessment} className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium">
-                \u27a4 Start Now - Risk Free
+                ➤ Start Now - Risk Free
               </Button>
             </div>
 
             {/* PHASE 1 ENHANCEMENT: Added trust badges and guarantee component */}
             <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground border-t pt-4">
               <div className="inline-flex items-center justify-center rounded-full bg-green/10 text-green-600 w-5 h-5">
-                \u2714
+                ✔
               </div>
-              <span><span className="font-semibold">\u20ac</span><span className="text-xs">\u20ac</span>30-Day Money-Back Guarantee</span>
+              <span><span className="font-semibold">$</span><span className="text-xs">$</span>30-Day Money-Back Guarantee</span>
             </div>
           </div>
 
@@ -647,7 +647,7 @@ export default function Home() {
               <CardHeader>
                 <CardTitle className="text-primary">Assessment preview</CardTitle>
                 <CardDescription>
-                  A friendly, step\u2011by\u2011step flow with a clear progress indicator.
+                  A friendly, step‑by‑step flow with a clear progress indicator.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -695,15 +695,15 @@ export default function Home() {
           {[
             {
               title: "Fasting protocol",
-              points: ["16:8, 18:6, or 14:10 window", "Customized eating window timing", "Step\u2011by\u2011step progression roadmap", "Weekend & social flexibility tactics"],
+              points: ["16:8, 18:6, or 14:10 window", "Customized eating window timing", "Step‑by‑step progression roadmap", "Weekend & social flexibility tactics"],
             },
             {
               title: "Metabolic support",
-              points: ["Electrolyte management (Na, K, Mg)", "Insulin sensitivity optimization", "Fat\u2011adapted eating strategies", "Hunger management techniques"],
+              points: ["Electrolyte management (Na, K, Mg)", "Insulin sensitivity optimization", "Fat‑adapted eating strategies", "Hunger management techniques"],
             },
             {
               title: "Lifestyle alignment",
-              points: ["Sleep\u2011fasting synchronization", "Fasted vs. fed exercise timing", "Stress & cortisol management", "Progress tracking system"],
+              points: ["Sleep‑fasting synchronization", "Fasted vs. fed exercise timing", "Stress & cortisol management", "Progress tracking system"],
             },
           ].map((c) => (
             <Card key={c.title}>
@@ -714,7 +714,7 @@ export default function Home() {
               <CardContent>
                 <ul className="text-sm text-muted-foreground space-y-2">
                   {c.points.map((p) => (
-                    <li key={p} className="leading-relaxed">\u2022 {p}</li>
+                    <li key={p} className="leading-relaxed">• {p}</li>
                   ))}
                 </ul>
               </CardContent>
@@ -785,15 +785,15 @@ export default function Home() {
                 Unlock your complete fasting plan
               </h3>
               <p className="mt-2 text-muted-foreground">
-                Get your fully personalized fasting protocol, fat\u2011burning window strategy, first\u2011meal
+                Get your fully personalized fasting protocol, fat‑burning window strategy, first‑meal
                 guide, nutrition targets, electrolyte plan, and full weekly rhythm. Pay securely with Stripe.
               </p>
               <div className="mt-6 flex items-center justify-center gap-4 text-sm text-muted-foreground">
-                <span className="font-bold">\u20ac19.99</span>
+                <span className="font-bold">$19.99</span>
                 <span className="line-through opacity-60">$79.99</span>
               </div>
               <div className="mt-6">
-                <Button onClick={startAssessment} className="px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium">Unlock Full Plan \u27a4</Button>
+                <Button onClick={startAssessment} className="px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium">Unlock Full Plan ➤</Button>
               </div>
             </div>
           </CardContent>
@@ -815,9 +815,9 @@ export default function Home() {
                     Free Preview (What You Get Now)
                   </p>
                   <ul className="text-xs text-muted-foreground space-y-1">
-                    <li>\u25cf One personalized fasting insight</li>
-                    <li>\u25cf Basic guidance on 16:8</li>
-                    <li>\u25cf Email with plan preview</li>
+                    <li>● One personalized fasting insight</li>
+                    <li>● Basic guidance on 16:8</li>
+                    <li>● Email with plan preview</li>
                   </ul>
                 </div>
 
@@ -825,24 +825,24 @@ export default function Home() {
                 <div className="border-l pl-4 space-y-2">
                   <p className="text-sm font-medium text-primary mb-2 flex items-center justify-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                    Full Plan (\u20ac19.99 - One Time)
+                    Full Plan ($19.99 - One Time)
                   </p>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>\u2713 Custom fasting window for YOUR schedule</li>
-                    <li>\u2713 First meal timing strategy</li>
-                    <li>\u2713 Fat-burning optimization guide</li>
-                    <li>\u2713 Electrolyte & supplement protocol</li>
-                    <li>\u2713 Weekly rhythm examples</li>
-                    <li>\u2713 Nutrition timing plan</li>
-                    <li>\u2713 Progress tracking system</li>
-                    <li>\u2713 30-day money-back guarantee</li>
+                    <li>✓ Custom fasting window for YOUR schedule</li>
+                    <li>✓ First meal timing strategy</li>
+                    <li>✓ Fat-burning optimization guide</li>
+                    <li>✓ Electrolyte & supplement protocol</li>
+                    <li>✓ Weekly rhythm examples</li>
+                    <li>✓ Nutrition timing plan</li>
+                    <li>✓ Progress tracking system</li>
+                    <li>✓ 30-day money-back guarantee</li>
                   </ul>
                 </div>
               </div>
 
               <div className="mt-8">
                 <Button onClick={startAssessment} className="px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium group">
-                  Get My Full Plan for \u20ac19.99 \u27a4
+                  Get My Full Plan for $19.99 ➤
                   <span className="ml-2 inline-block w-5 h-5 rounded-full bg-green-500 text-white text-[10px] items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">New!</span>
                 </Button>
               </div>
@@ -875,7 +875,7 @@ export default function Home() {
         {/* Related CTA */}
         <div className="mt-8 text-center">
           <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
-            \u27a4 Start Your Assessment Now - Risk Free
+            ➤ Start Your Assessment Now - Risk Free
           </Button>
         </div>
       </motion.section>
@@ -992,7 +992,7 @@ export default function Home() {
                   {/* Buy CTA */}
                   <div className="mt-4 pt-3 border-t">
                     <Button variant="outline" size="sm" className="w-full justify-center" onClick={() => window.location.href = "/"}>
-                      Get Your Plan \u27a4
+                      Get Your Plan ➤
                     </Button>
                   </div>
                 </CardContent>
@@ -1005,7 +1005,7 @@ export default function Home() {
             <h3 className="text-xl font-semibold text-primary mb-2">Ready to see your results?</h3>
             <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Get your personalized fasting plan for less than a morning coffee. Money-back guarantee included.</p>
             <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
-              \u27a4 Unlock Your Full Plan Now
+              ➤ Unlock Your Full Plan Now
             </Button>
           </div>
         </div>
@@ -1015,7 +1015,7 @@ export default function Home() {
       <footer className="border-t">
         <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-muted-foreground">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <p>\u00a9 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex gap-4">
               <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/faq" className="hover:text-primary">FAQ</a>
@@ -1055,7 +1055,7 @@ export default function Home() {
                   </DialogHeader>
                   <div className="space-y-4 text-sm text-muted-foreground">
                     <p>By using Custom Fasting Plan by Agile Rant ("Service"), you agree to these Terms. If you don't agree, please don't use the Service.</p>
-                    <p><span className="font-medium text-foreground">Use of Service:</span> You may use the Service for personal, non\u2011commercial purposes and must comply with applicable laws.</p>
+                    <p><span className="font-medium text-foreground">Use of Service:</span> You may use the Service for personal, non‑commercial purposes and must comply with applicable laws.</p>
                     <p><span className="font-medium text-foreground">No medical advice:</span> Content is for educational purposes only and does not constitute medical advice. Consult your clinician before making changes, especially if you have diabetes, are pregnant, or take medications.</p>
                     <p><span className="font-medium text-foreground">Payments:</span> Payments are processed by Stripe. Access to the full plan is delivered upon successful payment. Taxes may apply.</p>
                     <p><span className="font-medium text-foreground">Accounts and communications:</span> You agree to provide accurate information and consent to receive emails related to plan delivery and important updates. You can unsubscribe from marketing at any time.</p>
