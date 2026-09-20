@@ -135,7 +135,7 @@ export default function FAQPage() {
             {/* PHASE 2 ENHANCEMENT: Add quick CTA to main site */}
             <div className="mt-8">
               <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="inline-flex items-center gap-2">
-                \u27a4 Start Your Free Assessment Now
+                ➤ Start Your Free Assessment Now
               </Button>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function FAQPage() {
                         size="sm"
                         onClick={() => window.location.href = link.href}
                       >
-                        {link.text} \u27a4
+                        {link.text} ➤
                       </Button>
                     ))}
                   </div>
@@ -191,7 +191,7 @@ export default function FAQPage() {
 
             <div className="grid sm:grid-cols-2 gap-4">
               <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="w-full justify-center">
-                \u27a4 Take Free Assessment - Get Your Custom Plan
+                ➤ Take Free Assessment - Get Your Custom Plan
               </Button>
               <Button 
                 variant="secondary" 
@@ -202,7 +202,7 @@ export default function FAQPage() {
                   window.location.href = "/";
                 }}
               >
-                \u27a4 Talk to Our Support Team
+                ➤ Talk to Our Support Team
               </Button>
             </div>
           </section>
@@ -218,8 +218,9 @@ export default function FAQPage() {
 
         <footer className="border-t mt-auto">
           <div className="mx-auto max-w-4xl px-4 py-8 text-sm text-muted-foreground text-center">
-            <p>\u00a9 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex justify-center gap-4 mt-4">
+              <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/privacy" className="hover:text-primary">Privacy Policy</a>
               <a href="/terms" className="hover:text-primary">Terms of Service</a>
             </div>
