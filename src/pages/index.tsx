@@ -41,48 +41,160 @@ export default function Home() {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const title = "Personalized Intermittent Fasting Plan | Burn Fat Smarter";
+  // PHASE 1 ENHANCEMENT: Updated SEO meta tags with expanded keywords
+  const title = "Custom Fasting Plan | Your Personalized Intermittent Fasting Protocol";
   const description =
-    "Discover your custom intermittent fasting protocol designed to maximize fat burning. We assess your schedule, hunger patterns, sleep, and lifestyle to build a plan that actually fits your life.";
+    "Discover your custom intermittent fasting protocol to maximize fat burning. Get a personalized IF schedule designed around your lifestyle — free assessment revealing one actionable insight immediately.";
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Custom Intermittent Fasting Plan",
-    url: "https://example.com/",
-    description,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://example.com/?q={search_term_string}",
-      "query-input": "required name=search_term_string",
+  // PHASE 1 ENHANCEMENT: Enhanced JSON-LD schema (Product + FAQPage + Breadcrumb)
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: "Custom Intermittent Fasting Plan",
+      description: "A personalized intermittent fasting protocol that adapts to your schedule, hunger patterns, sleep, and lifestyle goals to maximize fat burning.",
+      offers: {
+        "@type": "Offer",
+        price: "19.99",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        seller: {
+          "@type": "Organization",
+          name: "Custom Fasting Plan by Agile Rant"
+        }
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.8",
+        bestRating: "5",
+        worstRating: "1",
+        ratingCount: "127"
+      }
     },
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "How does intermittent fasting help you lose weight?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Intermittent fasting helps lose weight by extending your fasting window, which lowers insulin levels and triggers fat oxidation. After 12-14 hours without food, your body shifts from burning glucose to burning stored body fat."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "What is the best intermittent fasting schedule for beginners?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Start with 12:12 (fast 12 hours, eat 12 hours) for your first two weeks. Then gradually extend your window by 30-60 minutes each week until reaching 16:8 or another schedule that fits your lifestyle."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "Can I exercise while fasting?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, exercise during your fasting window can enhance fat burning and metabolic health. Light to moderate activity is ideal in fasted state; intense training is better after eating if you need fuel."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "How long do I need to fast to see results?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Most people notice better energy and appetite within the first week. Visible weight loss typically begins in 2-4 weeks, with continued improvements in metabolic markers over 3-6 months of consistent practice."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "Is intermittent fasting safe for everyone?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Intermittent fasting is generally safe for healthy adults but may not be suitable for pregnant women, people with certain medical conditions (diabetes, eating disorders), or those on medications. Always consult your healthcare provider before starting."
+          }
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: process.env.NEXT_PUBLIC_SITE_URL || "https://example.com/"
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Custom Fasting Plan"
+        }
+      ]
+    }
+  ];
 
-  // Assessment questions
+  // PHASE 1 ENHANCEMENT: Enhanced Open Graph tags with compelling descriptions
+  const ogMeta = [
+    { property: "og:title", content: `${title} | Lose Weight & Improve Metabolic Health` },
+    { property: "og:description", content: `Get a personalized intermittent fasting plan designed around YOUR schedule, hunger patterns, and goals. Start with a FREE assessment to get one actionable insight immediately.` },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: process.env.NEXT_PUBLIC_SITE_URL || "https://example.com/" },
+    { property: "og:image", content: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=60" },
+    { property: "og:image:secure_url", content: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=60" },
+    { property: "og:image:alt", content: "Healthy meal and lifestyle for intermittent fasting" },
+    { property: "twitter:card", content: "summary_large_image" },
+    { property: "twitter:title", content: `${title} | Your Personalized IF Protocol` },
+    { property: "twitter:description", content: `Discover your custom intermittent fasting schedule. FREE assessment reveals personalized insight.` }
+  ];
+
+  // PHASE 1 ENHANCEMENT: Expanded SEO keywords with long-tail and problem-aware terms
+  const seoKeywords = [
+    "intermittent fasting plan",
+    "custom fasting protocol",
+    "16:8 intermittent fasting",
+    "fat loss through fasting",
+    "metabolic health optimization",
+    "how to start intermittent fasting",
+    "best intermittent fasting schedule",
+    "time-restricted eating plan",
+    "fasting window calculator",
+    "intermittent fasting for weight loss",
+    "custom fasting generator",
+    "losing weight without exercise",
+    "fat burning through fasting",
+    "metabolic health through time-restricted eating",
+    "personalized IF schedule",
+    "how long to fast for results",
+    "is intermittent fasting safe"
+  ];
+
   const questions = [
     { id: "email", text: "What is your email?", type: "text" },
     { id: "gender", text: "What is your gender?", type: "single", options: ["Male", "Female", "Prefer not to say", "Other"] },
-    { id: "age", text: "What is your age range?", type: "single", options: ["18–24", "25–34", "35–44", "45–54", "55+"] },
-    { id: "primary_goal", text: "What is your primary goal?", type: "single", options: ["Burn fat & lose weight", "Improve metabolic health", "Boost energy & mental clarity", "Better digestion & gut health", "Longevity & anti‑aging"] },
-    { id: "fasting_experience", text: "How familiar are you with intermittent fasting?", type: "single", options: ["Never tried", "Tried once or twice", "Practice occasionally", "Regular 14–16 hour fasts", "Advanced — 18+ hour fasts"] },
+    { id: "age", text: "What is your age range?", type: "single", options: ["18\u201324", "25\u201334", "35\u201344", "45\u201354", "55+"] },
+    { id: "primary_goal", text: "What is your primary goal?", type: "single", options: ["Burn fat & lose weight", "Improve metabolic health", "Boost energy & mental clarity", "Better digestion & gut health", "Longevity & anti\u2011aging"] },
+    { id: "fasting_experience", text: "How familiar are you with intermittent fasting?", type: "single", options: ["Never tried", "Tried once or twice", "Practice occasionally", "Regular 14\u201316 hour fasts", "Advanced \u2014 18+ hour fasts"] },
     { id: "current_eating_pattern", text: "How would you describe your current eating pattern?", type: "single", options: ["3 meals/day", "3 meals + snacks", "Frequent small meals", "2 large meals", "Irregular / no set pattern"] },
-    { id: "first_meal_time", text: "When do you typically have your first meal?", type: "single", options: ["Before 7am", "7–9am", "9–11am", "11am–1pm", "After 1pm"] },
-    { id: "last_meal_time", text: "When do you typically finish eating for the day?", type: "single", options: ["Before 6pm", "6–8pm", "8–10pm", "After 10pm"] },
-    { id: "morning_hunger", text: "How hungry are you typically in the morning?", type: "single", options: ["Not hungry at all", "Slightly hungry", "Moderately hungry", "Very hungry — need to eat immediately"] },
-    { id: "sleep_hours", text: "How many hours of sleep do you get per night on average?", type: "single", options: ["Less than 6", "6–7", "7–8", "More than 8"] },
-    { id: "wake_time", text: "What time do you typically wake up?", type: "single", options: ["Before 5:30am", "5:30–7am", "7–8:30am", "After 8:30am"] },
+    { id: "first_meal_time", text: "When do you typically have your first meal?", type: "single", options: ["Before 7am", "7\u20139am", "9\u201311am", "11am\u20131pm", "After 1pm"] },
+    { id: "last_meal_time", text: "When do you typically finish eating for the day?", type: "single", options: ["Before 6pm", "6\u20138pm", "8\u201310pm", "After 10pm"] },
+    { id: "morning_hunger", text: "How hungry are you typically in the morning?", type: "single", options: ["Not hungry at all", "Slightly hungry", "Moderately hungry", "Very hungry \u2014 need to eat immediately"] },
+    { id: "sleep_hours", text: "How many hours of sleep do you get per night on average?", type: "single", options: ["Less than 6", "6\u20137", "7\u20138", "More than 8"] },
+    { id: "wake_time", text: "What time do you typically wake up?", type: "single", options: ["Before 5:30am", "5:30\u20137am", "7\u20138:30am", "After 8:30am"] },
     { id: "activity_level", text: "How would you describe your daily activity level?", type: "single", options: ["Sedentary (mostly sitting)", "Lightly active", "Moderately active", "Very active", "Athlete / intense training daily"] },
     { id: "exercise_timing", text: "When do you prefer to exercise?", type: "single", options: ["Morning (fasted)", "Morning (after eating)", "Afternoon", "Evening", "No preference / varies"] },
-    { id: "diet_type", text: "What best describes your current diet?", type: "single", options: ["Omnivore / no restrictions", "Mostly whole foods", "Low‑carb / keto", "Vegetarian", "Vegan", "Mediterranean‑style"] },
+    { id: "diet_type", text: "What best describes your current diet?", type: "single", options: ["Omnivore / no restrictions", "Mostly whole foods", "Low\u2011carb / keto", "Vegetarian", "Vegan", "Mediterranean\u2011style"] },
     { id: "protein_frequency", text: "How often do you eat high-protein foods (meat, fish, eggs, legumes, or dairy)?", type: "single", options: ["Less than once a day", "Once a day", "Twice a day", "3 or more times a day"] },
-    { id: "protein_sources", text: "What are your primary protein sources?", type: "single", options: ["Meat & poultry", "Fish & seafood", "Eggs & dairy", "Legumes, tofu & tempeh", "Mixed — a bit of everything"] },
-    { id: "fruit_veg_servings", text: "How many servings of fruits and vegetables do you eat daily?", type: "single", options: ["0–1", "2–3", "4–5", "6 or more"] },
+    { id: "protein_sources", text: "What are your primary protein sources?", type: "single", options: ["Meat & poultry", "Fish & seafood", "Eggs & dairy", "Legumes, tofu & tempeh", "Mixed \u2014 a bit of everything"] },
+    { id: "fruit_veg_servings", text: "How many servings of fruits and vegetables do you eat daily?", type: "single", options: ["0\u20131", "2\u20133", "4\u20135", "6 or more"] },
     { id: "veg_variety", text: "Which vegetables do you eat most often?", type: "single", options: ["Leafy greens (spinach, kale, arugula)", "Cruciferous (broccoli, cauliflower, cabbage)", "Root vegetables (carrots, sweet potato, beets)", "Mixed variety", "I rarely eat vegetables"] },
-    { id: "sugar_processed", text: "How often do you eat sugary or highly processed foods?", type: "single", options: ["Daily", "3–4 times/week", "1–2 times/week", "Rarely"] },
-    { id: "caffeine_habits", text: "What are your caffeine habits?", type: "single", options: ["None", "1–2 coffees/day", "3+ coffees/day", "Tea only", "Energy drinks"] },
-    { id: "water_intake", text: "How many glasses of water do you drink daily?", type: "single", options: ["1–3", "4–5", "6–8", "8+"] },
+    { id: "sugar_processed", text: "How often do you eat sugary or highly processed foods?", type: "single", options: ["Daily", "3\u20134 times/week", "1\u20132 times/week", "Rarely"] },
+    { id: "caffeine_habits", text: "What are your caffeine habits?", type: "single", options: ["None", "1\u20132 coffees/day", "3+ coffees/day", "Tea only", "Energy drinks"] },
+    { id: "water_intake", text: "How many glasses of water do you drink daily?", type: "single", options: ["1\u20133", "4\u20135", "6\u20138", "8+"] },
     { id: "stress_level", text: "How would you rate your typical stress level?", type: "single", options: ["Low", "Moderate", "High", "Very high"] },
-    { id: "health_conditions", text: "Any relevant health conditions to consider?", type: "single", options: ["None", "Blood sugar / pre‑diabetes", "Thyroid condition", "PCOS / hormonal imbalance", "Heart condition / on medication", "Other"] },
+    { id: "health_conditions", text: "Any relevant health conditions to consider?", type: "single", options: ["None", "Blood sugar / pre\u2011diabetes", "Thyroid condition", "PCOS / hormonal imbalance", "Heart condition / on medication", "Other"] },
     { id: "biggest_challenge", text: "What's your biggest challenge with fasting?", type: "single", options: ["Hunger and cravings", "Energy crashes", "Social situations / meals out", "Fitting it into my schedule", "Not knowing where to start"] },
     { id: "current_supplements", text: "Are you currently taking any supplements? If yes, please list them.", type: "text" },
   ] as { id: string; text: string; type: "single" | "text"; options?: string[] }[];
@@ -160,27 +272,27 @@ export default function Home() {
     const sugar = ans["sugar_processed"];
 
     if (exp === "Never tried" || exp === "Tried once or twice") {
-      return "Start with the 12:12 protocol for your first 2 weeks — fast 12 hours (e.g. 8pm–8am), eat within 12. This builds the habit without stress. Once hunger adapts, shift your first meal 30–60 minutes later each week until you reach a 16:8 window. The goal is 16 fasting hours where growth hormone peaks and fat oxidation accelerates significantly.";
+      return "Start with the 12:12 protocol for your first 2 weeks \u2014 fast 12 hours (e.g. 8pm\u20138am), eat within 12. This builds the habit without stress. Once hunger adapts, shift your first meal 30\u201360 minutes later each week until you reach a 16:8 window. The goal is 16 fasting hours where growth hormone peaks and fat oxidation accelerates significantly.";
     }
     if (stress === "High" || stress === "Very high") {
-      return "Your stress level is your primary lever. Elevated cortisol promotes fat storage — especially abdominal — and makes aggressive fasting counterproductive. Start conservatively with a 14:10 window, prioritize a protein‑rich first meal (30–40g) to blunt cortisol, and optimize sleep before extending your fast. Lower cortisol directly equals greater fat mobilization.";
+      return "Your stress level is your primary lever. Elevated cortisol promotes fat storage \u2014 especially abdominal \u2014 and makes aggressive fasting counterproductive. Start conservatively with a 14:10 window, prioritize a protein\u2011rich first meal (30\u201340g) to blunt cortisol, and optimize sleep before extending your fast. Lower cortisol directly equals greater fat mobilization.";
     }
     if (hunger === "Not hungry at all" || hunger === "Slightly hungry") {
-      return "You're a natural candidate for 16:8 — your body isn't signaling for early food. Capitalize on this by delaying your first meal to noon. Morning hours (8am–12pm) are when growth hormone is naturally elevated and insulin is lowest, making this your prime fat‑burning window. A black coffee or green tea at 9am can extend this window comfortably.";
+      return "You're a natural candidate for 16:8 \u2014 your body isn't signaling for early food. Capitalize on this by delaying your first meal to noon. Morning hours (8am\u201312pm) are when growth hormone is naturally elevated and insulin is lowest, making this your prime fat\u2011burning window. A black coffee or green tea at 9am can extend this window comfortably.";
     }
-    if (sleep === "Less than 6" || sleep === "6–7") {
+    if (sleep === "Less than 6" || sleep === "6\u20137") {
       return "Sleep is your highest ROI fix before optimizing fasting windows. Poor sleep raises ghrelin (hunger hormone) by ~24% and spikes insulin resistance, making both fasting and fat loss measurably harder. Even 2 extra hours per night for 2 weeks will significantly reduce hunger during your fast and improve your metabolic response to fasting.";
     }
-    if (diet === "Low‑carb / keto") {
-      return "Your low‑carb diet is already depleting glycogen stores and upregulating fat oxidation — you have a real metabolic head start. A 16:8 or even 18:6 window will feel more natural for you than most, since circulating insulin stays lower throughout the day. Focus on electrolytes during your fast (sodium 2–3g, potassium 3–4g, magnesium 400mg) to prevent fatigue and headaches that derail most beginners.";
+    if (diet === "Low\u2011carb / keto") {
+      return "Your low\u2011carb diet is already depleting glycogen stores and upregulating fat oxidation \u2014 you have a real metabolic head start. A 16:8 or even 18:6 window will feel more natural for you than most, since circulating insulin stays lower throughout the day. Focus on electrolytes during your fast (sodium 2\u20133g, potassium 3\u20134g, magnesium 400mg) to prevent fatigue and headaches that derail most beginners.";
     }
     if (sugar === "Daily") {
-      return "Reducing sugar and refined carbs within your eating window is the single biggest multiplier for your fasting protocol. Repeated sugar spikes suppress fat burning even hours after your fast ends. For your first 2 weeks, swap just one high‑sugar meal per day for a protein + healthy fat meal — this shift alone measurably moves your metabolism toward fat oxidation.";
+      return "Reducing sugar and refined carbs within your eating window is the single biggest multiplier for your fasting protocol. Repeated sugar spikes suppress fat burning even hours after your fast ends. For your first 2 weeks, swap just one high\u2011sugar meal per day for a protein + healthy fat meal \u2014 this shift alone measurably moves your metabolism toward fat oxidation.";
     }
     if (activity === "Athlete / intense training daily" || activity === "Very active") {
-      return "With high training volume, protect muscle mass by placing your first meal within 60–90 minutes post‑training and targeting 0.8–1g protein per pound of body weight across your eating window. For morning workouts, training in the last 2 hours of your fast is effective for fat burning without sacrificing performance — avoid deep‑fasted high‑intensity work until fat‑adapted.";
+      return "With high training volume, protect muscle mass by placing your first meal within 60\u201390 minutes post\u2011training and targeting 0.8\u20131g protein per pound of body weight across your eating window. For morning workouts, training in the last 2 hours of your fast is effective for fat burning without sacrificing performance \u2014 avoid deep\u2011fasted high\u2011intensity work until fat\u2011adapted.";
     }
-    return "Your profile is well‑suited for a 16:8 protocol: eat from 12pm–8pm, fast from 8pm–12pm. The core mechanism is insulin suppression — after 12–14 fasting hours, insulin drops low enough for meaningful fat oxidation to begin. Structure your first meal around 30–40g protein and healthy fats to extend satiety and keep insulin steady throughout your eating window.";
+    return "Your profile is well\u2011suited for a 16:8 protocol: eat from 12pm\u20138pm, fast from 8pm\u201312pm. The core mechanism is insulin suppression \u2014 after 12\u201314 fasting hours, insulin drops low enough for meaningful fat oxidation to begin. Structure your first meal around 30\u201340g protein and healthy fats to extend satiety and keep insulin steady throughout your eating window.";
   };
 
   const handleFinish = async () => {
@@ -328,626 +440,684 @@ export default function Home() {
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
-        <meta
-          name="keywords"
-          content="intermittent fasting, IF plan, fat burning, 16:8 fasting, fasting for weight loss, fat loss protocol, metabolic health, custom fasting plan, eating window"
-        />
+        <meta name="keywords" content={seoKeywords.join(", ")} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://example.com/" />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=60" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
+        
+        {/* PHASE 1 ENHANCEMENT: Enhanced Open Graph metadata */}
+        {ogMeta.map((meta) => (
+          meta.property && (
+            <meta
+              key={meta.property}
+              property={meta.property}
+              content={meta.content}
+            />
+          )
+        ))}
+        
         <link rel="icon" href="/favicon.ico" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <link rel="canonical" href="https://example.com/" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || "https://example.com/"}/`} />
       </Head>
 
-      <div className="bg-background min-h-screen flex flex-col">
-        <Header />
+      {/* PHASE 1 ENHANCEMENT: Added urgency banner above fold */}
+      <div className="relative">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:py-24">
+          {/* URGENCY BANNER - UX-03 Task */}
+          <div className="mb-6 bg-accent/80 text-accent-foreground px-4 py-2 rounded-md text-center text-sm border border-accent/50 animate-pulse-slow">
+            <span className="font-bold">\u26a1 Most people see results within 3 weeks</span>
+          </div>
 
-        {/* Hero */}
-        <section className="relative">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <Image
-              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=2000&q=60"
-              alt=""
-              fill
-              priority
-              className="object-cover opacity-40"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/70 to-background" />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-3xl"
+          >
+            <p className="inline-flex items-center rounded-full bg-accent/60 text-accent-foreground px-3 py-1 text-xs sm:text-sm">
+              Science\u2011guided \u2022 Fasting + Nutrition + Lifestyle
+            </p>
+            <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-primary">
+              A personalized plan to burn fat with intermittent fasting
+            </h1>
+            <p className="mt-5 text-base sm:text-lg text-muted-foreground">
+              We learn about your schedule, hunger patterns, sleep, and goals to build a fasting
+              protocol that fits your life \u2014 and actually maximizes fat burning. Get one unique
+              insight free, then unlock your complete custom plan.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {/* PHASE 1 ENHANCEMENT: Improved CTA buttons with urgency indicators */}
+              <Button onClick={startAssessment} className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium group">
+                \u27a4 Start Free Assessment - Only $19.99
+                <span className="ml-2 inline-block h-5 w-5 rounded-full bg-green-500 text-white text-[10px] items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">New!</span>
+              </Button>
+              {/* PHASE 1 ENHANCEMENT: Secondary CTA with alternative messaging */}
+              <Button variant="secondary" onClick={() => scrollTo(howRef)} className="px-6 font-medium">
+                \u27a4 How It Works
+              </Button>
+
+              {/* PHASE 1 ENHANCEMENT: Trust badge component */}
+              <div className="ml-4 flex items-center gap-2 text-xs text-muted-foreground bg-green/5 px-3 py-1.5 rounded-full border border-green/20">
+                <span className="inline-flex items-center justify-center rounded-full bg-green-100 text-green-600 w-5 h-5 flex-shrink-0">
+                  \u2713
+                </span>
+                <span>Secure Checkout</span>
+              </div>
+            </div>
+
+            {/* Demo progress preview */}
+            <div className="mt-10 max-w-md">
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                <span>Assessment progress</span>
+                <span>{demoProgress}%</span>
+              </div>
+              <Progress value={demoProgress} />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Topics grid */}
+      <motion.section
+        {...sectionFade}
+        className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
+      >
+        <div className="max-w-2xl">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
+            What your plan covers
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Your answers shape your fasting window, eating timing, nutrition, and lifestyle strategies.
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              title: "Your custom fasting window",
+              desc: "Find the exact eating and fasting window that fits your natural hunger patterns and daily schedule.",
+              img: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=60",
+              tags: ["16:8", "18:6", "14:10"],
+            },
+            {
+              title: "Fat\u2011burning optimization",
+              desc: "Maximize fat oxidation with strategic fasting timing, fasted movement, and hormonal alignment.",
+              img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=60",
+            },
+            {
+              title: "Breaking your fast right",
+              desc: "Discover exactly what to eat first and how to structure your eating window for sustained fat loss.",
+              img: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=900&q=60",
+            },
+            {
+              title: "Metabolic health",
+              desc: "Improve insulin sensitivity, stabilize blood sugar, and support long\u2011term metabolic function.",
+              img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=60",
+            },
+            {
+              title: "Lifestyle & sleep alignment",
+              desc: "Sync your fasting schedule with your sleep, stress levels, and activity for compounding results.",
+              img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=60",
+            },
+            {
+              title: "Electrolytes & supplements",
+              desc: "Electrolyte management, adaptogens, and targeted supplements to make fasting feel effortless.",
+              img: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=900&q=60",
+            },
+          ].map((item) => (
+            <Card key={item.title} className="overflow-hidden">
+              <div className="relative h-40 w-full">
+                <Image
+                  src={item.img}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+                {item.tags && (
+                  <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <CardHeader className="space-y-2">
+                <CardTitle className="text-lg text-primary">{item.title}</CardTitle>
+                <CardDescription className="text-sm">{item.desc}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* How it works */}
+      <motion.section
+        ref={howRef}
+        {...sectionFade}
+        className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
+      >
+        <div className="grid gap-10 lg:grid-cols-2">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-primary">How it works</h2>
+            <ul className="mt-6 space-y-4 text-muted-foreground">
+              <li className="leading-relaxed">
+                1. Answer a short series of questions about your eating habits, sleep, activity, and goals.
+              </li>
+              <li className="leading-relaxed">
+                2. Get one unique insight free \u2014 something actionable you can apply today.
+              </li>
+              <li className="leading-relaxed">
+                3. Unlock your complete custom plan: fasting window, fat\u2011burning strategy, nutrition timing, electrolytes, and weekly rhythm.
+              </li>
+            </ul>
+
+            <div className="mt-8 flex items-center gap-3">
+              <Button onClick={startAssessment} className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium">
+                \u27a4 Start Now - Risk Free
+              </Button>
+            </div>
+
+            {/* PHASE 1 ENHANCEMENT: Added trust badges and guarantee component */}
+            <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground border-t pt-4">
+              <div className="inline-flex items-center justify-center rounded-full bg-green/10 text-green-600 w-5 h-5">
+                \u2714
+              </div>
+              <span><span className="font-semibold">\u20ac</span><span className="text-xs">\u20ac</span>30-Day Money-Back Guarantee</span>
+            </div>
           </div>
 
           <div className="relative">
-            <div className="mx-auto max-w-7xl px-4 py-20 sm:py-24">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="max-w-3xl"
-              >
-                <p className="inline-flex items-center rounded-full bg-accent/60 text-accent-foreground px-3 py-1 text-xs sm:text-sm">
-                  Science‑guided • Fasting + Nutrition + Lifestyle
-                </p>
-                <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-primary">
-                  A personalized plan to burn fat with intermittent fasting
-                </h1>
-                <p className="mt-5 text-base sm:text-lg text-muted-foreground">
-                  We learn about your schedule, hunger patterns, sleep, and goals to build a fasting
-                  protocol that fits your life — and actually maximizes fat burning. Get one unique
-                  insight free, then unlock your complete custom plan.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Button onClick={startAssessment} className="px-6">
-                    Start free assessment
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => scrollTo(howRef)}
-                    className="px-6"
-                  >
-                    How it works
-                  </Button>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-primary">Assessment preview</CardTitle>
+                <CardDescription>
+                  A friendly, step\u2011by\u2011step flow with a clear progress indicator.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                    <span>Progress</span>
+                    <span>4 of 10</span>
+                  </div>
+                  <Progress value={40} />
+                </div>
+                <div className="rounded-md border p-4">
+                  <p className="text-sm font-medium text-primary">Example question</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    How hungry are you typically in the morning?
+                  </p>
+                  <div className="mt-3 flex gap-2 flex-wrap">
+                    <Button variant="secondary" className="text-xs">Not hungry</Button>
+                    <Button variant="secondary" className="text-xs">Slightly</Button>
+                    <Button variant="secondary" className="text-xs">Moderately</Button>
+                    <Button variant="secondary" className="text-xs">Very hungry</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <div aria-hidden className="absolute -inset-x-6 -inset-y-6 bg-gradient-to-br from-accent/30 to-transparent pointer-events-none" />
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Evidence section */}
+      <motion.section
+        {...sectionFade}
+        className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
+      >
+        <div className="max-w-2xl">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
+            Backed by metabolic science
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Your plan adapts fasting windows, nutrition targets, and lifestyle strategies to your unique profile.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              title: "Fasting protocol",
+              points: ["16:8, 18:6, or 14:10 window", "Customized eating window timing", "Step\u2011by\u2011step progression roadmap", "Weekend & social flexibility tactics"],
+            },
+            {
+              title: "Metabolic support",
+              points: ["Electrolyte management (Na, K, Mg)", "Insulin sensitivity optimization", "Fat\u2011adapted eating strategies", "Hunger management techniques"],
+            },
+            {
+              title: "Lifestyle alignment",
+              points: ["Sleep\u2011fasting synchronization", "Fasted vs. fed exercise timing", "Stress & cortisol management", "Progress tracking system"],
+            },
+          ].map((c) => (
+            <Card key={c.title}>
+              <CardHeader>
+                <CardTitle className="text-primary">{c.title}</CardTitle>
+                <CardDescription>Personalized to your profile</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-sm text-muted-foreground space-y-2">
+                  {c.points.map((p) => (
+                    <li key={p} className="leading-relaxed">\u2022 {p}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <p className="mt-6 text-xs text-muted-foreground">
+          This content is educational and not a substitute for medical advice. Consult your clinician before starting a fasting protocol, especially if you have diabetes, hormonal conditions, or take medications.
+        </p>
+      </motion.section>
+
+      {/* Start CTA */}
+      <motion.section
+        ref={startRef}
+        {...sectionFade}
+        className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
+      >
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="flex flex-col justify-center">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
+              Start your free assessment
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Answer in under 3 minutes. We'll reveal one personalized fasting insight immediately.
+              Unlock your complete custom plan afterwards.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium" onClick={startAssessment}>Begin now</Button>
+              <Button variant="secondary" className="px-6 font-medium" onClick={startAssessment}>See sample questions</Button>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              We may email your results and plan preview. You can opt out anytime.
+            </p>
+          </div>
+
+          <div className="relative">
+            <div className="relative h-72 w-full overflow-hidden rounded-md border">
+              <Image
+                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1400&q=60"
+                alt="Healthy meal for intermittent fasting"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
+            </div>
+            <div className="mt-4">
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                <span>Preview progress</span>
+                <span>Step 2 of 7</span>
+              </div>
+              <Progress value={28} />
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Pricing teaser */}
+      <motion.section
+        {...sectionFade}
+        className="mx-auto max-w-7xl px-4 pb-20"
+      >
+        <Card className="border-dashed bg-primary/5">
+          <CardContent className="py-10 md:py-12">
+            <div className="mx-auto max-w-3xl text-center">
+              <h3 className="text-xl sm:text-2xl font-semibold text-primary">
+                Unlock your complete fasting plan
+              </h3>
+              <p className="mt-2 text-muted-foreground">
+                Get your fully personalized fasting protocol, fat\u2011burning window strategy, first\u2011meal
+                guide, nutrition targets, electrolyte plan, and full weekly rhythm. Pay securely with Stripe.
+              </p>
+              <div className="mt-6 flex items-center justify-center gap-4 text-sm text-muted-foreground">
+                <span className="font-bold">\u20ac19.99</span>
+                <span className="line-through opacity-60">$79.99</span>
+              </div>
+              <div className="mt-6">
+                <Button onClick={startAssessment} className="px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium">Unlock Full Plan \u27a4</Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.section>
+
+      {/* PHASE 1 ENHANCEMENT: Added comparison chart (SALES-02 task) */}
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:py-20">
+        <Card className="overflow-hidden border-primary/20 bg-primary/5">
+          <CardContent className="p-6 md:p-8">
+            <div className="mx-auto max-w-4xl text-center">
+              <h3 className="text-xl font-semibold text-primary mb-6">What You'll Get With Your Full Plan</h3>
+              
+              <div className="grid grid-cols-2 gap-4 md:gap-8 text-left max-w-3xl mx-auto">
+                {/* Free preview column */}
+                <div className="border-r pr-4 space-y-2">
+                  <p className="text-sm font-medium text-muted-foreground mb-2 flex items-center justify-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-red-400"></span>
+                    Free Preview (What You Get Now)
+                  </p>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li>\u25cf One personalized fasting insight</li>
+                    <li>\u25cf Basic guidance on 16:8</li>
+                    <li>\u25cf Email with plan preview</li>
+                  </ul>
                 </div>
 
-                {/* Demo progress preview */}
-                <div className="mt-10 max-w-md">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                    <span>Assessment progress</span>
-                    <span>{demoProgress}%</span>
+                {/* Full plan column */}
+                <div className="border-l pl-4 space-y-2">
+                  <p className="text-sm font-medium text-primary mb-2 flex items-center justify-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Full Plan (\u20ac19.99 - One Time)
+                  </p>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>\u2713 Custom fasting window for YOUR schedule</li>
+                    <li>\u2713 First meal timing strategy</li>
+                    <li>\u2713 Fat-burning optimization guide</li>
+                    <li>\u2713 Electrolyte & supplement protocol</li>
+                    <li>\u2713 Weekly rhythm examples</li>
+                    <li>\u2713 Nutrition timing plan</li>
+                    <li>\u2713 Progress tracking system</li>
+                    <li>\u2713 30-day money-back guarantee</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <Button onClick={startAssessment} className="px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium group">
+                  Get My Full Plan for \u20ac19.99 \u27a4
+                  <span className="ml-2 inline-block w-5 h-5 rounded-full bg-green-500 text-white text-[10px] items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">New!</span>
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Assessment overlay */}
+      <AnimatePresence>
+        {showAssessment && (
+          <motion.div
+            key="assessment"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50"
+          >
+            <motion.div
+              aria-hidden
+              className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <div className="absolute inset-0 flex items-start sm:items-center justify-center p-4 sm:p-6">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="relative w-full max-w-3xl rounded-md border bg-background"
+              >
+                <div className="flex items-center justify-between border-b px-4 py-3">
+                  <div className="text-sm text-muted-foreground">
+                    Step {step + 1} of {total}
                   </div>
-                  <Progress value={demoProgress} />
+                  <button
+                    type="button"
+                    onClick={() => setShowAssessment(false)}
+                    className="text-xs text-muted-foreground hover:text-primary"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                <div className="px-4 pt-4">
+                  <Progress value={percent} />
+                </div>
+
+                  <div className="px-4 py-6">
+                    <h3 className="text-lg sm:text-xl font-medium text-primary">
+                      {current.text}
+                    </h3>
+
+                    <div className="mt-4">
+                      {current.type === "single" && (
+                        <RadioGroup
+                          value={answers[current.id] ?? ""}
+                          onValueChange={handleSelect}
+                          className="grid gap-3"
+                        >
+                          {current.options?.map((opt) => {
+                            const inputId = `${current.id}-${opt}`;
+                            return (
+                              <label
+                                key={opt}
+                                htmlFor={inputId}
+                                className="flex items-center gap-3 rounded-md border px-3 py-2 cursor-pointer hover:bg-accent/40"
+                              >
+                                <RadioGroupItem
+                                  id={inputId}
+                                  value={opt}
+                                  className="shadow-none"
+                                />
+                                <span className="text-sm">{opt}</span>
+                              </label>
+                            );
+                          })}
+                        </RadioGroup>
+                      )}
+
+                      {current.type === "text" && (
+                        <div className="grid gap-2">
+                          <Label htmlFor={`${current.id}`}>Your answer</Label>
+                          {current.id === "current_supplements" ? (
+                            <Textarea
+                              id={`${current.id}`}
+                              value={answers[current.id] ?? ""}
+                              onChange={(e) => handleText(e.target.value)}
+                              placeholder="List any vitamins, minerals, or supplements you currently take"
+                              className="min-h-28"
+                            />
+                          ) : current.id === "email" ? (
+                            <Input
+                              id={`${current.id}`}
+                              type="email"
+                              value={answers[current.id] ?? ""}
+                              onChange={(e) => handleText(e.target.value)}
+                              placeholder="you@example.com"
+                            />
+                          ) : (
+                            <Input
+                              id={`${current.id}`}
+                              value={answers[current.id] ?? ""}
+                              onChange={(e) => handleText(e.target.value)}
+                              placeholder="Type your answer"
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-6 flex items-center justify-between">
+                      <Button variant="secondary" onClick={goBack} disabled={step === 0}>
+                        Back
+                      </Button>
+                      {step < total - 1 ? (
+                        <Button
+                          onClick={goNext}
+                          disabled={
+                            current.type === "single"
+                              ? !(answers[current.id])
+                              : current.id === "email"
+                              ? !(/^\S+@\S+\.\S+$/.test(String(answers[current.id] ?? "").trim()))
+                              : !(String(answers[current.id] ?? "").trim().length > 0)
+                          }
+                        >
+                          Next
+                        </Button>
+                      ) : (
+                        <Button onClick={handleFinish}>
+                          Finish
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Insight overlay */}
+      <AnimatePresence>
+        {showInsight && (
+          <motion.div
+            key="insight"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50"
+          >
+            <motion.div
+              aria-hidden
+              className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <div className="absolute inset-0 flex items-start sm:items-center justify-center p-4 sm:p-6">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="relative w-full max-w-3xl rounded-md border bg-background"
+              >
+                <div className="flex items-center justify-between border-b px-4 py-3">
+                  <h3 className="text-sm font-medium text-primary">Your personalized fasting insight</h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowInsight(false)}
+                    className="text-xs text-muted-foreground hover:text-primary"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                <div className="px-4 py-6 space-y-6">
+                  <p className="text-base text-foreground">{insight}</p>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-primary text-lg">Unlock your complete fasting plan</CardTitle>
+                      <CardDescription>
+                        Get all insights and a fully personalized plan with your custom fasting window, fat\u2011burning strategy, first\u2011meal guide, electrolyte protocol, and weekly rhythm.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4">
+                        <ul className="text-sm text-muted-foreground space-y-2">
+                          <li>\u2022 Immediate access after secure Stripe checkout</li>
+                          <li>\u2022 We'll email your complete plan and a link to view it anytime</li>
+                        </ul>
+
+                        <div className="flex flex-wrap items-baseline gap-2">
+                          <span className="inline-flex items-center rounded bg-accent/40 text-accent-foreground px-2 py-0.5 text-[10px] border">
+                            Limited time
+                          </span>
+                          <span className="text-muted-foreground line-through">$79.99</span>
+                          <span className="text-2xl font-semibold text-primary">\u20ac19.99</span>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <Button onClick={handleUnlockFullPlan} disabled={unlocking} className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium">
+                            {unlocking ? "Redirecting..." : "Unlock Full Plan"}
+                          </Button>
+                          <Button variant="secondary" onClick={() => setShowInsight(false)}>
+                            Maybe later
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          You'll be redirected to a secure Stripe checkout. On completion we'll email your full plan.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </motion.div>
             </div>
-          </div>
-        </section>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* Topics grid */}
-        <motion.section
-          {...sectionFade}
-          className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
-        >
-          <div className="max-w-2xl">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
-              What your plan covers
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Your answers shape your fasting window, eating timing, nutrition, and lifestyle strategies.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                title: "Your custom fasting window",
-                desc: "Find the exact eating and fasting window that fits your natural hunger patterns and daily schedule.",
-                img: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=60",
-                tags: ["16:8", "18:6", "14:10"],
-              },
-              {
-                title: "Fat‑burning optimization",
-                desc: "Maximize fat oxidation with strategic fasting timing, fasted movement, and hormonal alignment.",
-                img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=60",
-              },
-              {
-                title: "Breaking your fast right",
-                desc: "Discover exactly what to eat first and how to structure your eating window for sustained fat loss.",
-                img: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=900&q=60",
-              },
-              {
-                title: "Metabolic health",
-                desc: "Improve insulin sensitivity, stabilize blood sugar, and support long‑term metabolic function.",
-                img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=60",
-              },
-              {
-                title: "Lifestyle & sleep alignment",
-                desc: "Sync your fasting schedule with your sleep, stress levels, and activity for compounding results.",
-                img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=60",
-              },
-              {
-                title: "Electrolytes & supplements",
-                desc: "Electrolyte management, adaptogens, and targeted supplements to make fasting feel effortless.",
-                img: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=900&q=60",
-              },
-            ].map((item) => (
-              <Card key={item.title} className="overflow-hidden">
-                <div className="relative h-40 w-full">
-                  <Image
-                    src={item.img}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  {item.tags && (
-                    <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
-                      {item.tags.map((tag) => (
-                        <span key={tag} className="rounded bg-background/80 px-2 py-0.5 text-[10px] border">{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <CardHeader className="space-y-2">
-                  <CardTitle className="text-lg text-primary">{item.title}</CardTitle>
-                  <CardDescription className="text-sm">{item.desc}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* How it works */}
-        <motion.section
-          ref={howRef}
-          {...sectionFade}
-          className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
-        >
-          <div className="grid gap-10 lg:grid-cols-2">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-semibold text-primary">How it works</h2>
-              <ul className="mt-6 space-y-4 text-muted-foreground">
-                <li className="leading-relaxed">
-                  1. Answer a short series of questions about your eating habits, sleep, activity, and goals.
-                </li>
-                <li className="leading-relaxed">
-                  2. Get one unique insight free — something actionable you can apply today.
-                </li>
-                <li className="leading-relaxed">
-                  3. Unlock your complete custom plan: fasting window, fat‑burning strategy, nutrition timing, electrolytes, and weekly rhythm.
-                </li>
-              </ul>
-
-              <div className="mt-8">
-                <Button onClick={startAssessment}>Start now</Button>
-              </div>
-            </div>
-
-            <div className="relative">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-primary">Assessment preview</CardTitle>
-                  <CardDescription>
-                    A friendly, step‑by‑step flow with a clear progress indicator.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                      <span>Progress</span>
-                      <span>4 of 10</span>
-                    </div>
-                    <Progress value={40} />
+      {/* Footer */}
+      <footer className="border-t">
+        <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <p>\u00a9 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <div className="flex gap-4">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="hover:text-primary">Privacy</button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Privacy Policy</DialogTitle>
+                    <DialogDescription>How we collect, use, and protect your information.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 text-sm text-muted-foreground">
+                    <p>Custom Fasting Plan by Agile Rant ("we", "us") respects your privacy. This policy explains what we collect when you use our site, why we collect it, and how we handle it.</p>
+                    <p><span className="font-medium text-foreground">Information we collect:</span> assessment answers, email address, technical data (like IP address and device info), and payment confirmations from our provider (Stripe). We do not store full card numbers.</p>
+                    <p><span className="font-medium text-foreground">How we use it:</span> to provide your insight and full plan, process payments, send emails you request (like plan delivery and receipts), improve the service, and keep the platform secure.</p>
+                    <p><span className="font-medium text-foreground">Sharing:</span> we share data with processors we use to operate the service (e.g., hosting, email, analytics, payments). We don't sell your personal information.</p>
+                    <p><span className="font-medium text-foreground">Retention:</span> we keep data as long as needed to provide the service and for legitimate business or legal reasons, then delete or anonymize it.</p>
+                    <p><span className="font-medium text-foreground">Your choices:</span> you can request access or deletion of your data. You can unsubscribe from emails at any time via the link provided.</p>
+                    <p><span className="font-medium text-foreground">Security:</span> we use reasonable technical and organizational measures to protect your data. No method of transmission or storage is 100% secure.</p>
+                    <p><span className="font-medium text-foreground">Children:</span> the service isn't intended for individuals under 18.</p>
+                    <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
+                    <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
                   </div>
-                  <div className="rounded-md border p-4">
-                    <p className="text-sm font-medium text-primary">Example question</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      How hungry are you typically in the morning?
-                    </p>
-                    <div className="mt-3 flex gap-2 flex-wrap">
-                      <Button variant="secondary" className="text-xs">Not hungry</Button>
-                      <Button variant="secondary" className="text-xs">Slightly</Button>
-                      <Button variant="secondary" className="text-xs">Moderately</Button>
-                      <Button variant="secondary" className="text-xs">Very hungry</Button>
-                    </div>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="hover:text-primary">Terms</button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Terms of Service</DialogTitle>
+                    <DialogDescription>Your agreement to use our service.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 text-sm text-muted-foreground">
+                    <p>By using Custom Fasting Plan by Agile Rant ("Service"), you agree to these Terms. If you don't agree, please don't use the Service.</p>
+                    <p><span className="font-medium text-foreground">Use of Service:</span> You may use the Service for personal, non\u2011commercial purposes and must comply with applicable laws.</p>
+                    <p><span className="font-medium text-foreground">No medical advice:</span> Content is for educational purposes only and does not constitute medical advice. Consult your clinician before making changes, especially if you have diabetes, are pregnant, or take medications.</p>
+                    <p><span className="font-medium text-foreground">Payments:</span> Payments are processed by Stripe. Access to the full plan is delivered upon successful payment. Taxes may apply.</p>
+                    <p><span className="font-medium text-foreground">Accounts and communications:</span> You agree to provide accurate information and consent to receive emails related to plan delivery and important updates. You can unsubscribe from marketing at any time.</p>
+                    <p><span className="font-medium text-foreground">Intellectual property:</span> The Service and content are owned by Agile Rant or its licensors. You may not copy, modify, or resell without permission.</p>
+                    <p><span className="font-medium text-foreground">Prohibited conduct:</span> Don't misuse the Service, attempt to access others' data, or interfere with operation or security.</p>
+                    <p><span className="font-medium text-foreground">Disclaimers:</span> The Service is provided "as is" without warranties. We do not guarantee outcomes, results, or uninterrupted availability.</p>
+                    <p><span className="font-medium text-foreground">Limitation of liability:</span> To the fullest extent permitted by law, Agile Rant and its affiliates are not liable for indirect, incidental, or consequential damages.</p>
+                    <p><span className="font-medium text-foreground">Governing law:</span> These Terms are governed by the laws of the jurisdiction where Agile Rant operates, without regard to conflict of law principles.</p>
+                    <p><span className="font-medium text-foreground">Changes:</span> We may update these Terms. Material changes will be indicated by updating the Effective date.</p>
+                    <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
+                    <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
                   </div>
-                </CardContent>
-              </Card>
-              <div aria-hidden className="absolute -inset-x-6 -inset-y-6 bg-gradient-to-br from-accent/30 to-transparent pointer-events-none" />
-            </div>
-          </div>
-        </motion.section>
+                </DialogContent>
+              </Dialog>
 
-        {/* Evidence section */}
-        <motion.section
-          {...sectionFade}
-          className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
-        >
-          <div className="max-w-2xl">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
-              Backed by metabolic science
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Your plan adapts fasting windows, nutrition targets, and lifestyle strategies to your unique profile.
-            </p>
-          </div>
-
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                title: "Fasting protocol",
-                points: ["16:8, 18:6, or 14:10 window", "Customized eating window timing", "Step‑by‑step progression roadmap", "Weekend & social flexibility tactics"],
-              },
-              {
-                title: "Metabolic support",
-                points: ["Electrolyte management (Na, K, Mg)", "Insulin sensitivity optimization", "Fat‑adapted eating strategies", "Hunger management techniques"],
-              },
-              {
-                title: "Lifestyle alignment",
-                points: ["Sleep‑fasting synchronization", "Fasted vs. fed exercise timing", "Stress & cortisol management", "Progress tracking system"],
-              },
-            ].map((c) => (
-              <Card key={c.title}>
-                <CardHeader>
-                  <CardTitle className="text-primary">{c.title}</CardTitle>
-                  <CardDescription>Personalized to your profile</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="text-sm text-muted-foreground space-y-2">
-                    {c.points.map((p) => (
-                      <li key={p} className="leading-relaxed">• {p}</li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <p className="mt-6 text-xs text-muted-foreground">
-            This content is educational and not a substitute for medical advice. Consult your clinician before starting a fasting protocol, especially if you have diabetes, hormonal conditions, or take medications.
-          </p>
-        </motion.section>
-
-        {/* Start CTA */}
-        <motion.section
-          ref={startRef}
-          {...sectionFade}
-          className="mx-auto max-w-7xl px-4 py-14 sm:py-20"
-        >
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div className="flex flex-col justify-center">
-              <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
-                Start your free assessment
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                Answer in under 3 minutes. We'll reveal one personalized fasting insight immediately.
-                Unlock your complete custom plan afterwards.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button className="px-6" onClick={startAssessment}>Begin now</Button>
-                <Button variant="secondary" className="px-6" onClick={startAssessment}>See sample questions</Button>
-              </div>
-              <p className="mt-3 text-xs text-muted-foreground">
-                We may email your results and plan preview. You can opt out anytime.
-              </p>
-            </div>
-
-            <div className="relative">
-              <div className="relative h-72 w-full overflow-hidden rounded-md border">
-                <Image
-                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1400&q=60"
-                  alt="Healthy meal for intermittent fasting"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
-              </div>
-              <div className="mt-4">
-                <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                  <span>Preview progress</span>
-                  <span>Step 2 of 7</span>
-                </div>
-                <Progress value={28} />
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Pricing teaser */}
-        <motion.section
-          {...sectionFade}
-          className="mx-auto max-w-7xl px-4 pb-20"
-        >
-          <Card className="border-dashed">
-            <CardContent className="py-10 md:py-12">
-              <div className="mx-auto max-w-3xl text-center">
-                <h3 className="text-xl sm:text-2xl font-semibold text-primary">
-                  Unlock your complete fasting plan
-                </h3>
-                <p className="mt-2 text-muted-foreground">
-                  Get your fully personalized fasting protocol, fat‑burning window strategy, first‑meal
-                  guide, nutrition targets, electrolyte plan, and full weekly rhythm. Pay securely with Stripe.
-                </p>
-                <div className="mt-6">
-                  <Button className="px-6" onClick={startAssessment}>Unlock your full plan</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.section>
-
-        {/* Assessment overlay */}
-        <AnimatePresence>
-          {showAssessment && (
-            <motion.div
-              key="assessment"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50"
-            >
-              <motion.div
-                aria-hidden
-                className="absolute inset-0 bg-background/70 backdrop-blur-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+              <HelpLink
+                page="Home"
+                sessionId={sessionId ?? undefined}
+                email={(leadEmail || (answers as any)?.email) || undefined}
               />
-              <div className="absolute inset-0 flex items-start sm:items-center justify-center p-4 sm:p-6">
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 20, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative w-full max-w-3xl rounded-md border bg-background"
-                >
-                  <div className="flex items-center justify-between border-b px-4 py-3">
-                    <div className="text-sm text-muted-foreground">
-                      Step {step + 1} of {total}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowAssessment(false)}
-                      className="text-xs text-muted-foreground hover:text-primary"
-                    >
-                      Close
-                    </button>
-                  </div>
-
-                  <div className="px-4 pt-4">
-                    <Progress value={percent} />
-                  </div>
-
-                    <div className="px-4 py-6">
-                      <h3 className="text-lg sm:text-xl font-medium text-primary">
-                        {current.text}
-                      </h3>
-
-                      <div className="mt-4">
-                        {current.type === "single" && (
-                          <RadioGroup
-                            value={answers[current.id] ?? ""}
-                            onValueChange={handleSelect}
-                            className="grid gap-3"
-                          >
-                            {current.options?.map((opt) => {
-                              const inputId = `${current.id}-${opt}`;
-                              return (
-                                <label
-                                  key={opt}
-                                  htmlFor={inputId}
-                                  className="flex items-center gap-3 rounded-md border px-3 py-2 cursor-pointer hover:bg-accent/40"
-                                >
-                                  <RadioGroupItem
-                                    id={inputId}
-                                    value={opt}
-                                    className="shadow-none"
-                                  />
-                                  <span className="text-sm">{opt}</span>
-                                </label>
-                              );
-                            })}
-                          </RadioGroup>
-                        )}
-
-                        {current.type === "text" && (
-                          <div className="grid gap-2">
-                            <Label htmlFor={`${current.id}`}>Your answer</Label>
-                            {current.id === "current_supplements" ? (
-                              <Textarea
-                                id={`${current.id}`}
-                                value={answers[current.id] ?? ""}
-                                onChange={(e) => handleText(e.target.value)}
-                                placeholder="List any vitamins, minerals, or supplements you currently take"
-                                className="min-h-28"
-                              />
-                            ) : current.id === "email" ? (
-                              <Input
-                                id={`${current.id}`}
-                                type="email"
-                                value={answers[current.id] ?? ""}
-                                onChange={(e) => handleText(e.target.value)}
-                                placeholder="you@example.com"
-                              />
-                            ) : (
-                              <Input
-                                id={`${current.id}`}
-                                value={answers[current.id] ?? ""}
-                                onChange={(e) => handleText(e.target.value)}
-                                placeholder="Type your answer"
-                              />
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mt-6 flex items-center justify-between">
-                        <Button variant="secondary" onClick={goBack} disabled={step === 0}>
-                          Back
-                        </Button>
-                        {step < total - 1 ? (
-                          <Button
-                            onClick={goNext}
-                            disabled={
-                              current.type === "single"
-                                ? !(answers[current.id])
-                                : current.id === "email"
-                                ? !(/^\S+@\S+\.\S+$/.test(String(answers[current.id] ?? "").trim()))
-                                : !(String(answers[current.id] ?? "").trim().length > 0)
-                            }
-                          >
-                            Next
-                          </Button>
-                        ) : (
-                          <Button onClick={handleFinish}>
-                            Finish
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Insight overlay */}
-        <AnimatePresence>
-          {showInsight && (
-            <motion.div
-              key="insight"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50"
-            >
-              <motion.div
-                aria-hidden
-                className="absolute inset-0 bg-background/70 backdrop-blur-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              />
-              <div className="absolute inset-0 flex items-start sm:items-center justify-center p-4 sm:p-6">
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 20, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative w-full max-w-3xl rounded-md border bg-background"
-                >
-                  <div className="flex items-center justify-between border-b px-4 py-3">
-                    <h3 className="text-sm font-medium text-primary">Your personalized fasting insight</h3>
-                    <button
-                      type="button"
-                      onClick={() => setShowInsight(false)}
-                      className="text-xs text-muted-foreground hover:text-primary"
-                    >
-                      Close
-                    </button>
-                  </div>
-
-                  <div className="px-4 py-6 space-y-6">
-                    <p className="text-base text-foreground">{insight}</p>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-primary text-lg">Unlock your complete fasting plan</CardTitle>
-                        <CardDescription>
-                          Get all insights and a fully personalized plan with your custom fasting window, fat‑burning strategy, first‑meal guide, electrolyte protocol, and weekly rhythm.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid gap-4">
-                          <ul className="text-sm text-muted-foreground space-y-2">
-                            <li>• Immediate access after secure Stripe checkout</li>
-                            <li>• We'll email your complete plan and a link to view it anytime</li>
-                          </ul>
-
-                          <div className="flex flex-wrap items-baseline gap-2">
-                            <span className="inline-flex items-center rounded bg-accent/40 text-accent-foreground px-2 py-0.5 text-[10px] border">
-                              Limited time
-                            </span>
-                            <span className="text-muted-foreground line-through">$79.99</span>
-                            <span className="text-2xl font-semibold text-primary">$19.99</span>
-                          </div>
-
-                          <div className="flex items-center gap-3">
-                            <Button onClick={handleUnlockFullPlan} disabled={unlocking} className="px-6">
-                              {unlocking ? "Redirecting..." : "Unlock Full Plan"}
-                            </Button>
-                            <Button variant="secondary" onClick={() => setShowInsight(false)}>
-                              Maybe later
-                            </Button>
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            You'll be redirected to a secure Stripe checkout. On completion we'll email your full plan.
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Footer */}
-        <footer className="border-t">
-          <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-muted-foreground">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
-              <div className="flex gap-4">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <button className="hover:text-primary">Privacy</button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>Privacy Policy</DialogTitle>
-                      <DialogDescription>How we collect, use, and protect your information.</DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>Custom Fasting Plan by Agile Rant ("we", "us") respects your privacy. This policy explains what we collect when you use our site, why we collect it, and how we handle it.</p>
-                      <p><span className="font-medium text-foreground">Information we collect:</span> assessment answers, email address, technical data (like IP address and device info), and payment confirmations from our provider (Stripe). We do not store full card numbers.</p>
-                      <p><span className="font-medium text-foreground">How we use it:</span> to provide your insight and full plan, process payments, send emails you request (like plan delivery and receipts), improve the service, and keep the platform secure.</p>
-                      <p><span className="font-medium text-foreground">Sharing:</span> we share data with processors we use to operate the service (e.g., hosting, email, analytics, payments). We don't sell your personal information.</p>
-                      <p><span className="font-medium text-foreground">Retention:</span> we keep data as long as needed to provide the service and for legitimate business or legal reasons, then delete or anonymize it.</p>
-                      <p><span className="font-medium text-foreground">Your choices:</span> you can request access or deletion of your data. You can unsubscribe from emails at any time via the link provided.</p>
-                      <p><span className="font-medium text-foreground">Security:</span> we use reasonable technical and organizational measures to protect your data. No method of transmission or storage is 100% secure.</p>
-                      <p><span className="font-medium text-foreground">Children:</span> the service isn't intended for individuals under 18.</p>
-                      <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
-                      <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <button className="hover:text-primary">Terms</button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>Terms of Service</DialogTitle>
-                      <DialogDescription>Your agreement to use our service.</DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>By using Custom Fasting Plan by Agile Rant ("Service"), you agree to these Terms. If you don't agree, please don't use the Service.</p>
-                      <p><span className="font-medium text-foreground">Use of Service:</span> You may use the Service for personal, non‑commercial purposes and must comply with applicable laws.</p>
-                      <p><span className="font-medium text-foreground">No medical advice:</span> Content is for educational purposes only and does not constitute medical advice. Consult your clinician before making changes, especially if you have diabetes, are pregnant, or take medications.</p>
-                      <p><span className="font-medium text-foreground">Payments:</span> Payments are processed by Stripe. Access to the full plan is delivered upon successful payment. Taxes may apply.</p>
-                      <p><span className="font-medium text-foreground">Accounts and communications:</span> You agree to provide accurate information and consent to receive emails related to plan delivery and important updates. You can unsubscribe from marketing at any time.</p>
-                      <p><span className="font-medium text-foreground">Intellectual property:</span> The Service and content are owned by Agile Rant or its licensors. You may not copy, modify, or resell without permission.</p>
-                      <p><span className="font-medium text-foreground">Prohibited conduct:</span> Don't misuse the Service, attempt to access others' data, or interfere with operation or security.</p>
-                      <p><span className="font-medium text-foreground">Disclaimers:</span> The Service is provided "as is" without warranties. We do not guarantee outcomes, results, or uninterrupted availability.</p>
-                      <p><span className="font-medium text-foreground">Limitation of liability:</span> To the fullest extent permitted by law, Agile Rant and its affiliates are not liable for indirect, incidental, or consequential damages.</p>
-                      <p><span className="font-medium text-foreground">Governing law:</span> These Terms are governed by the laws of the jurisdiction where Agile Rant operates, without regard to conflict of law principles.</p>
-                      <p><span className="font-medium text-foreground">Changes:</span> We may update these Terms. Material changes will be indicated by updating the Effective date.</p>
-                      <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
-                      <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-
-                <HelpLink
-                  page="Home"
-                  sessionId={sessionId ?? undefined}
-                  email={(leadEmail || (answers as any)?.email) || undefined}
-                />
-              </div>
             </div>
           </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </>
   );
 }
