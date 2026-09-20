@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://custom-fasting-plan.vercel.app/sitemap.xml
