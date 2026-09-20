@@ -365,6 +365,13 @@ export default function Home() {
     setUnlocking(true);
     await postLog("unlock_click", { hasSessionId: !!sessionId });
     try {
+      const cfgData = await fetch("/api/config").then((r) => r.json()).catch(() => null);
+      if (cfgData && cfgData.enableStripe === false) {
+        await postLog("unlock_stripe_disabled");
+        toast({ title: "Checkout coming soon", description: "Payments aren't available yet. Please check back shortly." });
+        return;
+      }
+
       const emailToUse = String((leadEmail || (answers as any)["email"] || "")).trim();
 
       // Check for payment bypass before hitting Stripe
@@ -1038,7 +1045,7 @@ export default function Home() {
                     <p><span className="font-medium text-foreground">Your choices:</span> you can request access or deletion of your data. You can unsubscribe from emails at any time via the link provided.</p>
                     <p><span className="font-medium text-foreground">Security:</span> we use reasonable technical and organizational measures to protect your data. No method of transmission or storage is 100% secure.</p>
                     <p><span className="font-medium text-foreground">Children:</span> the service isn't intended for individuals under 18.</p>
-                    <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
+                    <p><span className="font-medium text-foreground">Contact:</span> use the Contact link in the footer or email ar@agilerant.info.</p>
                     <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
                   </div>
                 </DialogContent>
@@ -1065,7 +1072,7 @@ export default function Home() {
                     <p><span className="font-medium text-foreground">Limitation of liability:</span> To the fullest extent permitted by law, Agile Rant and its affiliates are not liable for indirect, incidental, or consequential damages.</p>
                     <p><span className="font-medium text-foreground">Governing law:</span> These Terms are governed by the laws of the jurisdiction where Agile Rant operates, without regard to conflict of law principles.</p>
                     <p><span className="font-medium text-foreground">Changes:</span> We may update these Terms. Material changes will be indicated by updating the Effective date.</p>
-                    <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
+                    <p><span className="font-medium text-foreground">Contact:</span> use the Contact link in the footer or email ar@agilerant.info.</p>
                     <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
                   </div>
                 </DialogContent>
@@ -1075,6 +1082,8 @@ export default function Home() {
                 page="Home"
                 sessionId={sessionId ?? undefined}
                 email={(leadEmail || (answers as any)?.email) || undefined}
+                label="Contact"
+                title="Contact us"
               />
             </div>
           </div>

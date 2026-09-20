@@ -17,6 +17,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     undefined;
   const ua = req.headers["user-agent"] || undefined;
 
+  const enableStripe = (process.env.ENABLE_STRIPE || "true").toLowerCase() !== "false";
+  if (!enableStripe) {
+    console.log("[stripe/payment-link] disabled");
+    return res.status(200).json({ ok: false, message: "Payments are not available right now" });
+  }
+
   const mode = (process.env.STRIPE_MODE || "test").toLowerCase() === "live" ? "live" : "test";
   console.log("[stripe/payment-link] start", JSON.stringify({ mode, ip: Boolean(ip), ua: Boolean(ua) }));
   const url =

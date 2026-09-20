@@ -25,6 +25,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     (process.env.NEXT_PUBLIC_STRIPE_CONFIRM_ENABLED || "false").toLowerCase() === "true";
   const env = process.env.NEXT_PUBLIC_CO_DEV_ENV || process.env.NODE_ENV || "unknown";
 
+  // Toggle to disable Stripe payment links/checkout while still setting up.
+  const enableStripe = (process.env.ENABLE_STRIPE || "true").toLowerCase() !== "false";
+  // Toggle to show the waitlist signup button/modal.
+  const enableWaitlist = (process.env.ENABLE_WAITLIST || "false").toLowerCase() === "true";
+
   console.log(
     "[config] return",
     JSON.stringify({
@@ -32,6 +37,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       serverHasStripeKey,
       serverConfirmEnabled,
       clientConfirmEnabled,
+      enableStripe,
+      enableWaitlist,
       env,
       ip: Boolean(ip),
       ua: Boolean(ua),
@@ -44,6 +51,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     serverHasStripeKey,
     serverConfirmEnabled,
     clientConfirmEnabled,
+    enableStripe,
+    enableWaitlist,
     env,
   });
 }
