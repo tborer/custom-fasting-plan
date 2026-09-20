@@ -239,6 +239,7 @@ export default function AboutPage() {
           <div className="mx-auto max-w-4xl px-4 py-8 text-sm text-muted-foreground text-center">
             <p>\u00a9 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex justify-center gap-4 mt-4">
+              <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/privacy" className="hover:text-primary">Privacy Policy</a>
               <a href="/terms" className="hover:text-primary">Terms of Service</a>
             </div>

@@ -1017,6 +1017,9 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <p>\u00a9 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex gap-4">
+              <a href="/blog" className="hover:text-primary">Blog</a>
+              <a href="/faq" className="hover:text-primary">FAQ</a>
+              <a href="/about" className="hover:text-primary">About</a>
               <Dialog>
                 <DialogTrigger asChild>
                   <button className="hover:text-primary">Privacy</button>
