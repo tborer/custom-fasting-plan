@@ -1,5 +1,7 @@
 // Single source for the Privacy Policy and Terms of Service text, used by the
 // /privacy and /terms pages. Bump LEGAL_EFFECTIVE_DATE whenever either changes.
+import { resetConsent } from "@/lib/consent";
+
 export const LEGAL_EFFECTIVE_DATE = "2026-09-25";
 
 const Label = ({ children }: { children: React.ReactNode }) => (
@@ -13,6 +15,9 @@ export function PrivacyPolicyContent() {
       <p><Label>Information we collect:</Label> assessment answers, email address, technical data (like IP address and device info), and payment confirmations from our provider (Stripe). We do not store full card numbers.</p>
       <p><Label>How we use it:</Label> to provide your insight and full plan, process payments, send emails you request (like plan delivery and receipts), improve the service, and keep the platform secure.</p>
       <p><Label>Sharing:</Label> we share data with processors we use to operate the service (e.g., hosting, email, analytics, payments). We don’t sell your personal information.</p>
+      <p><Label>Cookies and analytics:</Label> with your consent, we use Google Analytics cookies to measure how the site is used (pages visited, assessment and checkout steps). We don’t use advertising cookies. If you decline, analytics cookies aren’t set.{" "}
+        <button type="button" onClick={resetConsent} className="underline underline-offset-2 hover:text-primary">Change cookie preferences</button>
+      </p>
       <p><Label>Retention:</Label> we keep data as long as needed to provide the service and for legitimate business or legal reasons, then delete or anonymize it.</p>
       <p><Label>Your choices:</Label> you can request access or deletion of your data. You can unsubscribe from emails at any time via the link provided.</p>
       <p><Label>Security:</Label> we use reasonable technical and organizational measures to protect your data. No method of transmission or storage is 100% secure.</p>

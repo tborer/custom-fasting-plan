@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
+import CookieConsent from '@/components/CookieConsent';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -50,6 +51,27 @@ export default function App({ Component, pageProps }: AppProps) {
       {/* Google tag (gtag.js) */}
       {GA_ID && (
         <>
+          {/* Must run before gtag.js: queues consent defaults ahead of config. */}
+          <Script
+            id="ga4-inline"
+            strategy="afterInteractive"
+          >
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              window.gtag = window.gtag || gtag;
+              var stored = null;
+              try { stored = localStorage.getItem('cookie_consent'); } catch (e) {}
+              gtag('consent', 'default', {
+                analytics_storage: stored === 'granted' ? 'granted' : 'denied',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied'
+              });
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}', { send_page_view: false, transport_type: 'image' });
+            `}
+          </Script>
           <Script
             id="ga4-script"
             strategy="afterInteractive"
@@ -59,18 +81,7 @@ export default function App({ Component, pageProps }: AppProps) {
               window.gtag?.('config', GA_ID, { page_path: window.location.pathname + window.location.search, transport_type: 'image' });
             }}
           />
-          <Script
-            id="ga4-inline"
-            strategy="afterInteractive"
-          >
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              window.gtag = window.gtag || gtag;
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', { send_page_view: false, transport_type: 'image' });
-            `}
-          </Script>
+          <CookieConsent />
         </>
       )}
 

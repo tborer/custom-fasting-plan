@@ -68,6 +68,9 @@ bypass for allow-listed addresses.
   free assessment still works, but paid plans can't be recorded or unlocked (see `payments`).
 - **Structured event logging** (`/api/log`) with PII protection: emails are masked, secrets/tokens/
   keys redacted, answer payloads omitted, long strings truncated.
+- **Google Analytics 4** with Consent Mode v2 — analytics storage is denied until the visitor
+  accepts the cookie banner (changeable from the Privacy Policy). Funnel events: `assessment_start`,
+  `assessment_complete`, `generate_lead`, `begin_checkout`, `purchase`.
 - **In-app help widget** — a 500-character help form that emails the support address with page, IP,
   user agent and session context attached.
 - **Optional debug banner** on the success page for diagnosing checkout/confirm issues.
@@ -131,7 +134,7 @@ See `.env.example` for the full list.
 | `TURSO_URL`, `TURSO_TOKEN` | Turso database URL (`libsql://…`) and auth token |
 | `NEXT_PUBLIC_SITE_URL` | Public site URL used for Stripe redirects and email links |
 | `BYPASS_PAYMENT_EMAIL` | Email address that skips Stripe and receives the full plan directly |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID (optional) |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID (optional; enables GA and the cookie consent banner) |
 | `NEXT_PUBLIC_CO_DEV_ENV` | Environment label used in logs and build config |
 | `NEXT_PUBLIC_DEBUG_BANNER` | Shows the checkout debug banner on the success page |
 
