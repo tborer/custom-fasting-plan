@@ -9,10 +9,10 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import { trackEvent, PLAN_PRICE_USD } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
@@ -227,6 +227,7 @@ export default function Home() {
   };
   const startAssessment = () => {
     postLog("assessment_start", { step: 0 });
+    trackEvent("assessment_start");
     setShowAssessment(true);
     setStep(0);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
@@ -298,6 +299,7 @@ export default function Home() {
   const handleFinish = async () => {
     const text = generateInsight(answers);
     setInsight(text);
+    trackEvent("assessment_complete");
     await postLog("assessment_finish", { total, hasEmail: !!leadEmail || !!(answers as any)["email"] });
     try {
       if (typeof window !== "undefined") {
@@ -346,6 +348,7 @@ export default function Home() {
       });
       const data = await resp.json();
       if (data?.ok) {
+        trackEvent("generate_lead", { lead_source: "insight" });
         await postLog("lead_submit_success", { sessionId: data?.sessionId || sessionId });
         if (data.sessionId) setSessionId(data.sessionId);
         if (typeof window !== "undefined") localStorage.setItem("fasting_lead", "true");
@@ -363,6 +366,7 @@ export default function Home() {
 
   const handleUnlockFullPlan = async () => {
     setUnlocking(true);
+    trackEvent("begin_checkout", { currency: "USD", value: PLAN_PRICE_USD });
     await postLog("unlock_click", { hasSessionId: !!sessionId });
     try {
       const emailToUse = String((leadEmail || (answers as any)["email"] || "")).trim();
@@ -503,8 +507,7 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               {/* PHASE 1 ENHANCEMENT: Improved CTA buttons with urgency indicators */}
               <Button onClick={startAssessment} className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium group">
-                ➤ Start Free Assessment - Only $19.99
-                <span className="ml-2 inline-block h-5 w-5 rounded-full bg-green-500 text-white text-[10px] items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">New!</span>
+                ➤ Start Free Assessment
               </Button>
               {/* PHASE 1 ENHANCEMENT: Secondary CTA with alternative messaging */}
               <Button variant="secondary" onClick={() => scrollTo(howRef)} className="px-6 font-medium">
@@ -862,7 +865,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((faq, index) => (
             <Card key={index} className="overflow-hidden">
-              <CardHeader className="pb-2 cursor-pointer hover:bg-accent/30 transition-colors" onClick={() => setShowInsight(false)} show={false}>
+              <CardHeader className="pb-2">
                 <CardTitle className="text-primary text-base">{faq.question}</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
@@ -874,7 +877,7 @@ export default function Home() {
 
         {/* Related CTA */}
         <div className="mt-8 text-center">
-          <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
+          <Button onClick={startAssessment} size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
             ➤ Start Your Assessment Now - Risk Free
           </Button>
         </div>
@@ -991,7 +994,7 @@ export default function Home() {
 
                   {/* Buy CTA */}
                   <div className="mt-4 pt-3 border-t">
-                    <Button variant="outline" size="sm" className="w-full justify-center" onClick={() => window.location.href = "/"}>
+                    <Button variant="outline" size="sm" className="w-full justify-center" onClick={startAssessment}>
                       Get Your Plan ➤
                     </Button>
                   </div>
@@ -1004,7 +1007,7 @@ export default function Home() {
           <div className="mt-12 p-6 bg-primary/5 rounded-lg border border-primary/20 text-center">
             <h3 className="text-xl font-semibold text-primary mb-2">Ready to see your results?</h3>
             <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Get your personalized fasting plan for less than a morning coffee. Money-back guarantee included.</p>
-            <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
+            <Button onClick={startAssessment} size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
               ➤ Unlock Your Full Plan Now
             </Button>
           </div>
@@ -1020,56 +1023,8 @@ export default function Home() {
               <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/faq" className="hover:text-primary">FAQ</a>
               <a href="/about" className="hover:text-primary">About</a>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="hover:text-primary">Privacy</button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>Privacy Policy</DialogTitle>
-                    <DialogDescription>How we collect, use, and protect your information.</DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 text-sm text-muted-foreground">
-                    <p>Custom Fasting Plan by Agile Rant ("we", "us") respects your privacy. This policy explains what we collect when you use our site, why we collect it, and how we handle it.</p>
-                    <p><span className="font-medium text-foreground">Information we collect:</span> assessment answers, email address, technical data (like IP address and device info), and payment confirmations from our provider (Stripe). We do not store full card numbers.</p>
-                    <p><span className="font-medium text-foreground">How we use it:</span> to provide your insight and full plan, process payments, send emails you request (like plan delivery and receipts), improve the service, and keep the platform secure.</p>
-                    <p><span className="font-medium text-foreground">Sharing:</span> we share data with processors we use to operate the service (e.g., hosting, email, analytics, payments). We don't sell your personal information.</p>
-                    <p><span className="font-medium text-foreground">Retention:</span> we keep data as long as needed to provide the service and for legitimate business or legal reasons, then delete or anonymize it.</p>
-                    <p><span className="font-medium text-foreground">Your choices:</span> you can request access or deletion of your data. You can unsubscribe from emails at any time via the link provided.</p>
-                    <p><span className="font-medium text-foreground">Security:</span> we use reasonable technical and organizational measures to protect your data. No method of transmission or storage is 100% secure.</p>
-                    <p><span className="font-medium text-foreground">Children:</span> the service isn't intended for individuals under 18.</p>
-                    <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
-                    <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="hover:text-primary">Terms</button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>Terms of Service</DialogTitle>
-                    <DialogDescription>Your agreement to use our service.</DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 text-sm text-muted-foreground">
-                    <p>By using Custom Fasting Plan by Agile Rant ("Service"), you agree to these Terms. If you don't agree, please don't use the Service.</p>
-                    <p><span className="font-medium text-foreground">Use of Service:</span> You may use the Service for personal, non‑commercial purposes and must comply with applicable laws.</p>
-                    <p><span className="font-medium text-foreground">No medical advice:</span> Content is for educational purposes only and does not constitute medical advice. Consult your clinician before making changes, especially if you have diabetes, are pregnant, or take medications.</p>
-                    <p><span className="font-medium text-foreground">Payments:</span> Payments are processed by Stripe. Access to the full plan is delivered upon successful payment. Taxes may apply.</p>
-                    <p><span className="font-medium text-foreground">Accounts and communications:</span> You agree to provide accurate information and consent to receive emails related to plan delivery and important updates. You can unsubscribe from marketing at any time.</p>
-                    <p><span className="font-medium text-foreground">Intellectual property:</span> The Service and content are owned by Agile Rant or its licensors. You may not copy, modify, or resell without permission.</p>
-                    <p><span className="font-medium text-foreground">Prohibited conduct:</span> Don't misuse the Service, attempt to access others' data, or interfere with operation or security.</p>
-                    <p><span className="font-medium text-foreground">Disclaimers:</span> The Service is provided "as is" without warranties. We do not guarantee outcomes, results, or uninterrupted availability.</p>
-                    <p><span className="font-medium text-foreground">Limitation of liability:</span> To the fullest extent permitted by law, Agile Rant and its affiliates are not liable for indirect, incidental, or consequential damages.</p>
-                    <p><span className="font-medium text-foreground">Governing law:</span> These Terms are governed by the laws of the jurisdiction where Agile Rant operates, without regard to conflict of law principles.</p>
-                    <p><span className="font-medium text-foreground">Changes:</span> We may update these Terms. Material changes will be indicated by updating the Effective date.</p>
-                    <p><span className="font-medium text-foreground">Contact:</span> use the Help link in the footer or email ar@agilerant.info.</p>
-                    <p className="text-xs">Effective: {new Date().toISOString().slice(0, 10)}</p>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <a href="/privacy" className="hover:text-primary">Privacy</a>
+              <a href="/terms" className="hover:text-primary">Terms</a>
 
               <HelpLink
                 page="Home"

@@ -44,8 +44,13 @@ bypass for allow-listed addresses.
 - **Test/live mode switching** via `STRIPE_MODE`, with separate key and price env vars per mode.
 - **Payment Link fallback** — if Checkout Session creation fails, the app falls back to a hosted
   Stripe Payment Link with the email pre-filled.
-- **Server-side payment confirmation** — the success page verifies the Checkout session, confirms
-  `payment_status`, then generates and emails the plan.
+- **Webhook fulfillment** — `/api/stripe/webhook` verifies the Stripe signature and, on
+  `checkout.session.completed` / `checkout.session.async_payment_succeeded` with
+  `payment_status = paid`, records the payment and emails the full plan.
+- **Server-verified unlock** — the success page polls `/api/stripe/session-status`, which only
+  returns the full plan once the payment is recorded (falling back to retrieving the Checkout
+  session from Stripe if the webhook hasn't landed yet). Fulfillment is idempotent, so the webhook
+  and the status check never double-send.
 - **Payment bypass** — addresses matching `BYPASS_PAYMENT_EMAIL` skip Stripe entirely and are sent
   the full plan directly.
 - **Graceful degradation** — with no Stripe keys configured, routes return structured failures
@@ -57,14 +62,12 @@ bypass for allow-listed addresses.
 - Every sent plan is written to a `plan_logs` table so it can be regenerated or resent.
 
 ### Data & operations
-- **Postgres persistence** (`@vercel/postgres`) with auto-created schema: `leads`, `answers` and
-  `plan_logs` tables plus indexes, created on first use.
-- **Fails soft without a database** — if Postgres isn't configured, saves no-op and the app keeps
-  working end to end.
+- **Postgres persistence** (`@vercel/postgres`) with auto-created schema: `leads`, `answers`,
+  `plan_logs` and `payments` tables plus indexes, created on first use.
+- **Database required for paid fulfillment** — without Postgres, lead/answer saves no-op and the
+  free assessment still works, but paid plans can't be recorded or unlocked (see `payments`).
 - **Structured event logging** (`/api/log`) with PII protection: emails are masked, secrets/tokens/
   keys redacted, answer payloads omitted, long strings truncated.
-- **Runtime config endpoint** (`/api/config`) so the client can read server-evaluated flags instead
-  of depending on build-time `NEXT_PUBLIC_*` values.
 - **In-app help widget** — a 500-character help form that emails the support address with page, IP,
   user agent and session context attached.
 - **Optional debug banner** on the success page for diagnosing checkout/confirm issues.
@@ -100,7 +103,8 @@ pnpm dev
 Open [http://localhost:3000](http://localhost:3000).
 
 The app runs without Stripe, Postgres or an email provider configured — the assessment and free
-insight work, and the payment/persistence/email paths degrade gracefully.
+insight work, and the payment/persistence/email paths return structured failures instead of
+crashing. Taking real payments needs Stripe, Postgres and an email provider all configured.
 
 ### Scripts
 
@@ -121,13 +125,13 @@ See `.env.example` for the full list.
 | `STRIPE_TEST_SECRET_KEY` / `STRIPE_SECRET_KEY` | Stripe secret key per mode |
 | `STRIPE_TEST_PRICE_ID` / `STRIPE_PRICE_ID` | Price ID per mode |
 | `STRIPE_TEST_PAYMENT_LINK` / `STRIPE_PAYMENT_LINK` | Payment Link fallback URL per mode |
-| `STRIPE_CONFIRM_ENABLED` | Enables server-side payment confirmation |
-| `NEXT_PUBLIC_STRIPE_CONFIRM_ENABLED` | Client-side counterpart of the above |
+| `STRIPE_TEST_WEBHOOK_SECRET` / `STRIPE_WEBHOOK_SECRET` | Webhook signing secret per mode |
 | `RESEND_API_KEY`, `RESEND_FROM` | Resend email delivery |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | SMTP delivery (alternative to Resend) |
-| `POSTGRES_URLPG` | Postgres connection string |
+| `POSTGRES_URL` | Postgres connection string (read automatically by `@vercel/postgres`) |
 | `NEXT_PUBLIC_SITE_URL` | Public site URL used for Stripe redirects and email links |
 | `BYPASS_PAYMENT_EMAIL` | Email address that skips Stripe and receives the full plan directly |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID (optional) |
 | `NEXT_PUBLIC_CO_DEV_ENV` | Environment label used in logs and build config |
 | `NEXT_PUBLIC_DEBUG_BANNER` | Shows the checkout debug banner on the success page |
 
@@ -139,11 +143,10 @@ See `.env.example` for the full list.
 | `/api/lead` | POST | Saves a consented lead and emails the plan preview |
 | `/api/stripe/create-checkout-session` | POST | Creates a Stripe Checkout session |
 | `/api/stripe/payment-link` | GET | Returns the Payment Link fallback URL |
-| `/api/stripe/confirm` | GET/POST | Verifies payment, then builds, logs and emails the full plan |
+| `/api/stripe/webhook` | POST | Stripe webhook: verifies the signature, records the payment, emails the full plan |
+| `/api/stripe/session-status` | GET | Returns the full plan for a Checkout session only once payment is recorded |
 | `/api/bypass-checkout` | POST | Sends the full plan without payment for allow-listed emails |
-| `/api/plan/log` | POST | Records a generated plan against a session |
 | `/api/help` | POST | Emails a support request with page and session context |
-| `/api/config` | GET | Server-evaluated runtime flags for the client |
 | `/api/log` | POST | Structured, PII-sanitized event logging |
 
 ## Project structure
@@ -154,16 +157,20 @@ src/
 │   ├── Header.tsx        # Site header with logo
 │   ├── HelpLink.tsx      # Help dialog + support form
 │   ├── Logo.tsx
+│   ├── legal/            # Privacy Policy + Terms text and page layout
 │   └── ui/               # shadcn/ui component library
-├── hooks/                # Custom React hooks
 ├── lib/
 │   ├── db.ts             # Postgres schema + lead/answer/plan persistence
 │   ├── email.ts          # Resend + SMTP delivery, preview/full plan emails
+│   ├── fulfillment.ts    # Idempotent paid-session fulfillment (webhook + status check)
 │   ├── plan.ts           # Deficiency analysis + full plan HTML builder
 │   ├── stripe.ts         # Stripe client, mode/price/site-URL resolution
 │   └── utils.ts
 ├── pages/
 │   ├── index.tsx         # Landing page + assessment + insight + checkout
+│   ├── about.tsx, faq.tsx
+│   ├── blog/             # Blog index and posts
+│   ├── privacy.tsx, terms.tsx
 │   ├── plan/success.tsx  # Post-payment confirmation and plan display
 │   ├── plan/cancel.tsx   # Cancelled checkout
 │   ├── error.tsx
@@ -180,12 +187,18 @@ Created automatically on first use:
   `(session_id, email)`.
 - **`answers`** — full assessment submissions keyed by session ID.
 - **`plan_logs`** — the exact plan HTML delivered to each recipient, for regeneration and resends.
+- **`payments`** — one row per paid Stripe Checkout session; the unique key makes fulfillment
+  idempotent.
 
 ## Deployment
 
 Configured for Vercel (`vercel.json` sets `pnpm install --no-frozen-lockfile`). Set the environment
 variables above in your Vercel project, and point `NEXT_PUBLIC_SITE_URL` at your production domain
 so Stripe redirects and email links resolve correctly.
+
+In the Stripe dashboard, add a webhook endpoint at `https://<your-domain>/api/stripe/webhook`
+listening for `checkout.session.completed` and `checkout.session.async_payment_succeeded`, and set
+its signing secret as `STRIPE_WEBHOOK_SECRET` (or `STRIPE_TEST_WEBHOOK_SECRET` in test mode).
 
 ## Disclaimer
 
