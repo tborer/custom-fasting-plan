@@ -22,7 +22,7 @@ bypass for allow-listed addresses.
   timing, diet type, protein frequency and sources, fruit/vegetable intake, sugar and processed
   food, caffeine, water, stress, health conditions, biggest challenge, and current supplements.
 - **Step-by-step flow** with a progress bar, forward/back navigation, and animated transitions.
-- **Answers persisted** to both `localStorage` and Postgres, keyed by a server-issued session ID
+- **Answers persisted** to both `localStorage` and Turso, keyed by a server-issued session ID
   so a plan can be rebuilt later from the original responses.
 
 ### Personalized plan generation
@@ -62,9 +62,9 @@ bypass for allow-listed addresses.
 - Every sent plan is written to a `plan_logs` table so it can be regenerated or resent.
 
 ### Data & operations
-- **Postgres persistence** (`@vercel/postgres`) with auto-created schema: `leads`, `answers`,
+- **Turso (libSQL) persistence** (`@libsql/client`) with auto-created schema: `leads`, `answers`,
   `plan_logs` and `payments` tables plus indexes, created on first use.
-- **Database required for paid fulfillment** — without Postgres, lead/answer saves no-op and the
+- **Database required for paid fulfillment** — without Turso, lead/answer saves no-op and the
   free assessment still works, but paid plans can't be recorded or unlocked (see `payments`).
 - **Structured event logging** (`/api/log`) with PII protection: emails are masked, secrets/tokens/
   keys redacted, answer payloads omitted, long strings truncated.
@@ -86,7 +86,7 @@ bypass for allow-listed addresses.
 | Language | TypeScript |
 | Styling | Tailwind CSS, shadcn/ui, Radix UI |
 | Animation | framer-motion |
-| Database | Postgres via `@vercel/postgres` |
+| Database | Turso (libSQL) via `@libsql/client` |
 | Payments | Stripe |
 | Email | Resend or SMTP (Nodemailer) |
 | Charts | Recharts |
@@ -102,9 +102,9 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-The app runs without Stripe, Postgres or an email provider configured — the assessment and free
+The app runs without Stripe, Turso or an email provider configured — the assessment and free
 insight work, and the payment/persistence/email paths return structured failures instead of
-crashing. Taking real payments needs Stripe, Postgres and an email provider all configured.
+crashing. Taking real payments needs Stripe, Turso and an email provider all configured.
 
 ### Scripts
 
@@ -128,7 +128,7 @@ See `.env.example` for the full list.
 | `STRIPE_TEST_WEBHOOK_SECRET` / `STRIPE_WEBHOOK_SECRET` | Webhook signing secret per mode |
 | `RESEND_API_KEY`, `RESEND_FROM` | Resend email delivery |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | SMTP delivery (alternative to Resend) |
-| `POSTGRES_URL` | Postgres connection string (read automatically by `@vercel/postgres`) |
+| `TURSO_URL`, `TURSO_TOKEN` | Turso database URL (`libsql://…`) and auth token |
 | `NEXT_PUBLIC_SITE_URL` | Public site URL used for Stripe redirects and email links |
 | `BYPASS_PAYMENT_EMAIL` | Email address that skips Stripe and receives the full plan directly |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID (optional) |
@@ -160,7 +160,7 @@ src/
 │   ├── legal/            # Privacy Policy + Terms text and page layout
 │   └── ui/               # shadcn/ui component library
 ├── lib/
-│   ├── db.ts             # Postgres schema + lead/answer/plan persistence
+│   ├── db.ts             # Turso schema + lead/answer/plan/payment persistence
 │   ├── email.ts          # Resend + SMTP delivery, preview/full plan emails
 │   ├── fulfillment.ts    # Idempotent paid-session fulfillment (webhook + status check)
 │   ├── plan.ts           # Deficiency analysis + full plan HTML builder

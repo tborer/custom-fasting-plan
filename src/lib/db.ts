@@ -1,62 +1,75 @@
-import { sql } from "@vercel/postgres";
+import { createClient, type Client, type InArgs } from "@libsql/client";
 import { randomUUID } from "crypto";
+
+// Turso (libSQL) connection. When TURSO_URL is unset every helper below no-ops
+// and reports saved: false, so the free assessment still works locally.
+let client: Client | null = null;
+
+function getClient(): Client {
+  if (client) return client;
+  const url = process.env.TURSO_URL;
+  if (!url) throw new Error("TURSO_URL is not configured");
+  client = createClient({ url, authToken: process.env.TURSO_TOKEN });
+  return client;
+}
+
+async function execute(sql: string, args: InArgs = []) {
+  return getClient().execute({ sql, args });
+}
 
 let schemaEnsured = false;
 
 async function ensureSchema() {
   if (schemaEnsured) return;
   try {
-    await sql`CREATE TABLE IF NOT EXISTS leads (
-      id BIGSERIAL PRIMARY KEY,
-      session_id TEXT,
-      email TEXT NOT NULL,
-      consent BOOLEAN NOT NULL,
-      answers JSONB,
-      source TEXT,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    );`;
-
-    await sql`CREATE UNIQUE INDEX IF NOT EXISTS leads_session_email_idx ON leads (session_id, email);`;
-
-    await sql`CREATE TABLE IF NOT EXISTS answers (
-      id BIGSERIAL PRIMARY KEY,
-      session_id TEXT NOT NULL,
-      email TEXT,
-      answers JSONB NOT NULL,
-      source TEXT,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    );`;
-
-    await sql`CREATE INDEX IF NOT EXISTS answers_session_idx ON answers (session_id);`;
-
-    await sql`CREATE TABLE IF NOT EXISTS plan_logs (
-      id BIGSERIAL PRIMARY KEY,
-      session_id TEXT,
-      email TEXT,
-      plan_html TEXT NOT NULL,
-      source TEXT,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    );`;
-
-    await sql`CREATE INDEX IF NOT EXISTS plan_logs_session_idx ON plan_logs (session_id);`;
-
-    await sql`CREATE TABLE IF NOT EXISTS payments (
-      id BIGSERIAL PRIMARY KEY,
-      stripe_session_id TEXT NOT NULL,
-      app_session_id TEXT,
-      email TEXT,
-      status TEXT NOT NULL,
-      insight TEXT,
-      emailed_at TIMESTAMPTZ,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    );`;
-
-    await sql`CREATE UNIQUE INDEX IF NOT EXISTS payments_stripe_session_idx ON payments (stripe_session_id);`;
-
+    await getClient().batch(
+      [
+        `CREATE TABLE IF NOT EXISTS leads (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          session_id TEXT,
+          email TEXT NOT NULL,
+          consent INTEGER NOT NULL,
+          answers TEXT,
+          source TEXT,
+          created_at TEXT DEFAULT (datetime('now'))
+        )`,
+        `CREATE UNIQUE INDEX IF NOT EXISTS leads_session_email_idx ON leads (session_id, email)`,
+        `CREATE TABLE IF NOT EXISTS answers (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          session_id TEXT NOT NULL,
+          email TEXT,
+          answers TEXT NOT NULL,
+          source TEXT,
+          created_at TEXT DEFAULT (datetime('now'))
+        )`,
+        `CREATE INDEX IF NOT EXISTS answers_session_idx ON answers (session_id)`,
+        `CREATE TABLE IF NOT EXISTS plan_logs (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          session_id TEXT,
+          email TEXT,
+          plan_html TEXT NOT NULL,
+          source TEXT,
+          created_at TEXT DEFAULT (datetime('now'))
+        )`,
+        `CREATE INDEX IF NOT EXISTS plan_logs_session_idx ON plan_logs (session_id)`,
+        `CREATE TABLE IF NOT EXISTS payments (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          stripe_session_id TEXT NOT NULL,
+          app_session_id TEXT,
+          email TEXT,
+          status TEXT NOT NULL,
+          insight TEXT,
+          emailed_at TEXT,
+          created_at TEXT DEFAULT (datetime('now'))
+        )`,
+        `CREATE UNIQUE INDEX IF NOT EXISTS payments_stripe_session_idx ON payments (stripe_session_id)`,
+      ],
+      "write"
+    );
     schemaEnsured = true;
   } catch (err) {
     // If DB is not configured yet, fail gracefully. We'll no-op in save functions.
-    console.warn("[db] ensureSchema skipped or failed (is Postgres configured?)", err);
+    console.warn("[db] ensureSchema skipped or failed (is Turso configured?)", err);
   }
 }
 
@@ -72,10 +85,10 @@ export async function saveAnswers(params: {
   try {
     await ensureSchema();
     const answersJson = JSON.stringify(answers);
-    await sql`
-      INSERT INTO answers (session_id, email, answers, source)
-      VALUES (${sid}, ${email ?? null}, ${answersJson}::jsonb, ${source ?? null})
-    `;
+    await execute(
+      `INSERT INTO answers (session_id, email, answers, source) VALUES (?, ?, ?, ?)`,
+      [sid, email ?? null, answersJson, source ?? null]
+    );
     return { sessionId: sid, saved: true };
   } catch (err) {
     console.warn("[db] saveAnswers fallback (no DB)", err);
@@ -96,16 +109,17 @@ export async function saveLead(params: {
   try {
     await ensureSchema();
     const answersJson = answers ? JSON.stringify(answers) : null;
-    await sql`
-      INSERT INTO leads (session_id, email, consent, answers, source)
-      VALUES (${sid}, ${email}, ${consent}, ${answersJson}::jsonb, ${source ?? null})
-      ON CONFLICT (session_id, email)
-      DO UPDATE SET
-        consent = EXCLUDED.consent,
-        answers = COALESCE(EXCLUDED.answers, leads.answers),
-        source = COALESCE(EXCLUDED.source, leads.source),
-        created_at = NOW()
-    `;
+    await execute(
+      `INSERT INTO leads (session_id, email, consent, answers, source)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT (session_id, email)
+       DO UPDATE SET
+         consent = excluded.consent,
+         answers = COALESCE(excluded.answers, leads.answers),
+         source = COALESCE(excluded.source, leads.source),
+         created_at = datetime('now')`,
+      [sid, email, consent ? 1 : 0, answersJson, source ?? null]
+    );
     return { sessionId: sid, saved: true };
   } catch (err) {
     console.warn("[db] saveLead fallback (no DB)", err);
@@ -116,11 +130,12 @@ export async function saveLead(params: {
 export async function getAnswersBySessionId(sessionId: string): Promise<Record<string, any> | null> {
   try {
     await ensureSchema();
-    const result = await sql`
-      SELECT answers FROM answers WHERE session_id = ${sessionId} ORDER BY created_at DESC LIMIT 1
-    `;
+    const result = await execute(
+      `SELECT answers FROM answers WHERE session_id = ? ORDER BY id DESC LIMIT 1`,
+      [sessionId]
+    );
     if (result.rows.length === 0) return null;
-    return result.rows[0].answers as Record<string, any>;
+    return JSON.parse(String(result.rows[0].answers)) as Record<string, any>;
   } catch (err) {
     console.warn("[db] getAnswersBySessionId failed", err);
     return null;
@@ -138,10 +153,10 @@ export async function savePlanLog(params: {
 
   try {
     await ensureSchema();
-    await sql`
-      INSERT INTO plan_logs (session_id, email, plan_html, source)
-      VALUES (${sid}, ${email}, ${planHtml}, ${source ?? null})
-    `;
+    await execute(
+      `INSERT INTO plan_logs (session_id, email, plan_html, source) VALUES (?, ?, ?, ?)`,
+      [sid, email, planHtml, source ?? null]
+    );
     return { sessionId: sid, saved: true };
   } catch (err) {
     console.warn("[db] savePlanLog fallback (no DB)", err);
@@ -164,12 +179,13 @@ export async function markPaymentPaid(params: {
 
   try {
     await ensureSchema();
-    const result = await sql`
-      INSERT INTO payments (stripe_session_id, app_session_id, email, status, insight)
-      VALUES (${stripeSessionId}, ${appSessionId ?? null}, ${email ?? null}, 'paid', ${insight ?? null})
-      ON CONFLICT (stripe_session_id) DO NOTHING
-      RETURNING id
-    `;
+    const result = await execute(
+      `INSERT INTO payments (stripe_session_id, app_session_id, email, status, insight)
+       VALUES (?, ?, ?, 'paid', ?)
+       ON CONFLICT (stripe_session_id) DO NOTHING
+       RETURNING id`,
+      [stripeSessionId, appSessionId ?? null, email ?? null, insight ?? null]
+    );
     return { inserted: result.rows.length > 0, saved: true };
   } catch (err) {
     console.warn("[db] markPaymentPaid fallback (no DB)", err);
@@ -186,18 +202,19 @@ export async function getPaymentBySessionId(stripeSessionId: string): Promise<{
 } | null> {
   try {
     await ensureSchema();
-    const result = await sql`
-      SELECT stripe_session_id, app_session_id, email, status, insight
-      FROM payments WHERE stripe_session_id = ${stripeSessionId} LIMIT 1
-    `;
+    const result = await execute(
+      `SELECT stripe_session_id, app_session_id, email, status, insight
+       FROM payments WHERE stripe_session_id = ? LIMIT 1`,
+      [stripeSessionId]
+    );
     if (result.rows.length === 0) return null;
     const row = result.rows[0];
     return {
-      stripeSessionId: row.stripe_session_id,
-      appSessionId: row.app_session_id,
-      email: row.email,
-      status: row.status,
-      insight: row.insight,
+      stripeSessionId: String(row.stripe_session_id),
+      appSessionId: row.app_session_id == null ? null : String(row.app_session_id),
+      email: row.email == null ? null : String(row.email),
+      status: String(row.status),
+      insight: row.insight == null ? null : String(row.insight),
     };
   } catch (err) {
     console.warn("[db] getPaymentBySessionId failed", err);
@@ -208,7 +225,7 @@ export async function getPaymentBySessionId(stripeSessionId: string): Promise<{
 export async function markPaymentEmailed(stripeSessionId: string): Promise<void> {
   try {
     await ensureSchema();
-    await sql`UPDATE payments SET emailed_at = NOW() WHERE stripe_session_id = ${stripeSessionId}`;
+    await execute(`UPDATE payments SET emailed_at = datetime('now') WHERE stripe_session_id = ?`, [stripeSessionId]);
   } catch (err) {
     console.warn("[db] markPaymentEmailed failed", err);
   }
