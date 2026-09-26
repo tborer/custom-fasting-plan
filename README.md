@@ -134,6 +134,8 @@ See `.env.example` for the full list.
 | `TURSO_URL`, `TURSO_TOKEN` | Turso database URL (`libsql://…`) and auth token |
 | `NEXT_PUBLIC_SITE_URL` | Public site URL used for Stripe redirects and email links |
 | `BYPASS_PAYMENT_EMAIL` | Email address that skips Stripe and receives the full plan directly |
+| `ENABLE_STRIPE` | Set to `false` to turn off checkout (default on); read at runtime, no rebuild needed |
+| `ENABLE_WAITLIST` | Set to `true` to show the header "Join Waitlist" button; signups are emailed to the owner |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID (optional; enables GA and the cookie consent banner) |
 | `NEXT_PUBLIC_CO_DEV_ENV` | Environment label used in logs and build config |
 | `NEXT_PUBLIC_DEBUG_BANNER` | Shows the checkout debug banner on the success page |
@@ -149,6 +151,8 @@ See `.env.example` for the full list.
 | `/api/stripe/webhook` | POST | Stripe webhook: verifies the signature, records the payment, emails the full plan |
 | `/api/stripe/session-status` | GET | Returns the full plan for a Checkout session only once payment is recorded |
 | `/api/bypass-checkout` | POST | Sends the full plan without payment for allow-listed emails |
+| `/api/waitlist` | POST | Emails a waitlist signup to the owner (only when `ENABLE_WAITLIST=true`) |
+| `/api/config` | GET | Runtime feature flags (`enableStripe`, `enableWaitlist`) for the client |
 | `/api/help` | POST | Emails a support request with page and session context |
 | `/api/log` | POST | Structured, PII-sanitized event logging |
 

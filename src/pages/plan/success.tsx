@@ -306,7 +306,7 @@ export default function PlanSuccess() {
             <div>server: hasInsight={String(!!insight)} hasAnswers={String(!!answers)} hasEmail={String(!!email)}</div>
           </div>
         )}
-        {/* Page footer with Help link */}
+        {/* Page footer with Contact link */}
         <footer className="border-t">
           <div className="mx-auto max-w-3xl w-full px-4 py-10 text-sm text-muted-foreground">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -319,6 +319,8 @@ export default function PlanSuccess() {
                   page="Plan Success"
                   sessionId={stripeSessionId ?? undefined}
                   email={email ?? undefined}
+                  label="Contact"
+                  title="Contact us"
                 />
               </div>
             </div>

@@ -369,6 +369,13 @@ export default function Home() {
     trackEvent("begin_checkout", { currency: "USD", value: PLAN_PRICE_USD });
     await postLog("unlock_click", { hasSessionId: !!sessionId });
     try {
+      const cfgData = await fetch("/api/config").then((r) => r.json()).catch(() => null);
+      if (cfgData && cfgData.enableStripe === false) {
+        await postLog("unlock_stripe_disabled");
+        toast({ title: "Checkout coming soon", description: "Payments aren't available yet. Please check back shortly." });
+        return;
+      }
+
       const emailToUse = String((leadEmail || (answers as any)["email"] || "")).trim();
 
       // Check for payment bypass before hitting Stripe
@@ -1030,6 +1037,8 @@ export default function Home() {
                 page="Home"
                 sessionId={sessionId ?? undefined}
                 email={(leadEmail || (answers as any)?.email) || undefined}
+                label="Contact"
+                title="Contact us"
               />
             </div>
           </div>

@@ -217,7 +217,7 @@ export default function AboutPage() {
             <div className="rounded-lg border bg-accent/5 p-6">
               <h3 className="font-medium text-primary mb-2">➤ Connect With Us</h3>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li>• Use the Help link in the site footer</li>
+                <li>• Use the Contact link in the site footer</li>
                 <li>• Visit our FAQ page for immediate answers</li>
                 <li>• Email: ar@agilerant.info (subject line optional)</li>
               </ul>

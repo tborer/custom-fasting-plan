@@ -36,7 +36,7 @@ export default function LegalPage({ title, description, path, children }: LegalP
               <a href="/about" className="hover:text-primary">About</a>
               <a href="/privacy" className="hover:text-primary">Privacy Policy</a>
               <a href="/terms" className="hover:text-primary">Terms of Service</a>
-              <HelpLink page={title} />
+              <HelpLink page={title} label="Contact" title="Contact us" />
             </div>
           </div>
         </footer>

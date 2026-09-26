@@ -11,9 +11,10 @@ type Props = {
   email?: string;
   className?: string;
   label?: string;
+  title?: string;
 };
 
-export default function HelpLink({ page, sessionId, email, className, label = "Help" }: Props) {
+export default function HelpLink({ page, sessionId, email, className, label = "Help", title = "Need help?" }: Props) {
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState("");
   const [replyEmail, setReplyEmail] = useState(email || "");
@@ -78,7 +79,7 @@ export default function HelpLink({ page, sessionId, email, className, label = "H
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-primary">Need help?</DialogTitle>
+          <DialogTitle className="text-primary">{title}</DialogTitle>
         </DialogHeader>
 
         {sent ? (

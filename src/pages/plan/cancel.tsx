@@ -49,7 +49,7 @@ export default function PlanCancel() {
                 <a href="/privacy" className="hover:text-primary">Privacy</a>
                 <a href="/terms" className="hover:text-primary">Terms</a>
 
-                <HelpLink page="Plan Cancel" />
+                <HelpLink page="Plan Cancel" label="Contact" title="Contact us" />
               </div>
             </div>
           </div>

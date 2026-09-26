@@ -6,6 +6,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ ok: false, message: "Method not allowed" });
   }
 
+  const enableStripe = (process.env.ENABLE_STRIPE || "true").toLowerCase() !== "false";
+  if (!enableStripe) {
+    console.log("[stripe] checkout_session_create disabled");
+    return res.status(200).json({ ok: false, message: "Payments are not available right now" });
+  }
+
   const stripe = getStripe();
   const priceId = getPriceId();
 

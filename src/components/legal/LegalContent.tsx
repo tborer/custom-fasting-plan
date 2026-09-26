@@ -22,7 +22,7 @@ export function PrivacyPolicyContent() {
       <p><Label>Your choices:</Label> you can request access or deletion of your data. You can unsubscribe from emails at any time via the link provided.</p>
       <p><Label>Security:</Label> we use reasonable technical and organizational measures to protect your data. No method of transmission or storage is 100% secure.</p>
       <p><Label>Children:</Label> the service isn’t intended for individuals under 18.</p>
-      <p><Label>Contact:</Label> use the Help link in the footer or email ar@agilerant.info.</p>
+      <p><Label>Contact:</Label> use the Contact link in the footer or email ar@agilerant.info.</p>
       <p className="text-xs">Effective: {LEGAL_EFFECTIVE_DATE}</p>
     </div>
   );
@@ -43,7 +43,7 @@ export function TermsOfServiceContent() {
       <p><Label>Limitation of liability:</Label> To the fullest extent permitted by law, Agile Rant and its affiliates are not liable for indirect, incidental, or consequential damages.</p>
       <p><Label>Governing law:</Label> These Terms are governed by the laws of the jurisdiction where Agile Rant operates, without regard to conflict of law principles.</p>
       <p><Label>Changes:</Label> We may update these Terms. Material changes will be indicated by updating the Effective date.</p>
-      <p><Label>Contact:</Label> use the Help link in the footer or email ar@agilerant.info.</p>
+      <p><Label>Contact:</Label> use the Contact link in the footer or email ar@agilerant.info.</p>
       <p className="text-xs">Effective: {LEGAL_EFFECTIVE_DATE}</p>
     </div>
   );
