@@ -57,7 +57,7 @@ export default function ScienceOfFastingPage() {
               <li><a href="#mitochondria" className="hover:underline">Mitochondrial Efficiency</a></li>
               <li><a href="#hormones" className="hover:underline">Hormonal Balance (Ghrelin, Leptin, Cortisol)</a></li>
               <li><a href="#study-summary" className="hover:underline">Study Summary</a></li>
-              <li><a href="#cta" className="text-primary font-bold hover:text-primary/80 inline-block mt-2">&#10132; Start Free Assessment & Get Your Science-Based Plan</a></li>
+              <li><a href="/?start=1" className="text-primary font-bold hover:text-primary/80 inline-block mt-2">&#10132; Start Free Assessment & Get Your Science-Based Plan</a></li>
             </ol>
           </nav>
 
