@@ -71,7 +71,7 @@ export default function BeginnersGuidePage() {
                 Common IF protocols include 16:8 (fast 16 hours, eat during an 8-hour window), 18:6, and even more aggressive schedules like 20:4 for experienced fasters. Our personalized plans help you find the schedule that fits YOUR lifestyle &mdash; because what works for one person won&apos;t work for everyone.
               </p>
 
-              <div className="rounded-md border bg-green/5 p-4">
+              <div className="rounded-md border bg-green-500/5 p-4">
                 <h3 className="text-base font-medium text-primary mb-2">Key Benefits of IF</h3>
                 <ul className="text-xs text-muted-foreground space-y-1 ml-4">
                   <li>&bull; Enhanced fat burning through insulin sensitivity</li>
@@ -192,7 +192,7 @@ export default function BeginnersGuidePage() {
                 </div>
               </div>
 
-              <div className="rounded-md border bg-green/5 p-4">
+              <div className="rounded-md border bg-green-500/5 p-4">
                 <h3 className="font-medium text-primary mb-2">Sample Eating Window (8:00pm &ndash; 12:00pm)</h3>
                 <ul className="text-xs text-muted-foreground space-y-1 ml-1">
                   <li>&bull; 8:00&ndash;9:00pm: Dinner (chicken breast, quinoa, roasted vegetables)</li>
@@ -240,7 +240,7 @@ export default function BeginnersGuidePage() {
                 Take our free 25-question assessment and receive your custom fasting protocol tailored to YOUR schedule, hunger patterns, sleep needs, and health goals. Unlock your personalized plan for only $19.99 &mdash; or get one actionable insight for free right now!
               </p>
               <Button asChild size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
-                <a href="/">Start Free Assessment &#10132;</a>
+                <a href="/?start=1">Start Free Assessment &#10132;</a>
               </Button>
               <div className="mt-4 flex items-center justify-center gap-3 text-xs text-muted-foreground">
                 <span>Money-back guarantee included</span>

@@ -164,7 +164,7 @@ export default function AboutPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <a 
-                href="https://www.harvardhealth.org" 
+                href="https://www.health.harvard.edu" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="rounded-lg border bg-card px-4 py-5 hover:border-primary/30 transition-colors text-center space-y-2"
@@ -226,8 +226,7 @@ export default function AboutPage() {
 
           {/* Footer */}
           <div className="mt-16 pt-10 border-t text-center">
-            <p className="text-sm text-muted-foreground">© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
-            <div className="flex justify-center gap-4 mt-4">
+            <div className="flex justify-center gap-4">
               <a href="/faq" className="hover:text-primary text-sm underline-offset-2 hover:underline">FAQ</a>
               <a href="/" className="hover:text-primary text-sm underline-offset-2 hover:underline">➤ Back to Home</a>
             </div>
@@ -237,7 +236,7 @@ export default function AboutPage() {
         {/* Footer */}
         <footer className="border-t mt-auto">
           <div className="mx-auto max-w-4xl px-4 py-8 text-sm text-muted-foreground text-center">
-            <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex justify-center gap-4 mt-4">
               <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/privacy" className="hover:text-primary">Privacy Policy</a>
