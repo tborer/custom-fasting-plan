@@ -52,6 +52,25 @@ export function getSiteUrl(req?: NextApiRequest): string {
 }
 
 /**
+ * Convenience to get the webhook signing secret, selected by STRIPE_MODE.
+ * - Test: STRIPE_TEST_WEBHOOK_SECRET
+ * - Live: STRIPE_WEBHOOK_SECRET
+ */
+export function getWebhookSecret(): string | null {
+  const mode = (process.env.STRIPE_MODE || "test").toLowerCase() === "live" ? "live" : "test";
+  const secret = mode === "live" ? process.env.STRIPE_WEBHOOK_SECRET : process.env.STRIPE_TEST_WEBHOOK_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        `[stripe] ${mode === "live" ? "STRIPE_WEBHOOK_SECRET" : "STRIPE_TEST_WEBHOOK_SECRET"} missing - webhook signature verification will fail`
+      );
+    }
+    return null;
+  }
+  return secret;
+}
+
+/**
  * Convenience to get the Price ID (required), selected by STRIPE_MODE.
  * - Test: STRIPE_TEST_PRICE_ID
  * - Live: STRIPE_PRICE_ID
