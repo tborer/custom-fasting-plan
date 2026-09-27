@@ -1,5 +1,6 @@
 import Head from "next/head";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import HelpLink from "@/components/HelpLink";
 
 export default function FAQPage() {
   const currentUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com/faq";
@@ -10,12 +11,12 @@ export default function FAQPage() {
     {
       question: "How does intermittent fasting help you lose weight?",
       answer: "Intermittent fasting helps lose weight by extending your fasting window, which lowers insulin levels and triggers fat oxidation. After 12-14 hours without food, your body shifts from burning glucose to burning stored body fat.",
-      internalLinks: [{ text: "Start your assessment", href: "/" }]
+      internalLinks: [{ text: "Start your assessment", href: "/?start=1" }]
     },
     {
       question: "What is the best intermittent fasting schedule for beginners?",
       answer: "Start with 12:12 (fast 12 hours, eat 12 hours) for your first two weeks. Then gradually extend your window by 30-60 minutes each week until reaching 16:8 or another schedule that fits your lifestyle.",
-      internalLinks: [{ text: "Get your custom plan", href: "/" }]
+      internalLinks: [{ text: "Get your custom plan", href: "/?start=1" }]
     },
     {
       question: "Can I eat on 16:8 intermittent fasting?",
@@ -35,7 +36,7 @@ export default function FAQPage() {
     {
       question: "What should I eat during my eating window?",
       answer: "Focus on whole foods: lean proteins, healthy fats, fiber-rich vegetables, and complex carbs. Prioritize protein to stay satiated and build muscle. Hydrate well with water, herbal tea, or black coffee.",
-      internalLinks: [{ text: "Learn more about nutrition", href: "/" }]
+      internalLinks: [{ text: "Learn more about nutrition", href: "/blog/beginners-guide#what-to-eat" }]
     },
     {
       question: "How do I break a fast properly?",
@@ -45,7 +46,7 @@ export default function FAQPage() {
     {
       question: "Can I exercise while fasting?",
       answer: "Yes, exercise during your fasting window can enhance fat burning and metabolic health. Light to moderate activity is ideal in fasted state; intense training is better after eating if you need fuel.",
-      internalLinks: [{ text: "Custom plan includes exercise timing", href: "/" }]
+      internalLinks: [{ text: "Custom plan includes exercise timing", href: "/?start=1" }]
     },
     {
       question: "What if I get hungry during my fast?",
@@ -65,7 +66,7 @@ export default function FAQPage() {
     {
       question: "What are common intermittent fasting mistakes?",
       answer: "Common mistakes: eating too much in the window (undoing fat loss benefits), skipping workouts, ignoring sleep/stress management, giving up before 2-3 weeks, and relying on processed foods during your eating period.",
-      internalLinks: [{ text: "Avoid these pitfalls", href: "/" }]
+      internalLinks: [{ text: "Avoid these pitfalls", href: "/blog/beginners-guide#mistakes" }]
     },
     {
       question: "Can I combine IF with keto or other diets?",
@@ -122,7 +123,7 @@ export default function FAQPage() {
       </Head>
 
       <div className="bg-background min-h-screen flex flex-col">
-        <main className="flex-1 mx-auto max-w-4xl px-4 py-16 sm:py-20">
+        <main className="flex-1 mx-auto w-full max-w-4xl px-4 py-16 sm:py-20">
           <div className="text-center mb-12">
             <h1 className="text-3xl sm:text-4xl font-semibold text-primary">
               Frequently Asked Questions
@@ -134,7 +135,7 @@ export default function FAQPage() {
 
             {/* PHASE 2 ENHANCEMENT: Add quick CTA to main site */}
             <div className="mt-8">
-              <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="inline-flex items-center gap-2">
+              <Button onClick={() => window.location.href = "/?start=1"} size="lg" variant="default" className="inline-flex items-center gap-2">
                 ➤ Start Your Free Assessment Now
               </Button>
             </div>
@@ -190,20 +191,15 @@ export default function FAQPage() {
             </p>
 
             <div className="grid sm:grid-cols-2 gap-4">
-              <Button onClick={() => window.location.href = "/"} size="lg" variant="default" className="w-full justify-center">
+              <Button onClick={() => window.location.href = "/?start=1"} size="lg" variant="default" className="w-full justify-center h-auto min-h-11 py-3 whitespace-normal">
                 ➤ Take Free Assessment - Get Your Custom Plan
               </Button>
-              <Button 
-                variant="secondary" 
-                size="lg"
-                className="w-full justify-center"
-                onClick={() => {
-                  // Could implement help dialog here
-                  window.location.href = "/";
-                }}
-              >
-                ➤ Talk to Our Support Team
-              </Button>
+              <HelpLink
+                page="FAQ"
+                label="➤ Talk to Our Support Team"
+                title="Contact us"
+                className={buttonVariants({ variant: "secondary", size: "lg", className: "w-full justify-center h-auto min-h-11 py-3 whitespace-normal" })}
+              />
             </div>
           </section>
 
@@ -218,7 +214,7 @@ export default function FAQPage() {
 
         <footer className="border-t mt-auto">
           <div className="mx-auto max-w-4xl px-4 py-8 text-sm text-muted-foreground text-center">
-            <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex justify-center gap-4 mt-4">
               <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/privacy" className="hover:text-primary">Privacy Policy</a>

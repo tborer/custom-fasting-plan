@@ -57,7 +57,7 @@ export default function ScienceOfFastingPage() {
               <li><a href="#mitochondria" className="hover:underline">Mitochondrial Efficiency</a></li>
               <li><a href="#hormones" className="hover:underline">Hormonal Balance (Ghrelin, Leptin, Cortisol)</a></li>
               <li><a href="#study-summary" className="hover:underline">Study Summary</a></li>
-              <li><a href="#cta" className="text-primary font-bold hover:text-primary/80 inline-block mt-2">&#10132; Start Free Assessment & Get Your Science-Based Plan</a></li>
+              <li><a href="/?start=1" className="text-primary font-bold hover:text-primary/80 inline-block mt-2">&#10132; Start Free Assessment & Get Your Science-Based Plan</a></li>
             </ol>
           </nav>
 
@@ -137,7 +137,7 @@ export default function ScienceOfFastingPage() {
                 </div>
               </div>
 
-              <div className="rounded-md border bg-green/5 p-4">
+              <div className="rounded-md border bg-green-500/5 p-4">
                 <h3 className="font-medium text-primary mb-2">Best Timing</h3>
                 <p className="text-xs text-muted-foreground">
                   Your body naturally secretes growth hormone during fasting windows, peaking in the late evening. This is one reason IF helps with sleep quality &mdash; lower insulin means deeper restorative sleep, which further improves metabolic health (it&apos;s a virtuous cycle).
@@ -151,7 +151,7 @@ export default function ScienceOfFastingPage() {
                 Autophagy is the cellular process of &ldquo;self-eating&rdquo; &mdash; your body recycles damaged proteins and organelles to rebuild cleaner, more efficient cells. This is a protective mechanism that activates after 16&ndash;20+ hours of fasting. Think of it as your cells&apos; cleanup system activating to remove metabolic waste products before they accumulate.
               </p>
 
-              <div className="rounded-md border bg-green/5 p-4">
+              <div className="rounded-md border bg-green-500/5 p-4">
                 <h3 className="font-medium text-primary mb-2">Health Benefits</h3>
                 <ul className="text-xs text-muted-foreground space-y-1 ml-4">
                   <li>&bull; Reduces inflammation linked to chronic disease</li>
@@ -184,7 +184,7 @@ export default function ScienceOfFastingPage() {
                 </ul>
               </div>
 
-              <div className="rounded-md border bg-green/5 p-4">
+              <div className="rounded-md border bg-green-500/5 p-4">
                 <h3 className="font-medium text-primary mb-2">Fasted vs. Fed Training</h3>
                 <p className="text-xs text-muted-foreground">
                   <span className="font-semibold text-primary">Fasted advantage:</span> Enhanced fat oxidation, improved insulin sensitivity post-exercise.<br />
@@ -245,7 +245,7 @@ export default function ScienceOfFastingPage() {
                 Our personalized plans incorporate the latest research into every aspect of your protocol: fasting window timing, nutrition for metabolic health, exercise integration, and sleep optimization. Unlock yours today!
               </p>
               <Button asChild size="lg" variant="default" className="inline-flex items-center gap-2 px-8">
-                <a href="/">Start Free Assessment &#10132;</a>
+                <a href="/?start=1">Start Free Assessment &#10132;</a>
               </Button>
               <div className="mt-4 flex items-center justify-center gap-3 text-xs text-muted-foreground">
                 <span>Science-backed protocols</span>

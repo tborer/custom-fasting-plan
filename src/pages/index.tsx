@@ -233,6 +233,18 @@ export default function Home() {
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Other pages link to /?start=1 so their "Start assessment" CTAs open the
+  // assessment directly. Strip the param so a refresh doesn't reopen it.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("start") !== "1") return;
+    params.delete("start");
+    const qs = params.toString();
+    window.history.replaceState(null, "", window.location.pathname + (qs ? `?${qs}` : "") + window.location.hash);
+    startAssessment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [showInsight, setShowInsight] = useState(false);
   const [insight, setInsight] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -522,7 +534,7 @@ export default function Home() {
               </Button>
 
               {/* PHASE 1 ENHANCEMENT: Trust badge component */}
-              <div className="ml-4 flex items-center gap-2 text-xs text-muted-foreground bg-green/5 px-3 py-1.5 rounded-full border border-green/20">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-green-500/5 px-3 py-1.5 rounded-full border border-green-500/20">
                 <span className="inline-flex items-center justify-center rounded-full bg-green-100 text-green-600 w-5 h-5 flex-shrink-0">
                   ✓
                 </span>
@@ -645,10 +657,10 @@ export default function Home() {
 
             {/* PHASE 1 ENHANCEMENT: Added trust badges and guarantee component */}
             <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground border-t pt-4">
-              <div className="inline-flex items-center justify-center rounded-full bg-green/10 text-green-600 w-5 h-5">
+              <div className="inline-flex items-center justify-center rounded-full bg-green-500/10 text-green-600 w-5 h-5">
                 ✔
               </div>
-              <span><span className="font-semibold">$</span><span className="text-xs">$</span>30-Day Money-Back Guarantee</span>
+              <span>30-Day Money-Back Guarantee</span>
             </div>
           </div>
 
@@ -674,15 +686,15 @@ export default function Home() {
                     How hungry are you typically in the morning?
                   </p>
                   <div className="mt-3 flex gap-2 flex-wrap">
-                    <Button variant="secondary" className="text-xs">Not hungry</Button>
-                    <Button variant="secondary" className="text-xs">Slightly</Button>
-                    <Button variant="secondary" className="text-xs">Moderately</Button>
-                    <Button variant="secondary" className="text-xs">Very hungry</Button>
+                    <Button variant="secondary" className="text-xs" onClick={startAssessment}>Not hungry</Button>
+                    <Button variant="secondary" className="text-xs" onClick={startAssessment}>Slightly</Button>
+                    <Button variant="secondary" className="text-xs" onClick={startAssessment}>Moderately</Button>
+                    <Button variant="secondary" className="text-xs" onClick={startAssessment}>Very hungry</Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <div aria-hidden className="absolute -inset-x-6 -inset-y-6 bg-gradient-to-br from-accent/30 to-transparent pointer-events-none" />
+            <div aria-hidden className="absolute -inset-x-4 -inset-y-6 bg-gradient-to-br from-accent/30 to-transparent pointer-events-none" />
           </div>
         </div>
       </motion.section>
@@ -817,11 +829,11 @@ export default function Home() {
             <div className="mx-auto max-w-4xl text-center">
               <h3 className="text-xl font-semibold text-primary mb-6">What You'll Get With Your Full Plan</h3>
               
-              <div className="grid grid-cols-2 gap-4 md:gap-8 text-left max-w-3xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 text-left max-w-3xl mx-auto">
                 {/* Free preview column */}
-                <div className="border-r pr-4 space-y-2">
+                <div className="border-b pb-6 sm:border-b-0 sm:pb-0 sm:border-r sm:pr-4 space-y-2">
                   <p className="text-sm font-medium text-muted-foreground mb-2 flex items-center justify-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-red-400"></span>
+                    <span className="w-2 h-2 shrink-0 rounded-full bg-red-400"></span>
                     Free Preview (What You Get Now)
                   </p>
                   <ul className="text-xs text-muted-foreground space-y-1">
@@ -832,9 +844,9 @@ export default function Home() {
                 </div>
 
                 {/* Full plan column */}
-                <div className="border-l pl-4 space-y-2">
+                <div className="sm:pl-4 space-y-2">
                   <p className="text-sm font-medium text-primary mb-2 flex items-center justify-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    <span className="w-2 h-2 shrink-0 rounded-full bg-green-500"></span>
                     Full Plan ($19.99 - One Time)
                   </p>
                   <ul className="text-sm text-muted-foreground space-y-1">
@@ -853,7 +865,6 @@ export default function Home() {
               <div className="mt-8">
                 <Button onClick={startAssessment} className="px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium group">
                   Get My Full Plan for $19.99 ➤
-                  <span className="ml-2 inline-block w-5 h-5 rounded-full bg-green-500 text-white text-[10px] items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">New!</span>
                 </Button>
               </div>
             </div>
@@ -967,8 +978,8 @@ export default function Home() {
                 {/* Star rating */}
                 <div className="px-4 py-3 border-b bg-muted/30 flex items-center gap-1">
                   {[...Array(5)].map((_, starIndex) => (
-                    <svg key={starIndex} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className={index % 2 === 0 ? "text-yellow-500" : "text-accent-foreground"}>
-                      <polygon points="12 2 15.39 6.46 22 8.67 17.45 13.5 17.88 21.45 12 17.2 6.12 21.45 6.55 13.5 2 8.67 8.61 6.46 12 2z"></polygon>
+                    <svg key={starIndex} xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-yellow-500">
+                      <polygon points="12 2 15.39 6.46 22 8.67 17.45 13.5 17.88 21.45 12 17.2 6.12 21.45 6.55 13.5 2 8.67 8.61 6.46 12 2"></polygon>
                     </svg>
                   ))}
                   <span className="ml-2 text-xs font-medium text-muted-foreground">{testimonial.purchaseDate}</span>
@@ -985,7 +996,7 @@ export default function Home() {
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-primary">{testimonial.name}</span>
                     {testimonial.verified && (
-                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-green/5 px-2 py-0.5 rounded-full border border-green/20">
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-green-500/5 px-2 py-0.5 rounded-full border border-green-500/20">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-green-600">
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
@@ -1021,11 +1032,228 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Assessment overlay */}
+      <AnimatePresence>
+        {showAssessment && (
+          <motion.div
+            key="assessment"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50"
+          >
+            <motion.div
+              aria-hidden
+              className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <div className="absolute inset-0 flex items-start justify-center overflow-y-auto overscroll-contain p-4 sm:p-6">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="relative my-auto w-full max-w-3xl rounded-md border bg-background"
+              >
+                <div className="flex items-center justify-between border-b px-4 py-3">
+                  <div className="text-sm text-muted-foreground">
+                    Step {step + 1} of {total}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowAssessment(false)}
+                    className="text-xs text-muted-foreground hover:text-primary"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                <div className="px-4 pt-4">
+                  <Progress value={percent} />
+                </div>
+
+                  <div className="px-4 py-6">
+                    <h3 className="text-lg sm:text-xl font-medium text-primary">
+                      {current.text}
+                    </h3>
+
+                    <div className="mt-4">
+                      {current.type === "single" && (
+                        <RadioGroup
+                          value={answers[current.id] ?? ""}
+                          onValueChange={handleSelect}
+                          className="grid gap-3"
+                        >
+                          {current.options?.map((opt) => {
+                            const inputId = `${current.id}-${opt}`;
+                            return (
+                              <label
+                                key={opt}
+                                htmlFor={inputId}
+                                className="flex items-center gap-3 rounded-md border px-3 py-2 cursor-pointer hover:bg-accent/40"
+                              >
+                                <RadioGroupItem
+                                  id={inputId}
+                                  value={opt}
+                                  className="shadow-none"
+                                />
+                                <span className="text-sm">{opt}</span>
+                              </label>
+                            );
+                          })}
+                        </RadioGroup>
+                      )}
+
+                      {current.type === "text" && (
+                        <div className="grid gap-2">
+                          <Label htmlFor={`${current.id}`}>Your answer</Label>
+                          {current.id === "current_supplements" ? (
+                            <Textarea
+                              id={`${current.id}`}
+                              value={answers[current.id] ?? ""}
+                              onChange={(e) => handleText(e.target.value)}
+                              placeholder="List any vitamins, minerals, or supplements you currently take"
+                              className="min-h-28"
+                            />
+                          ) : current.id === "email" ? (
+                            <Input
+                              id={`${current.id}`}
+                              type="email"
+                              value={answers[current.id] ?? ""}
+                              onChange={(e) => handleText(e.target.value)}
+                              placeholder="you@example.com"
+                            />
+                          ) : (
+                            <Input
+                              id={`${current.id}`}
+                              value={answers[current.id] ?? ""}
+                              onChange={(e) => handleText(e.target.value)}
+                              placeholder="Type your answer"
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-6 flex items-center justify-between">
+                      <Button variant="secondary" onClick={goBack} disabled={step === 0}>
+                        Back
+                      </Button>
+                      {step < total - 1 ? (
+                        <Button
+                          onClick={goNext}
+                          disabled={
+                            current.type === "single"
+                              ? !(answers[current.id])
+                              : current.id === "email"
+                              ? !(/^\S+@\S+\.\S+$/.test(String(answers[current.id] ?? "").trim()))
+                              : !(String(answers[current.id] ?? "").trim().length > 0)
+                          }
+                        >
+                          Next
+                        </Button>
+                      ) : (
+                        <Button onClick={handleFinish}>
+                          Finish
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Insight overlay */}
+      <AnimatePresence>
+        {showInsight && (
+          <motion.div
+            key="insight"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50"
+          >
+            <motion.div
+              aria-hidden
+              className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <div className="absolute inset-0 flex items-start justify-center overflow-y-auto overscroll-contain p-4 sm:p-6">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="relative my-auto w-full max-w-3xl rounded-md border bg-background"
+              >
+                <div className="flex items-center justify-between border-b px-4 py-3">
+                  <h3 className="text-sm font-medium text-primary">Your personalized fasting insight</h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowInsight(false)}
+                    className="text-xs text-muted-foreground hover:text-primary"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                <div className="px-4 py-6 space-y-6">
+                  <p className="text-base text-foreground">{insight}</p>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-primary text-lg">Unlock your complete fasting plan</CardTitle>
+                      <CardDescription>
+                        Get all insights and a fully personalized plan with your custom fasting window, fat‑burning strategy, first‑meal guide, electrolyte protocol, and weekly rhythm.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4">
+                        <ul className="text-sm text-muted-foreground space-y-2">
+                          <li>• Immediate access after secure Stripe checkout</li>
+                          <li>• We'll email your complete plan and a link to view it anytime</li>
+                        </ul>
+
+                        <div className="flex flex-wrap items-baseline gap-2">
+                          <span className="inline-flex items-center rounded bg-accent/40 text-accent-foreground px-2 py-0.5 text-[10px] border">
+                            Limited time
+                          </span>
+                          <span className="text-muted-foreground line-through">$79.99</span>
+                          <span className="text-2xl font-semibold text-primary">$19.99</span>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <Button onClick={handleUnlockFullPlan} disabled={unlocking} className="px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all font-medium">
+                            {unlocking ? "Redirecting..." : "Unlock Full Plan"}
+                          </Button>
+                          <Button variant="secondary" onClick={() => setShowInsight(false)}>
+                            Maybe later
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          You'll be redirected to a secure Stripe checkout. On completion we'll email your full plan.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Footer */}
       <footer className="border-t">
         <div className="mx-auto max-w-7xl px-4 py-10 text-sm text-muted-foreground">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex gap-4">
               <a href="/blog" className="hover:text-primary">Blog</a>
               <a href="/faq" className="hover:text-primary">FAQ</a>

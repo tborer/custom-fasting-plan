@@ -28,7 +28,7 @@ export default function LegalPage({ title, description, path, children }: LegalP
 
         <footer className="border-t mt-auto">
           <div className="mx-auto max-w-4xl px-4 py-8 text-sm text-muted-foreground text-center">
-            <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Custom Fasting Plan by Agile Rant. All rights reserved.</p>
             <div className="flex flex-wrap justify-center gap-4 mt-4">
               <a href="/" className="hover:text-primary">Home</a>
               <a href="/blog" className="hover:text-primary">Blog</a>

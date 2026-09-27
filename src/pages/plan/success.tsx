@@ -310,7 +310,7 @@ export default function PlanSuccess() {
         <footer className="border-t">
           <div className="mx-auto max-w-3xl w-full px-4 py-10 text-sm text-muted-foreground">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <p>© 2025 Custom Fasting Plan by Agile Rant. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} Custom Fasting Plan by Agile Rant. All rights reserved.</p>
               <div className="flex gap-4">
                 <a href="/privacy" className="hover:text-primary">Privacy</a>
                 <a href="/terms" className="hover:text-primary">Terms</a>
